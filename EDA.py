@@ -101,9 +101,9 @@ def BiserialCorrelation(dataset, target_variable, input_variable, apply_box_cox=
     print('---------------------------Point Biserial Test--------------------------------')
     print(f'statistic={biserial[0]}, p_value={biserial[1]}\n')
     if biserial[1] < 0.05:
-        print(f'Since {biserial[1]} < 0.05 you can reject the null hypothesis')
+        print(f'Since {biserial[1]} < 0.05 you can reject the null hypothesis, \nso variables are correlated')
     else:
-        print(f'Since {biserial[1]} > 0.05 you cannot reject the null hypothesis')
+        print(f'Since {biserial[1]} > 0.05 you cannot reject the null hypothesis, \nso variables are not correlated')
     print('------------------------------------------------------------------------------\n')
 
 
@@ -137,9 +137,9 @@ def LeveneTest(dataset, target_variable, input_variable):
     print('------------------------------------------------------------------------------')
     print(f'statistic={levene[0]}, p_value={levene[1]}\n')
     if levene[1] < 0.05:
-        print(f'Since {levene[1]} < 0.05 you can reject the null hypothesis')
+        print(f'Since {levene[1]} < 0.05 you can reject the null hypothesis, \nso variances_1 != variances_2')
     else:
-        print(f'Since {levene[1]} > 0.05 you cannot reject the null hypothesis')
+        print(f'Since {levene[1]} > 0.05 you cannot reject the null hypothesis, \nso variances_1 = variances_2')
     print('------------------------------------------------------------------------------\n')
 
 
@@ -187,12 +187,3 @@ def KruskalTest(dataset, target_variable, input_variable):
     else:
         print(f'Since {kruskal[1]} > 0.05 you cannot reject the null hypothesis \nso we have that medians_1 = medians_2')
     print('------------------------------------------------------------------------------\n')
-
-
-        
-        
-        
-        
-        
-        
-       
