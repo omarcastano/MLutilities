@@ -19,8 +19,12 @@ def KolmogorovTest(dataset, variable, apply_box_cox=False, plot_histogram=False)
 
     Arguments:
         dataset: pandas dataframe
-
-        variable: variable to performe the Kolmogorov test     
+        variable: string
+            variable to performe the Kolmogorov test
+        apply_box_cox: bool
+            If True appy box_cox transformation to the input variable 
+        plot_histogram: bool
+            If True plot a histogram of the variable
     """
 
     if apply_box_cox:
@@ -42,7 +46,7 @@ def KolmogorovTest(dataset, variable, apply_box_cox=False, plot_histogram=False)
         fig.show()
         
  
-def LeveneTest(dataset, target_variable, input_varaible):
+def LeveneTest(dataset, target_variable, input_variable):
 
     """
     Levene’s test is used to check that variances are equal for all 
@@ -53,12 +57,19 @@ def LeveneTest(dataset, target_variable, input_varaible):
     H2: variances_1 != variances_2 != variances.
 
     if p_values < 0.05 rejecct the null hypothesis
+
+    Arguments:
+        dataset: pandas dataframe
+        target_variable: string
+            Name of the target variable  
+        input_varaible: string
+            Name of the input variable
     """
 
     y_unique = dataset[target_variable].unique()
     
-    y1 = dataset.loc[dataset[target_variable] == y_unique[0] ,input_varaible].to_numpy()
-    y2 = dataset.loc[dataset[target_variable] == y_unique[1] ,input_varaible].to_numpy()
+    y1 = dataset.loc[dataset[target_variable] == y_unique[0] ,input_variable].to_numpy()
+    y2 = dataset.loc[dataset[target_variable] == y_unique[1] ,input_variable].to_numpy()
 
     levene = stats.levene(y1, y2)
 
@@ -69,6 +80,10 @@ def LeveneTest(dataset, target_variable, input_varaible):
     else:
         print(f'Since {levene[1]} > 0.05 you cannot reject the null hypothesis')
     print('------------------------------------------------------------------------------\n')
+    
+    
+    
+
 
         
         
