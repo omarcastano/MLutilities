@@ -5,7 +5,7 @@ import plotly.express as px
 from sklearn.preprocessing import LabelEncoder
 import scipy.stats as stats
 
-def KolmogorovTest(dataset, variable, apply_box_cox=False, plot_histogram=False, color=None):
+def KolmogorovTest(dataset, variable, apply_yeo_johnson=False, plot_histogram=False, color=None):
 
     """
     This function computes Kolmogorov test to check if the variable
@@ -20,8 +20,8 @@ def KolmogorovTest(dataset, variable, apply_box_cox=False, plot_histogram=False,
         dataset: pandas dataframe
         variable: string
             variable to performe the Kolmogorov test
-        apply_box_cox: bool
-            If True appy box_cox transformation to the input variable 
+        apply_yeo_johnson: bool
+            If True appy yeo johnson transformation to the input variable 
         plot_histogram: bool
             If True plot a histogram of the variable
         color: string
@@ -29,8 +29,8 @@ def KolmogorovTest(dataset, variable, apply_box_cox=False, plot_histogram=False,
             assign color to marks.
     """
 
-    if apply_box_cox:
-        x = stats.boxcox(dataset[variable].to_numpy())[0]
+    if apply_yeo_johnson:
+        x = stats.yeojohnson(dataset[variable].to_numpy())[0]
     else:
         x = dataset[variable].to_numpy()
 
@@ -49,7 +49,7 @@ def KolmogorovTest(dataset, variable, apply_box_cox=False, plot_histogram=False,
         fig.show()
 
 
-def BiserialCorrelation(dataset, target_variable, input_variable, apply_box_cox=False, test_assumptions=False):
+def BiserialCorrelation(dataset, target_variable, input_variable, apply_yeo_johnson=False, test_assumptions=False):
     
     """
         A point-biserial correlation is used to measure the correlation between
@@ -69,8 +69,8 @@ def BiserialCorrelation(dataset, target_variable, input_variable, apply_box_cox=
             Name of the target variable  
         input_varaible: string
             Name of the input variable
-        apply_box_cox: bool
-            If True appy box_cox transformation to the input variable
+        apply_yeo_johnson: bool
+            If True appy yeo johnson transformation to the input variable
         test_assumptions: bool
             If True test the assuptioms for the continuos variable
     """
@@ -81,9 +81,9 @@ def BiserialCorrelation(dataset, target_variable, input_variable, apply_box_cox=
         x2 = dataset.loc[dataset[target_variable] == y_unique[1] ,[input_variable]]
 
         print(f'------------------------Kolmogorov Test for y:{y_unique[0]}---------------------------')
-        KolmogorovTest(x1, input_variable, apply_box_cox=apply_box_cox, plot_histogram=False)
+        KolmogorovTest(x1, input_variable, apply_yeo_johnson=apply_yeo_johnson, plot_histogram=False)
         print(f'------------------------Kolmogorov Test for y:{y_unique[1]}---------------------------')
-        KolmogorovTest(x1, input_variable, apply_box_cox=apply_box_cox, plot_histogram=False)
+        KolmogorovTest(x1, input_variable, apply_yeo_johnson=apply_yeo_johnson, plot_histogram=False)
 
         print('--------------------------------Levene Test-----------------------------------')
         LeveneTest(dataset, target_variable, input_variable)
@@ -93,7 +93,7 @@ def BiserialCorrelation(dataset, target_variable, input_variable, apply_box_cox=
     y = LabelEncoder().fit_transform(dataset[target_variable])
 
     if apply_box_cox:
-        x = stats.boxcox(dataset[input_variable].to_numpy())[0]
+        x = stats.yeojohnson(dataset[input_variable].to_numpy())[0]
     else:
         x = dataset[input_variable].to_numpy()
 
