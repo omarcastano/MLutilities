@@ -233,7 +233,7 @@ def CramersV(dataset, input_feature, target_feature, plot_histogram=True ,histno
     dimension = dataset[[input_feature, target_feature]].notnull().prod(axis=1).sum()
     cramer = np.sqrt( (chi2/dimension) /  (np.min(obs.shape) -1 ))
     print("------------------------------------------------------------------------------------------------------")
-    print(f'CramersV: {cramer}, chi2:{chi2}, p_value:{p}')
+    print(f'CramersV: {cramer}, chi2:{chi2}, p_value:{p}\n')
     if p < 0.05:
         print(f'Since {p} < 0.05 you can reject the null hypothesis, \nso there is a relationship between the variables.')
     else:
