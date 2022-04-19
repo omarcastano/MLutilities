@@ -204,6 +204,9 @@ def KruskalTest(dataset, target_variable, input_variable):
 def CramersV(dataset, input_feature, target_feature, plot_histogram=True ,histnorm='percent', color=None):
     """
     This function computes cramer's V correlation coefficient which is a measure of association between two nominal variables.
+    
+    H0: there is not a relationship between the variables.
+    H1: there is a relationship between the variables.
 
     Arguments:
         dataset: pandas dataframe
@@ -220,6 +223,8 @@ def CramersV(dataset, input_feature, target_feature, plot_histogram=True ,histno
         color: string
             Name of column in dataset. Values from this column are used to
             assign color to marks.
+            
+    If p_value < 0.5 you can reject the null hypothesis
     """
 
     obs = pd.crosstab(dataset[input_feature], dataset[target_feature])
@@ -229,6 +234,10 @@ def CramersV(dataset, input_feature, target_feature, plot_histogram=True ,histno
     cramer = np.sqrt( (chi2/dimension) /  (np.min(obs.shape) -1 ))
     print("------------------------------------------------------------------------------------------------------")
     print(f'CramersV: {cramer}, chi2:{chi2}, p_value:{p}')
+    if p < 0.05:
+        print(f'Since {p} < 0.05 you can reject the null hypothesis, \nso there is a relationship between the variables.')
+    else:
+        print(f'Since {p} > 0.05 you cannot reject the null hypothesis, \nso there is not a relationship between the variables.')
     print("------------------------------------------------------------------------------------------------------\n")
 
     if plot_histogram:
