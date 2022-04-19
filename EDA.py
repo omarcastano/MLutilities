@@ -4,6 +4,7 @@ import matplotlib.pyplot as plt
 import plotly.express as px
 from sklearn.preprocessing import LabelEncoder
 import scipy.stats as stats
+import numpy as np
 
 def KolmogorovTest(dataset, variable, apply_yeo_johnson=False, apply_log_transform=False ,plot_histogram=False, color=None):
 
