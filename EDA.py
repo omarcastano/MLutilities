@@ -197,3 +197,40 @@ def KruskalTest(dataset, target_variable, input_variable):
     else:
         print(f'Since {kruskal[1]} > 0.05 you cannot reject the null hypothesis \nso we have that medians_1 = medians_2')
     print('------------------------------------------------------------------------------\n')
+    
+ 
+
+#Creamers V Correlation
+def CramersV(dataset, input_feature, target_feature, plot_histogram=True ,histnorm='percent', color=None):
+    """
+    This function computes cramer's V correlation coefficient which is a measure of association between two nominal variables.
+
+    Arguments:
+        dataset: pandas dataframe
+        target_variable: string
+            Name of the target variable  
+        input_varaible: string
+            Name of the input variable
+        plot_histogram: bool
+            If True plot a histogram
+        histnorm: string (default='percentage')
+            It can be either 'percent' or 'count'. If 'percent'
+            show the percengate of each category, if 'count' show 
+            the frequency of each category.
+        color: string
+            Name of column in dataset. Values from this column are used to
+            assign color to marks.
+    """
+
+    obs = pd.crosstab(dataset[input_feature], dataset[target_feature])
+    chi2, p, dof, ex = stats.chi2_contingency(obs, correction=False)
+
+    dimension = dataset[[input_feature, target_feature]].notnull().prod(axis=1).sum()
+    cramer = np.sqrt( (chi2/dimension) /  (np.min(obs.shape) -1 ))
+    print("------------------------------------------------------------------------------------------------------")
+    print(f'CramersV: {cramer}, chi2:{chi2}, p_value:{p}')
+    print("------------------------------------------------------------------------------------------------------\n")
+
+    if plot_histogram:
+        fig= px.histogram(dataset, x=input_feature, histnorm=histnorm, color=color, barmode='group')
+        fig.show()
