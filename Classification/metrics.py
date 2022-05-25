@@ -6,3 +6,4 @@ import plotly.express as px
 from sklearn.preprocessing import LabelEncoder
 import scipy.stats as stats
 import numpy as np
+from ipywidgets import widgets
