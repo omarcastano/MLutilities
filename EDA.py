@@ -6,6 +6,10 @@ from sklearn.preprocessing import LabelEncoder
 import scipy.stats as stats
 import numpy as np
 
+"""
+This module provides some exploratory data analysis tools.
+"""
+
 def KolmogorovTest(dataset, variable, apply_yeo_johnson=False, apply_log_transform=False ,plot_histogram=False, color=None):
 
     """
