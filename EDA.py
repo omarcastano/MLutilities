@@ -100,7 +100,6 @@ def BiserialCorrelation(dataset, target_variable, input_variable, apply_yeo_john
         print('--------------------------------Levene Test-----------------------------------')
         LeveneTest(dataset, target_variable, input_variable)
 
-
     #Point Biserial correlation Test
     y = LabelEncoder().fit_transform(dataset[target_variable])
 
