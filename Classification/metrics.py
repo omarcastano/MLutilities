@@ -1,5 +1,6 @@
 from sklearn.metrics import accuracy_score, precision_score, f1_score, recall_score, average_precision_score
 from sklearn.metrics import confusion_matrix, plot_confusion_matrix, classification_report
+from sklearn.datasets import make_blobs
 import pandas as pd
 import seaborn as sns; sns.set()
 import matplotlib.pyplot as plt
@@ -9,6 +10,7 @@ import scipy.stats as stats
 import numpy as np
 from ipywidgets import widgets
 from sklearn.metrics import roc_auc_score
+from sklearn.linear_model import LogisticRegression
 
 
 def threshold_example(threshold=0.5):
@@ -46,12 +48,31 @@ def threshold_example(threshold=0.5):
     print(f"Accuracy = {((y_pred > threshold)*1 == y_true).sum()}/{50} =" ,((y_pred > threshold)*1 == y_true).mean())
     print("-------------------------")
 
+def bolbs_predictions():
+
+    """
+    Helper function to show how differnt metrics sush as
+    accuracy, precision, recall etc, will look like in a case
+    of datapoints that can be perfectly classified using a 
+    logistic regression
+    """
+
+    X, y = make_blobs(n_samples=500, centers=2, cluster_std=2, random_state=42)
+
+    model = LogisticRegression()
+
+    model.fit(X, y)
+
+    y_pred_proba = model.predict_proba(X)
+
+    return y, y_pred_proba
+
 
 #threshold dependence
 def threshold_metric_evaluation(y_true, y_score, metric='Accuracy', threshold=0.5):
 
     """
-    Plot a value of a given metric for several probability threshold. This function
+    Plot the value of a given metric for several probability threshold. This function
     only work for a binary classification problem
 
     Argumetns:
@@ -71,16 +92,17 @@ def threshold_metric_evaluation(y_true, y_score, metric='Accuracy', threshold=0.
                     'Precision':lambda tn, fp, fn, tp:(tp)/(tp+fp+10e-8), 
                     'Recall':lambda tn, fp, fn, tp:(tp)/(tp+fn+10e-8),
                     'f1_score': lambda tn, fp, fn, tp:(2*((tp)/(tp+fp+10e-8))*((tp)/(tp+fn+10e-8)))/(((tp)/(tp+fp+10e-8)) + ((tp)/(tp+fn+10e-8))),
-                    'FPR': lambda tn, fp, fn, tp: fp/(fp+tn),
-                    'FNR': lambda tn, fp, fn, tp: fn/(fn+tp),
-                    'NPV': lambda tn, fp, fn, tp: tn/(tn+fn),
-                    'TNR': lambda tn, fp, fn, tp: tn/(tn+fp)
+                    'FPR': lambda tn, fp, fn, tp: fp/(fp+tn+10e-8),
+                    'FNR': lambda tn, fp, fn, tp: fn/(fn+tp+10e-8),
+                    'NPV': lambda tn, fp, fn, tp: tn/(tn+fn+10e-8),
+                    'TNR': lambda tn, fp, fn, tp: tn/(tn+fp+10e-8)
                     }
 
     metrics = []
     thresholds = []
 
     for t in np.arange(0.01,0.99,0.01):
+
         y_pred = (y_score[:,1] >= t).astype(int)
         tn, fp, fn, tp = confusion_matrix(y_true, y_pred).ravel()
         metrics.append(metrics_dict[metric](tn, fp, fn, tp))
@@ -176,7 +198,13 @@ def precision_recall_tradeoff(y_true, y_score, threshold=0.5):
     y_pred = (y_score[:,1] >= threshold).astype(int)
     conf_mt = confusion_matrix(y_true, y_pred)
 
-    sns.heatmap(conf_mt, annot=True, cbar=False, cmap="Blues", fmt='.5g' ,annot_kws={'size':20}, ax=ax[1])
+    conf_mt_str = conf_mt.copy().astype(str)
+    conf_mt_str[0,0] = "TN = " + str(conf_mt[0,0])
+    conf_mt_str[1,1] = "TP = " + str(conf_mt[1,1])
+    conf_mt_str[1,0] = "FN = " + str(conf_mt[1,0])
+    conf_mt_str[0,1] = "FP = " + str(conf_mt[0,1])
+    
+    sns.heatmap(conf_mt, annot=conf_mt_str, cbar=False, cmap="Blues", fmt="" ,annot_kws={'size':20}, ax=ax[1])
     ax[1].set_title("Congusion Matrix", fontsize=20)
     ax[1].set_xlabel("Predicted Label", fontsize=20)
     ax[1].set_ylabel("True Label", fontsize=20)
@@ -240,7 +268,13 @@ def precision_recall_curve(y_true, y_score, threshold=0.5):
     conf_mt = confusion_matrix(y_true, y_pred)
     ax[0].set_title(f'PR AUC:{average_precision_score(y_true, y_score[:,1]).round(3)}', fontsize=25)
 
-    sns.heatmap(conf_mt, annot=True, cbar=False, cmap="Blues", fmt='.5g' ,annot_kws={'size':20}, ax=ax[1])
+    conf_mt_str = conf_mt.copy().astype(str)
+    conf_mt_str[0,0] = "TN = " + str(conf_mt[0,0])
+    conf_mt_str[1,1] = "TP = " + str(conf_mt[1,1])
+    conf_mt_str[1,0] = "FN = " + str(conf_mt[1,0])
+    conf_mt_str[0,1] = "FP = " + str(conf_mt[0,1])
+    
+    sns.heatmap(conf_mt, annot=conf_mt_str, cbar=False, cmap="Blues", fmt="" ,annot_kws={'size':20}, ax=ax[1])
     ax[1].set_title("Congusion Matrix", fontsize=20)
     ax[1].set_xlabel("Predicted Label", fontsize=20)
     ax[1].set_ylabel("True Label", fontsize=20)
