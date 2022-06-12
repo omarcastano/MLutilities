@@ -48,24 +48,28 @@ def threshold_example(threshold=0.5):
     print(f"Accuracy = {((y_pred > threshold)*1 == y_true).sum()}/{50} =" ,((y_pred > threshold)*1 == y_true).mean())
     print("-------------------------")
 
-def bolbs_predictions():
+def per_class_accuracy(y_true, y_pred):
 
     """
-    Helper function to show how differnt metrics sush as
-    accuracy, precision, recall etc, will look like in a case
-    of datapoints that can be perfectly classified using a 
-    logistic regression
+    Computes per class accuracy
+
+    Argumetns:
+        y_true: 1D numpy array
+            true labels
+        y_pred: 1D numpy array
+            predicted class labels
     """
 
-    X, y = make_blobs(n_samples=500, centers=2, cluster_std=2, random_state=42)
+    acc = lambda tn, fp, fn, tp:(tp+tn)/(tp+fp+tn+fn+10e-8)
+    
+    acc_by_class = []
 
-    model = LogisticRegression()
+    for y in np.unique(y_true):
+    
+        tn, fp, fn, tp = confusion_matrix((y_true==y)*1, (y_pred==y)*1).ravel()
+        acc_by_class.append(acc(tn, fp, fn, tp))
 
-    model.fit(X, y)
-
-    y_pred_proba = model.predict_proba(X)
-
-    return y, y_pred_proba
+    return np.array(acc_by_class)
 
 
 #threshold dependence
