@@ -2,7 +2,7 @@ from setuptools import setup
 
 setup(
     name='MLutilities'
-    version='0.0.0',
+    version='1.0.0',
     author='Omar Andres Castaño',
     description='Machine Learning Utilities',
     long_description='This packages provides a series of machine learning utilities which makes easy to teach machine learning topics',
