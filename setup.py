@@ -1,7 +1,7 @@
 from setuptools import setup
 
 setup(
-    name='MLutilities'
+    name='MLutilities',
     version='1.0.0',
     author='Omar Andres Castaño',
     description='Machine Learning Utilities',
