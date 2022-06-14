@@ -7,6 +7,5 @@ setup(
     description='Machine Learning Utilities',
     long_description='This packages provides a series of machine learning utilities which makes easy to teach machine learning topics',
     url='https://github.com/omarcastano/MLutilities.git',
-    python_requires='>=3.7, <4',
     packages=find_packages()
 )
