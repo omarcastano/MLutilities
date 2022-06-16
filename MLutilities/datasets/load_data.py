@@ -1,5 +1,7 @@
 import pickle
 
+import pkg_resources
+print( pkg_resources.resource_filename(__name__, 'datasets/diamonds.pkl'))
 
 def diamonds():
   
