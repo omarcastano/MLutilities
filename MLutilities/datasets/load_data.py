@@ -4,6 +4,7 @@ import pkg_resources
 
 
 def diamonds():
+  print('$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$')
   print( pkg_resources.resource_filename(__name__, 'datasets/diamonds.pkl'))
   """
   Load Diamonds dataset
