@@ -82,8 +82,8 @@ def threshold_metric_evaluation(y_true, y_score, metric='Accuracy', threshold=0.
     Argumetns:
         y_true: array-like
             true labels
-        y_score: array-like
-            predicted scores 
+        y_score: 2D array-like
+            predicted scores for positive and negative class
         metric: string
             one of the metric from the following list
             Accuracy, Precision, Recall, F1_score, FPR
