@@ -4,6 +4,7 @@ import pkg_resources
 
 
 def diamonds():
+  print(pkg_resources.resource_filename('MLutilities/datasets', 'diamonds.pkl'))
   print('$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$')
   print( pkg_resources.resource_filename(__name__, 'datasets/diamonds.pkl'))
   """
