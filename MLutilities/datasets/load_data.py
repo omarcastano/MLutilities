@@ -4,12 +4,12 @@ import pkg_resources
 
 
 def diamonds():
-  print(pkg_resources.resource_filename('MLutilities/datasets', 'diamonds.pkl'))
-  print('$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$')
-  print( pkg_resources.resource_filename(__name__, 'datasets/diamonds.pkl'))
+  
   """
   Load Diamonds dataset
   """
-  a_file = open('datasets/diamonds.pkl', "rb")
+  
+  path_to_data = pkg_resources.resource_filename(__name__, 'diamonds.pkl')
+  a_file = open(path_to_data, "rb")
   
   return pickle.load(a_file)
