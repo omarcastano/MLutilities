@@ -86,7 +86,7 @@ def threshold_metric_evaluation(y_true, y_score, metric='Accuracy', threshold=0.
             predicted scores 
         metric: string
             one of the metric from the following list
-            Accuracy, Precision, Recall, f1_score, FPR
+            Accuracy, Precision, Recall, F1_score, FPR
             FNR, NPV, TNR
         threshold: Threshold for the probability
     """
@@ -95,7 +95,7 @@ def threshold_metric_evaluation(y_true, y_score, metric='Accuracy', threshold=0.
     metrics_dict = {'Accuracy':lambda tn, fp, fn, tp:(tp+tn)/(tp+fp+tn+fn+10e-8), 
                     'Precision':lambda tn, fp, fn, tp:(tp)/(tp+fp+10e-8), 
                     'Recall':lambda tn, fp, fn, tp:(tp)/(tp+fn+10e-8),
-                    'f1_score': lambda tn, fp, fn, tp:(2*((tp)/(tp+fp+10e-8))*((tp)/(tp+fn+10e-8)))/(((tp)/(tp+fp+10e-8)) + ((tp)/(tp+fn+10e-8))),
+                    'F1_score': lambda tn, fp, fn, tp:(2*((tp)/(tp+fp+10e-8))*((tp)/(tp+fn+10e-8)))/(((tp)/(tp+fp+10e-8)) + ((tp)/(tp+fn+10e-8))),
                     'FPR': lambda tn, fp, fn, tp: fp/(fp+tn+10e-8),
                     'FNR': lambda tn, fp, fn, tp: fn/(fn+tp+10e-8),
                     'NPV': lambda tn, fp, fn, tp: tn/(tn+fn+10e-8),
@@ -279,7 +279,7 @@ def precision_recall_curve(y_true, y_score, threshold=0.5):
     conf_mt_str[0,1] = "FP = " + str(conf_mt[0,1])
     
     sns.heatmap(conf_mt, annot=conf_mt_str, cbar=False, cmap="Blues", fmt="" ,annot_kws={'size':20}, ax=ax[1])
-    ax[1].set_title("Congusion Matrix", fontsize=20)
+    ax[1].set_title("Confusion Matrix", fontsize=20)
     ax[1].set_xlabel("Predicted Label", fontsize=20)
     ax[1].set_ylabel("True Label", fontsize=20)
 
@@ -336,6 +336,6 @@ def ROC_curve(y_true, y_score, threshold=0.5):
     ax[0].set_title(f'ROC AUC:{roc_auc_score(y_true, y_score[:,1]).round(3)}', fontsize=25)
 
     sns.heatmap(conf_mt, annot=conf_mt_str, cbar=False, cmap="Blues", fmt="" ,annot_kws={'size':20}, ax=ax[1])
-    ax[1].set_title("Congusion Matrix", fontsize=20)
+    ax[1].set_title("Confusion Matrix", fontsize=20)
     ax[1].set_xlabel("Predicted Label", fontsize=20)
     ax[1].set_ylabel("True Label", fontsize=20)
