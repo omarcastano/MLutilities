@@ -6,6 +6,6 @@ def diamonds():
   """
   Load Diamonds dataset
   """
-  a_file = open('MLutilities/MLutilities/datasets/diamonds.pkl', "rb")
+  a_file = open('datasets/diamonds.pkl', "rb")
   
   return pickle.load(a_file)
