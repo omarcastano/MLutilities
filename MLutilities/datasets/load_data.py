@@ -18,10 +18,10 @@ def diamonds(load_as:str='dict'):
             this arguments contros how the raw data is stored.
             * 'dict' : dict like {column -> [values]}
             * 'list' : list like [[column 1],[column 2],[column 3]]
-            * 'numpy' : numpy like numpy.array([[column 1],[column 2],[column 3]])
+            * 'dataframe: dataframe like pd.DataFrame
     """
 
-    assert load_as in ['dict', 'list', 'numpy'], "load_as mus be on of the possible options: 'dict', 'list or 'numpy'"
+    assert load_as in ['dict', 'list', 'numpy', 'dataframe'], "load_as mus be on of the possible options: 'dict', 'list, 'numpy' o 'dataframe'"
 
     path_to_data = pkg_resources.resource_filename(__name__, 'diamonds.pkl')
     a_file = open(path_to_data, "rb")
@@ -33,3 +33,5 @@ def diamonds(load_as:str='dict'):
         return {'DESC':data['DESC'], 'data':data['data'].to_numpy().tolist(), 'feature_names':data['feature_names']}
     elif load_as=='numpy':
         return {'DESC':data['DESC'], 'data':data['data'].to_numpy(), 'feature_names':data['feature_names']}
+    elif load_as=='dataframe':
+        return data
