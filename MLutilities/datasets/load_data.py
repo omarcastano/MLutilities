@@ -4,7 +4,7 @@ import numpy as np
 import pkg_resources
 
 
-def diamonds(load_as:str='list'):
+def diamonds(load_as:str='dict'):
   
     """
     Returns a dicctionary that loads Diamonds dataset. The dicctionary has 
