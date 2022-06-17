@@ -28,8 +28,8 @@ def diamonds(load_as:str='dict'):
     data = pickle.load(a_file)
   
     if load_as=='dict':
-        return {'DESC':data['DESC'], 'data':data.to_dict(orient='list'), 'feature_names':data['feature_names']}
+        return {'DESC':data['DESC'], 'data':data['data'].to_dict(orient='list'), 'feature_names':data['feature_names']}
     elif load_as=='list':
-        return {'DESC':data['DESC'], 'data':data.to_numpy().tolist(), 'feature_names':data['feature_names']}
+        return {'DESC':data['DESC'], 'data':data['data'].to_numpy().tolist(), 'feature_names':data['feature_names']}
     elif load_as=='numpy':
-        return {'DESC':data['DESC'], 'data':data.to_numpy(), 'feature_names':data['feature_names']}
+        return {'DESC':data['DESC'], 'data':data['data'].to_numpy(), 'feature_names':data['feature_names']}
