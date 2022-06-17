@@ -4,7 +4,7 @@ import numpy as np
 import pkg_resources
 
 
-def diamonds(load_as:str='dict', n=10):
+def diamonds(load_as:str='dict', n=-1):
   
     """
     Returns a dicctionary that loads Diamonds dataset. The dicctionary has 
@@ -19,6 +19,9 @@ def diamonds(load_as:str='dict', n=10):
             * 'dict' : dict like {column -> [values]}
             * 'list' : list like [[column 1],[column 2],[column 3]]
             * 'dataframe: dataframe like pd.DataFrame
+        n: int default(n=10)
+            number of instances to sample from the complete dataset.
+            If n=-1, the whole dataset is return 
     """
 
     assert load_as in ['dict', 'list', 'numpy', 'dataframe'], "load_as mus be on of the possible options: 'dict', 'list, 'numpy' o 'dataframe'"
@@ -26,6 +29,9 @@ def diamonds(load_as:str='dict', n=10):
     path_to_data = pkg_resources.resource_filename(__name__, 'diamonds.pkl')
     a_file = open(path_to_data, "rb")
     data = pickle.load(a_file)
+    
+    if n==-1:
+      n=data['data'].shape[0]
   
     if load_as=='dict':
         return {'DESC':data['DESC'], 'data':data['data'].sample(n).to_dict(orient='list'), 'feature_names':data['feature_names']}
