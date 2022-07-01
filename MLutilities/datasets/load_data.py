@@ -9,16 +9,18 @@ def diamonds(load_as:str='dict', n=-1):
     """
     Returns a dicctionary that loads Diamonds dataset. The dicctionary has 
     the follow keys:
+    
     DESC: a breve description of the dataset and its columns
     data: raw data (rows and columns)
     feature_names: the name of the features/columns
 
     Argumetns:
         load_as: str. possible options: 'dict', 'list or 'numpy'
-            this arguments contros how the raw data is stored.
+            this argument controls how raw data is stored.
             * 'dict' : dict like {column -> [values]}
             * 'list' : list like [[column 1],[column 2],[column 3]]
             * 'dataframe: dataframe like pd.DataFrame
+            
         n: int default(n=10)
             number of instances to sample from the complete dataset.
             If n=-1, the whole dataset is return 
