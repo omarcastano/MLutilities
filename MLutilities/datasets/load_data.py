@@ -36,10 +36,10 @@ def diamonds(load_as:str='dict', n=-1):
       n=data['data'].shape[0]
   
     if load_as=='dict':
-        return {'DESC':data['DESC'], 'data':data['data'].sample(n).to_dict(orient='list'), 'feature_names':data['feature_names'].tolist()}
+        return {'DESC':data['DESC'], 'data':data['data'].sample(n, replace=False).to_dict(orient='list'), 'feature_names':data['feature_names'].tolist()}
     elif load_as=='list':
-        return {'DESC':data['DESC'], 'data':data['data'].sample(n).to_numpy().tolist(), 'feature_names':data['feature_names'].tolist()}
+        return {'DESC':data['DESC'], 'data':data['data'].sample(n, replace=False).to_numpy().tolist(), 'feature_names':data['feature_names'].tolist()}
     elif load_as=='numpy':
-        return {'DESC':data['DESC'], 'data':data['data'].sample(n).to_numpy(), 'feature_names':data['feature_names'].tolist()}
+        return {'DESC':data['DESC'], 'data':data['data'].sample(n, replace=False).to_numpy(), 'feature_names':data['feature_names'].tolist()}
     elif load_as=='dataframe':
         return data
