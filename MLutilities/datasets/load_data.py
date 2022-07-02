@@ -15,11 +15,13 @@ def diamonds(load_as:str='dict', n=-1):
     feature_names: the name of the features/columns
 
     Argumetns:
-        load_as: str. possible options: 'dict', 'list or 'numpy'
+        load_as: str. possible options: 'dict', 'list, 'numpy' or 'dataframe'
             this argument controls how raw data is stored.
             * 'dict' : dict like {column -> [values]}
             * 'list' : list like [[column 1],[column 2],[column 3]]
+            * 'numpy': 2D numpy like. shape (rows, columns)
             * 'dataframe: dataframe like pd.DataFrame
+            
             
         n: int default(n=10)
             number of instances to sample from the complete dataset.
@@ -36,10 +38,10 @@ def diamonds(load_as:str='dict', n=-1):
       n=data['data'].shape[0]
   
     if load_as=='dict':
-        return {'DESC':data['DESC'], 'data':data['data'].sample(n, replace=False).to_dict(orient='list'), 'feature_names':data['feature_names'].tolist()}
+        return {'DESC':data['DESC'], 'data':data['data'].sample(n, replace=False).dropna().to_dict(orient='list'), 'feature_names':data['feature_names'].tolist()}
     elif load_as=='list':
-        return {'DESC':data['DESC'], 'data':data['data'].sample(n, replace=False).to_numpy().tolist(), 'feature_names':data['feature_names'].tolist()}
-    elif load_as=='numpy':
-        return {'DESC':data['DESC'], 'data':data['data'].sample(n, replace=False).to_numpy(), 'feature_names':data['feature_names'].tolist()}
+        return {'DESC':data['DESC'], 'data':data['data'].sample(n, replace=False).dropna().to_numpy().tolist(), 'feature_names':data['feature_names'].tolist()}
+    elif load_as=='2Dnumpy':
+        return {'DESC':data['DESC'], 'data':data['data'].sample(n, replace=False).dropna().to_numpy(), 'feature_names':data['feature_names'].tolist()}
     elif load_as=='dataframe':
         return data
