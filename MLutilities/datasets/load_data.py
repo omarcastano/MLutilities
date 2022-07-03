@@ -42,7 +42,7 @@ def diamonds(load_as:str='dict', n=-1):
     if load_as=='dict':
         return {'DESC':data['DESC'], 'data':sample.dropna().to_dict(orient='list'), 'feature_names':data['feature_names'].tolist()}
     elif load_as=='list':
-        return {'DESC':data['DESC'], 'data':sample.to_numpy().dropna().tolist(), 'feature_names':data['feature_names'].tolist()}
+        return {'DESC':data['DESC'], 'data':sample.dropna().to_numpy().tolist(), 'feature_names':data['feature_names'].tolist()}
     elif load_as=='numpy':
         return {'DESC':data['DESC'], 'data':sample.dropna().to_numpy(), 'feature_names':data['feature_names'].tolist()}
     elif load_as=='dataframe':
