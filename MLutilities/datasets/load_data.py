@@ -3,6 +3,8 @@ import pandas as pd
 import numpy as np
 import pkg_resources
 
+
+
 def diamonds(load_as:str='dict', n=-1):
   
     """
