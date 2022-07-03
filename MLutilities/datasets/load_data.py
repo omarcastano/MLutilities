@@ -16,15 +16,15 @@ def diamonds(load_as:str='dict', n=-1):
 
     Argumetns:
         load_as: str. possible options: 'dict', 'list, 'numpy' or 'dataframe'
-            this argument controls how raw data is stored.
-            * 'dict' : dict like {column -> [values]}
+            this argument controls how raw data is return.
+            * 'dict' : dict like {column : [values]}
             * 'list' : list like [[column 1],[column 2],[column 3]]
             * 'numpy': 2D numpy like. shape (rows, columns)
             * 'dataframe: dataframe like pd.DataFrame
             
             
         n: int default(n=10)
-            number of instances to sample from the complete dataset.
+            number of instances to randommly sample from the complete dataset.
             If n=-1, the whole dataset is return 
     """
 
@@ -35,13 +35,16 @@ def diamonds(load_as:str='dict', n=-1):
     data = pickle.load(a_file)
     
     if n==-1:
-      n=data['data'].shape[0]
-  
+        sample = data['data']
+    else:
+        sample = data['data'].sample(n ,random_state=42)
+        
     if load_as=='dict':
-        return {'DESC':data['DESC'], 'data':data['data'].sample(n, replace=False).dropna().to_dict(orient='list'), 'feature_names':data['feature_names'].tolist()}
+        return {'DESC':data['DESC'], 'data':sample.dropna().to_dict(orient='list'), 'feature_names':data['feature_names'].tolist()}
     elif load_as=='list':
-        return {'DESC':data['DESC'], 'data':data['data'].sample(n, replace=False).dropna().to_numpy().tolist(), 'feature_names':data['feature_names'].tolist()}
+        return {'DESC':data['DESC'], 'data':sample.to_numpy().dropna().tolist(), 'feature_names':data['feature_names'].tolist()}
     elif load_as=='numpy':
-        return {'DESC':data['DESC'], 'data':data['data'].sample(n, replace=False).dropna().to_numpy(), 'feature_names':data['feature_names'].tolist()}
+        return {'DESC':data['DESC'], 'data':sample.dropna().to_numpy(), 'feature_names':data['feature_names'].tolist()}
     elif load_as=='dataframe':
         return data
+
