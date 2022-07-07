@@ -52,7 +52,7 @@ def diamonds(load_as:str='dict', n=-1):
         sample.dropna(inplace=True)
         ds = {}
         for col in sample.columns:
-            ds[col] = sample[col].value
+            ds[col] = sample[col].values
             
         return {'DESC':data['DESC'], 'data':ds, 'feature_names':data['feature_names'].tolist()}    
 
