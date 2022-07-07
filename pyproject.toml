@@ -12,7 +12,7 @@ packages = [
 python = ">=3.7, <3.9.0"
 numpy = "^1.21.6"
 matplotlib = "^3.5.2"
-ipywidgets = "^7.7.1"
+ipywidgets = "^7.7.0"
 scipy = "^1.4.1"
 
 [tool.poetry.dev-dependencies]
