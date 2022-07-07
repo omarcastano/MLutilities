@@ -37,7 +37,7 @@ def example_histogram(mean:float=0.0, std:float=1.0, alpha:float=0.0):
 
     ax[0,0].set_title("Distribucion Normal", fontsize=20)
     ax[0,1].set_title("Distribucion Sesgada", fontsize=20)
-    ax[0,1].legend([f"median={np.meadin(rvs).round(2)}"], fontsize=20)
+    ax[0,1].legend([f"median={np.median(rvs).round(2)}"], fontsize=20)
     ax[0,0].legend([f"median={np.median(normal).round(2)}"], fontsize=20)
     ax[1,0].legend(fontsize=20)
     ax[1,1].legend(fontsize=20)
