@@ -4,7 +4,7 @@ version = "1.0.0-dev"
 description = "\"Library to teach Machine Learning\""
 authors = ["omarcastano <omar.castano@udea.edu.co"]
 packages = {
-    { include = "MLutilities/MLutilities"}
+    { include = "MLutilities/Classification"}
 }
 
 [tool.poetry.dependencies]
