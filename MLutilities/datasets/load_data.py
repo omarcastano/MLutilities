@@ -126,7 +126,7 @@ def penguins(load_as:str='dict', n=-1):
 
     assert load_as in ['dict', 'list', 'numpy1D', 'numpy2D',  'dataframe'], "load_as mus be on of the possible options: 'dict', 'list, 'numpy1D', 'numpy2D' o 'dataframe'"
 
-    path_to_data = pkg_resources.resource_filename(__name__, 'diamonds.pkl')
+    path_to_data = pkg_resources.resource_filename(__name__, 'penguins.pkl')
     
     with open(path_to_data, "rb") as f:
         data = pickle.load(f)
