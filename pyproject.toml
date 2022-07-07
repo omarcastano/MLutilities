@@ -1,11 +1,11 @@
 [tool.poetry]
 name = "MLutilities"
 version = "1.0.0-dev"
-description = "\"Library to teach Machine Learning\""
-authors = ["omarcastano <omar.castano@udea.edu.co"]
-packages = {
+description = "Library to teach Machine Learning"
+authors = ["omarcastano <omar.castano@udea.edu.co>"]
+packages = [
     { include = "MLutilities/Classification"}
-}
+]
 
 [tool.poetry.dependencies]
 python = ">=3.7, <3.9.0"
