@@ -1,4 +1,5 @@
 import ipywidgets as widgets
+from MLutilities.stats.distributions import example_histogram
 
 def widget_example_histogram_matplotlib():
     
