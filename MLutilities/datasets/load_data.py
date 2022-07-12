@@ -17,7 +17,7 @@ def data_format(data, load_as, n):
                 image: Illustrative image of the problem (can be none)
                 feature_names: the name of the features/columns
      
-        load_as: str. possible options: 'dict', 'list, 'numpy' or 'dataframe'
+        load_as: str. possible options: 'dict', 'list, 'numpy1D', 'numpy2D' or 'dataframe'
             this argument controls how raw data is return.
             * 'dict' : dict like --> {column : [values]}
             * 'list' : list like --> [[column 1],[column 2],[column 3]]
