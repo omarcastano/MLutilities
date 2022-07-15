@@ -51,13 +51,13 @@ def kolmogorov_test(dataset, variable:str, apply_yeo_johnson:bool=False, apply_l
         x = dataset[variable].to_numpy()
 
     ktest = stats.kstest(x, 'norm')
-    print('------------------------------------------------------------------------------')
+    print(f'------------------------- Kolmogorov test fot the variable {variable} --------------------')
     print(f'statistic={ktest[0]:.3f}, p_value={ktest[1]:.3f}\n')
     if ktest[1] < 0.05:
-        print(f'Since {ktest[1]:.3f} < 0.05 you can reject the null hypothesis, so the variable \ndo not follow a normal distribution')
+        print(f'Since {ktest[1]:.3f} < 0.05 you can reject the null hypothesis, so the variable {variable} \ndo not follow a normal distribution')
     else:
-        print(f'Since {ktest[1]:.3f} > 0.05 you cannot reject the null hypothesis, so the variable \nfollows a normal distribution')
-    print('------------------------------------------------------------------------------\n')
+        print(f'Since {ktest[1]:.3f} > 0.05 you cannot reject the null hypothesis, so the variable {variable} \nfollows a normal distribution')
+    print('-------------------------------------------------------------------------------------------\n')
     if plot_histogram:
         fig = px.histogram(dataset, x=x, nbins=bins, marginal='box', color=color, barmode='overlay')
         fig.update_traces(marker_line_width=1, marker_line_color="white", opacity=0.8)
@@ -93,7 +93,7 @@ def biserial_correlation(dataset, categorical_variable:str, numerical_variable:s
             If True test the assuptioms for the continuos variable
     """
     
-    assert not apply_log_transform == apply_yeo_johnson, "apply_log_transform and apply_yeo_johnson cannot be True at the same time"
+    assert not apply_log_transform or not apply_yeo_johnson, "apply_log_transform and apply_yeo_johnson cannot be True at the same time"
     
     if type(dataset) == dict:
         dataset = pd.DataFrame(dataset)
