@@ -59,7 +59,7 @@ def KolmogorovTest(dataset, variable, apply_yeo_johnson=False, apply_log_transfo
         fig.show()
 
 
-def BiserialCorrelation(dataset, target_variable, input_variable, apply_yeo_johnson=False, apply_log_transform=False, test_assumptions=False):
+def BiserialCorrelation(dataset, target_variable, input_variable, apply_yeo_johnson=False, apply_log_transform=False, test_assumptions=False, apply_box_cox=False):
     
     """
         A point-biserial correlation is used to measure the correlation between
