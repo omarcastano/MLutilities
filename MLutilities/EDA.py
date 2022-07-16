@@ -8,6 +8,7 @@ import numpy as np
 from statsmodels.compat import lzip
 import statsmodels.stats.api as sms
 import statsmodels.formula.api as smf
+from IPython.display import display
 
 """
 This module provides some exploratory data analysis tools.
@@ -264,7 +265,7 @@ def camersv(dataset, target_feature:str, input_feature:str, show_crosstab:bool=F
 
     if show_crosstab:
         print("----------------------- Contingency Table -------------------------")
-        print(obs)
+        print(display(obs.style.background_gradient(cmap='Blues')))
         print("------------------------------------------------------------------\n")
 
     dimension = dataset[[input_feature, target_feature]].notnull().prod(axis=1).sum()
@@ -378,3 +379,26 @@ def correlation_coef(dataset, target_variable:str, input_variable:str, kind:str=
         print(f'Since {p_value:.3f} > 0.05 you cannot reject the null hypothesis, so the variables {target_variable} \nand {input_variable} are not correlated')
     print('-------------------------------------------------------------------------------------------\n')
        
+def contingency_table(dataset, target_variable:str, input_variable:str, table_size:int=30) -> None:
+
+    """
+    This function computes the contingency table of the given varaibles
+
+    Arguments:
+        dataset: pandas dataframe or dict with de format {'col1':np.array, 'col2':np.array}
+        target_variable: string
+            Name of one categorical variable 
+        input_varaible: string
+            Name of one categorical variable
+        table_size: integet
+            size of the displayed table in pixels
+    """
+
+    if type(dataset) == dict:
+        dataset = pd.DataFrame(dataset)
+
+    obs = pd.crosstab(dataset[input_variable], dataset[target_variable])
+
+    print("----------------------- Contingency Table -------------------------")
+    display(obs.style.background_gradient(cmap='Blues').set_table_attributes(f'style="font-size: {table_size}px"'))
+    print("------------------------------------------------------------------\n")
