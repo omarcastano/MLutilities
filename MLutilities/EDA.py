@@ -273,7 +273,7 @@ def cramersv(dataset, target_feature:str, input_feature:str, show_crosstab:bool=
 
     if show_crosstab:
         print("----------------------- Contingency Table -------------------------")
-        display(pd.crosstab(dataset[input_feature], dataset[target_feature], margins=True).style.background_gradient(cmap='Blues'))
+        #display(pd.crosstab(dataset[input_feature], dataset[target_feature], margins=True).style.background_gradient(cmap='Blues'))
         print("------------------------------------------------------------------\n")
 
     dimension = dataset[[input_feature, target_feature]].notnull().prod(axis=1).sum()
@@ -408,5 +408,5 @@ def contingency_table(dataset, target_variable:str, input_variable:str, table_si
     obs = pd.crosstab(dataset[input_variable], dataset[target_variable], margins=True)
 
     print("----------------------- Contingency Table -------------------------")
-    display(obs.style.background_gradient(cmap='Blues'))#.set_table_attributes(f'style="font-size: {table_size}px"'))
+    display(obs)#.style.background_gradient(cmap='Blues'))#.set_table_attributes(f'style="font-size: {table_size}px"'))
     print("------------------------------------------------------------------\n")
