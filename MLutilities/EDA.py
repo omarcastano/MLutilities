@@ -260,12 +260,12 @@ def cramersv(dataset, target_feature:str, input_feature:str, show_crosstab:bool=
     if type(dataset) == dict:
         dataset = pd.DataFrame(dataset)
 
-    obs = pd.crosstab(dataset[input_feature], dataset[target_feature])
+    obs = pd.crosstab(dataset[input_feature], dataset[target_feature], margins=True)
     chi2, p, dof, ex = stats.chi2_contingency(obs, correction=False)
 
     if show_crosstab:
         print("----------------------- Contingency Table -------------------------")
-        print(display(obs.style.background_gradient(cmap='Blues')))
+        display(pd.crosstab(dataset[input_feature], dataset[target_feature], margins=True).style.background_gradient(cmap='Blues'))
         print("------------------------------------------------------------------\n")
 
     dimension = dataset[[input_feature, target_feature]].notnull().prod(axis=1).sum()
