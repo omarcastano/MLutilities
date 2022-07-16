@@ -408,5 +408,5 @@ def contingency_table(dataset, target_variable:str, input_variable:str, table_si
     obs = pd.crosstab(dataset[input_variable], dataset[target_variable], margins=True)
 
     print("----------------------- Contingency Table -------------------------")
-    display(obs.style.background_gradient(cmap='Blues').set_table_attributes(f'style="font-size: {table_size}px"'))
+    display(obs.style.background_gradient(cmap='Blues'))#.set_table_attributes(f'style="font-size: {table_size}px"'))
     print("------------------------------------------------------------------\n")
