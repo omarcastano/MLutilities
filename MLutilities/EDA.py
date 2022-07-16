@@ -5,6 +5,9 @@ import plotly.express as px
 from sklearn.preprocessing import LabelEncoder
 import scipy.stats as stats
 import numpy as np
+from statsmodels.compat import lzip
+import statsmodels.stats.api as sms
+import statsmodels.formula.api as smf
 
 """
 This module provides some exploratory data analysis tools.
@@ -277,3 +280,101 @@ def camersv(dataset, target_feature:str, input_feature:str, show_crosstab:bool=F
     if plot_histogram:
         fig= px.histogram(dataset, x=input_feature, histnorm=histnorm, color=color, barmode='group')
         fig.show()
+
+def breusch_pagan_test(dataset, target_variable:str, input_variable:str):
+    """
+    
+    Breusch-Pagan test is a way to check whether heteroscedasticity exists in regression analysis.
+    A Breusch-Pagan test follows the below hypotheses:
+    
+    H0: Homoscedasticity is present.
+    H1: Homoscedasticity is not present (i.e. heteroscedasticity exists)
+    
+    Arguments:
+        dataset: pandas dataframe or dict with de format {'col1':np.array, 'col2':np.array}
+        target_variable: string
+            Name of one numercial variable
+        input_variable: string
+            Name of one numercial variable
+                    
+    """
+    
+    if type(dataset) == dict:
+        dataset = pd.DataFrame(dataset)
+   
+    #fit regression model
+    fit_lr = smf.ols(f'{target_variable} ~ {input_variable}', data=dataset).fit()
+
+    #perform Bresuch-Pagan test
+    statistic, p_value, _, _= sms.het_breuschpagan(fit_lr.resid, fit_lr.model.exog)
+
+    print(f'------------------------------------ Breusch-Pagan test ----------------------------------')
+    print(f'statistic={statistic:.3f}, p_value={p_value:.3f}\n')
+    if p_value < 0.05:
+        print(f'Since {p_value:.3f} < 0.05 you can reject the null hypothesis, so homoscedasticity is not present')
+    else:
+        print(f'Since {p_value:.3f} > 0.05 you cannot reject the null hypothesis, so homoscedasticity is present')
+    print('-------------------------------------------------------------------------------------------\n')
+
+def correlation_coef(dataset, target_variable:str, input_variable:str, kind:str='pearson', kolmogorov:bool=False, breusch_pagan:bool=False, scatter_plot:bool=False):
+    
+    """
+    This function computes the correlation between two numerical variables. 
+    
+    H0: variables are not correlated
+    H1: varaibles are correlated
+
+    Arguments:
+        dataset: pandas dataframe or dict with de format {'col1':np.array, 'col2':np.array}
+        target_variable: string
+            Name of one numercial variable
+        input_variable: string
+            Name of one numercial variable
+        kind: string
+            kind of correlation you want to compute, possible potions are
+            pearson, spearman or kendall.
+        kolmogorov_test: bool
+            wheter or not to compute kolmogorov test to check if variables 
+            are normally distributed. This test is only relevant if kint = 'spearman'
+            correleation is  used.
+        breusch_pagan:
+            wheter or not to compute breusch pagan test to check if homoscedasticity
+            is present. This test is only relevant if kind = 'spearman'
+            correleation is  used.
+        scatter_plot: bool
+            If True a scatter plot is display 
+    """
+    
+    assert kind in ['spearman', 'kendall', 'pearson'], "kind must be one of the options in the list ['spearmn', 'kendall', 'pearson']"
+    
+    if type(dataset) == dict:
+        dataset = pd.DataFrame(dataset)
+        
+    if kind == 'pearson':    
+        if kolmogorov:
+            kolmogorov_test(dataset, target_variable)
+            kolmogorov_test(dataset, input_variable)
+        if breusch_pagan:
+            breusch_pagan_test(dataset, target_variable, input_variable)
+        corr, p_value = stats.pearsonr(dataset[target_variable], dataset[input_variable])
+    elif kind == 'spearman':
+        corr, p_value = stats.spearmanr(dataset[target_variable], dataset[input_variable])
+    elif kind == 'kendall':
+        corr, p_value = stats.kendalltau(dataset[target_variable], dataset[input_variable])
+        
+
+    if scatter_plot:
+        plt.figure(figsize=(15,6))
+        sns.scatterplot(data=dataset, x=input_variable, y=target_variable)
+        plt.xlabel(input_variable ,fontsize=15)
+        plt.ylabel(target_variable ,fontsize=15)
+
+        
+    print(f'------------------------------------ {kind} correlation ---------------------------------')
+    print(f'statistic={corr:.3f}, p_value={p_value:.3f}\n')
+    if p_value < 0.05:
+        print(f'Since {p_value:.3f} < 0.05 you can reject the null hypothesis, so the variables {target_variable} \nand {input_variable} are correlated')
+    else:
+        print(f'Since {p_value:.3f} > 0.05 you cannot reject the null hypothesis, so the variables {target_variable} \nand {input_variable} are not correlated')
+    print('-------------------------------------------------------------------------------------------\n')
+       
