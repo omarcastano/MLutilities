@@ -69,7 +69,10 @@ def kolmogorov_test(dataset, variable:str, apply_yeo_johnson:bool=False, apply_l
         fig.show()
 
 
-def biserial_correlation(dataset, categorical_variable:str, numerical_variable:str, apply_yeo_johnson:bool=False, apply_log_transform:bool=False, test_assumptions:bool=False):
+def biserial_correlation(dataset, categorical_variable:str, 
+                         numerical_variable:str, apply_yeo_johnson:bool=False, 
+                         apply_log_transform:bool=False, box_plot:bool=False, 
+                         test_assumptions:bool=False):
     
     """
         A point-biserial correlation is used to measure the correlation between
@@ -93,6 +96,8 @@ def biserial_correlation(dataset, categorical_variable:str, numerical_variable:s
             If True appy yeo johnson transformation to the input variable
         apply_log_transform: bool
             If True apply logarithm transformation to the input variable
+        box_plot:bool
+            If Ture display a boxplot
         test_assumptions: bool
             If True test the assuptioms for the continuos variable
     """
@@ -134,6 +139,9 @@ def biserial_correlation(dataset, categorical_variable:str, numerical_variable:s
         print(f'Since {biserial[1]:.3f} > 0.05 you cannot reject the null hypothesis, \nso variables are not correlated')
     print('------------------------------------------------------------------------------\n')
 
+    if box_plot:
+        fig = px.box(dataset, x=categorical_variable, y=numerical_variable)
+        fig.show()
 
 def levene_test(dataset, categorical_variable, numerical_variable):
 
