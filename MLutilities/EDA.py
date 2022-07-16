@@ -229,7 +229,7 @@ def kruskal_test(dataset, target_variable:str, input_variable:str):
     print('------------------------------------------------------------------------------\n')
     
 #Creamers V Correlation
-def camersv(dataset, target_feature:str, input_feature:str, show_crosstab:bool=False, plot_histogram:bool=False, histnorm:str='percent', color:str=None):
+def cramersv(dataset, target_feature:str, input_feature:str, show_crosstab:bool=False, plot_histogram:bool=False, histnorm:str='percent', color:str=None):
     """
     This function computes cramer's V correlation coefficient which is a measure of association between two nominal variables.
     
@@ -397,7 +397,7 @@ def contingency_table(dataset, target_variable:str, input_variable:str, table_si
     if type(dataset) == dict:
         dataset = pd.DataFrame(dataset)
 
-    obs = pd.crosstab(dataset[input_variable], dataset[target_variable])
+    obs = pd.crosstab(dataset[input_variable], dataset[target_variable], margins=True)
 
     print("----------------------- Contingency Table -------------------------")
     display(obs.style.background_gradient(cmap='Blues').set_table_attributes(f'style="font-size: {table_size}px"'))
