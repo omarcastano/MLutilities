@@ -338,7 +338,7 @@ def cramersv(
     H1: there is a relationship between the variables.
 
     Arguments:
-        dataset: pandas dataframe or dict with de format {'col1':np.array, 'col2':np.array}
+        dataset: pandas dataframe or dict with the format {'col1':np.array, 'col2':np.array}
         target_variable: string
             Name of the target variable
         input_varaible: string
@@ -346,7 +346,7 @@ def cramersv(
         show_crosstab: bool:
             if True prints the crosstab used to compute Cramer's V
         plot_histogram: bool
-            If True plot a histogram
+            If True plot the histogram of input_variable
         histnorm: string (default='percentage')
             It can be either 'percent' or 'count'. If 'percent'
             show the percengate of each category, if 'count' show
