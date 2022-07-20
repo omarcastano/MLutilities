@@ -253,7 +253,7 @@ def levene_test(dataset, categorical_variable, numerical_variable):
     )
 
 #Kruskall-Wallas Test
-def kruskal_test(dataset, target_variable: str, input_variable: str):
+def kruskal_test(dataset, target_variable: str, input_variable: str, plot_histogram:bool=False):
 
     """
 
@@ -317,6 +317,12 @@ def kruskal_test(dataset, target_variable: str, input_variable: str):
     print(
         "------------------------------------------------------------------------------\n"
     )
+    
+    if plot_histogram:
+        
+        fig = px.histogram(data_frame=dataset, x=input_variable, color=target_variable, nbins=40)
+        fig.update_traces(marker_line_width=1, marker_line_color="white", opacity=0.8)
+        fig.show()
 
 # Creamers V Correlation
 def cramersv(
