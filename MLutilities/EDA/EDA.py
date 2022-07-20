@@ -143,7 +143,7 @@ def biserial_correlation(
         ]
 
         print(
-            f"------------------------Kolmogorov Test for y:{y_unique[0]}---------------------------"
+            f"------------------------Kolmogorov Test for {categorical_variable}:{y_unique[0]}---------------------------"
         )
         kolmogorov_test(
             x1,
@@ -153,7 +153,7 @@ def biserial_correlation(
             plot_histogram=False,
         )
         print(
-            f"------------------------Kolmogorov Test for y:{y_unique[1]}---------------------------"
+            f"------------------------Kolmogorov Test for {categorical_variable}:{y_unique[1]}---------------------------"
         )
         kolmogorov_test(
             x1,
