@@ -320,7 +320,7 @@ def kruskal_test(dataset, target_variable: str, input_variable: str, plot_histog
     
     if plot_histogram:
         
-        fig = px.histogram(data_frame=dataset, x=input_variable, color=target_variable, nbins=40)
+        fig = px.histogram(data_frame=dataset, x=input_variable, color=target_variable, marginal='box', nbins=40)
         fig.update_traces(marker_line_width=1, marker_line_color="white", opacity=0.8)
         fig.show()
 
