@@ -507,10 +507,9 @@ def correlation_coef(
         )
 
     if scatter_plot:
-        plt.figure(figsize=(15, 6))
-        sns.scatterplot(data=dataset, x=input_variable, y=target_variable)
-        plt.xlabel(input_variable, fontsize=15)
-        plt.ylabel(target_variable, fontsize=15)
+        fig = px.scatter(dataset, x=input_variable, y=target_variable, marginal_x='histogram', marginal_y='histogram', width=1200, height=600)
+        fig.update_traces(marker_line_width=1, marker_line_color="white", opacity=0.8)
+        fig.show()
 
     print(
         f"------------------------------------ {kind} correlation ---------------------------------"
