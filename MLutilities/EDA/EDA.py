@@ -252,7 +252,7 @@ def levene_test(dataset, categorical_variable, numerical_variable):
         "------------------------------------------------------------------------------\n"
     )
 
-
+#Kruskall-Wallas Test
 def kruskal_test(dataset, target_variable: str, input_variable: str):
 
     """
@@ -260,25 +260,23 @@ def kruskal_test(dataset, target_variable: str, input_variable: str):
     The Kruskal-Wallis H test is a rank-based nonparametric test
     that can be used to determine if there are statistically significant
     differences between two or more groups of an independent variable on
-    a continuous or ordinal dependent variable. This function is created
-    to work only when target variable is binary
+    a continuous or ordinal dependent variable.
 
     Assumption:
         - Continuoues variable not need to follow a normal distribution
         - The distributions in each group should have the same shape.
 
-    H0: medians_1 = medians_2 = medians.
-    H2: medians_1 != medians_2.
+    H0: medians_1 = medians_2 = .... = medians.
+    H2: medians_1 != medians_2 != .....
 
     If p_values < 0.05 rejecct the null hypothesis
 
     Arguments:
         dataset: pandas dataframe or dict with de format {'col1':np.array, 'col2':np.array}
         target_variable: string
-        target_variable: string
-            Name of the target variable
+            Name of the categorical variable
         input_varaible: string
-            Name of the input variable
+            Name of the numerical variable
 
     """
 
@@ -286,40 +284,39 @@ def kruskal_test(dataset, target_variable: str, input_variable: str):
         dataset = pd.DataFrame(dataset)
 
     y_unique = dataset[target_variable].unique()
-
-    x1 = dataset.loc[dataset[target_variable] == y_unique[0], input_variable]
-    x2 = dataset.loc[dataset[target_variable] == y_unique[1], input_variable]
+    
+    x = [dataset.loc[dataset[target_variable] == unique, input_variable] for unique in y_unique]
 
     print(
         "--------------------------------Skewness and Kurtosis-------------------------"
     )
-    print(
-        f"Skweness and kurtosis for y:{y_unique[0]}. Skweness={round(x1.skew(),3)}, Kurtosis={round(x1.kurtosis(),3)}"
-    )
-    print(
-        f"Skweness and kurtosis for y:{y_unique[1]}. Skweness={round(x2.skew(),3)}, Kurtosis={round(x2.kurtosis(),3)}"
-    )
+    
+    for xi, yi in zip(x, y_unique):
+        
+        print(
+        f"Skweness and kurtosis for {target_variable}:{yi}. Skweness={xi.skew():.3f}, Kurtosis={xi.kurtosis():.3f}"
+        )
+    
     print(
         "------------------------------------------------------------------------------\n"
     )
 
-    kruskal = stats.kruskal(x1, x2)
+    kruskal = stats.kruskal(*x)
     print(
         "------------------------------------------------------------------------------"
     )
     print(f"statistic={kruskal[0]:.3f}, p_value={kruskal[1]:.3f}\n")
     if kruskal[1] < 0.05:
         print(
-            f"Since {kruskal[1]:.3f} < 0.05 you can reject the null hypothesis, \nso we have that medians_1 != medians_2"
+            f"Since {kruskal[1]:.3f} < 0.05 you can reject the null hypothesis, \nso we have that medians_1 != medians_2 != ...."
         )
     else:
         print(
-            f"Since {kruskal[1]:.3f} > 0.05 you cannot reject the null hypothesis \nso we have that medians_1 = medians_2"
+            f"Since {kruskal[1]:.3f} > 0.05 you cannot reject the null hypothesis \nso we have that medians_1 = medians_2 != ...."
         )
     print(
         "------------------------------------------------------------------------------\n"
     )
-
 
 # Creamers V Correlation
 def cramersv(
