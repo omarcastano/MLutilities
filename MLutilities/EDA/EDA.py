@@ -509,9 +509,7 @@ def correlation_coef(
             dataset[target_variable], dataset[input_variable]
         )
 
-    if scatter_plot:
-        fig = px.scatter(dataset, x=input_variable, y=target_variable, marginal_x='histogram', marginal_y='histogram', width=1200, height=600)
-        fig.update_traces(marker_line_width=1, marker_line_color="white", opacity=0.8)
+    
 
     print(
         f"------------------------------------ {kind} correlation ---------------------------------"
@@ -529,7 +527,10 @@ def correlation_coef(
         "-------------------------------------------------------------------------------------------\n"
     )
     
-    fig.show()
+    if scatter_plot:
+        fig = px.scatter(dataset, x=input_variable, y=target_variable, marginal_x='histogram', marginal_y='histogram', width=1200, height=600)
+        fig.update_traces(marker_line_width=1, marker_line_color="white", opacity=0.8)
+        fig.show()
 
 
 def contingency_table(
