@@ -4,7 +4,7 @@ import numpy as np
 import pkg_resources
 import logging
 
-DATASETS = ["penguins", "diamonds", "adults"]
+DATASETS = ["penguins", "diamonds", "adults", "cars"]
 
 
 def data_format(data: pickle, load_as: str, n: int):
