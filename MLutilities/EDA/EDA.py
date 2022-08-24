@@ -252,8 +252,11 @@ def levene_test(dataset, categorical_variable, numerical_variable):
         "------------------------------------------------------------------------------\n"
     )
 
-#Kruskall-Wallas Test
-def kruskal_test(dataset, target_variable: str, input_variable: str, plot_histogram:bool=False):
+
+# Kruskall-Wallas Test
+def kruskal_test(
+    dataset, target_variable: str, input_variable: str, plot_histogram: bool = False
+):
 
     """
 
@@ -284,19 +287,22 @@ def kruskal_test(dataset, target_variable: str, input_variable: str, plot_histog
         dataset = pd.DataFrame(dataset)
 
     y_unique = dataset[target_variable].unique()
-    
-    x = [dataset.loc[dataset[target_variable] == unique, input_variable] for unique in y_unique]
+
+    x = [
+        dataset.loc[dataset[target_variable] == unique, input_variable]
+        for unique in y_unique
+    ]
 
     print(
         "--------------------------------Skewness and Kurtosis-------------------------"
     )
-    
+
     for xi, yi in zip(x, y_unique):
-        
+
         print(
-        f"Skweness and kurtosis for {target_variable}:{yi}. Skweness={xi.skew():.3f}, Kurtosis={xi.kurtosis():.3f}"
+            f"Skweness and kurtosis for {target_variable}:{yi}. Skweness={xi.skew():.3f}, Kurtosis={xi.kurtosis():.3f}"
         )
-    
+
     print(
         "------------------------------------------------------------------------------\n"
     )
@@ -317,12 +323,19 @@ def kruskal_test(dataset, target_variable: str, input_variable: str, plot_histog
     print(
         "------------------------------------------------------------------------------\n"
     )
-    
+
     if plot_histogram:
-        
-        fig = px.histogram(data_frame=dataset, x=input_variable, color=target_variable, marginal='box', nbins=40)
+
+        fig = px.histogram(
+            data_frame=dataset,
+            x=input_variable,
+            color=target_variable,
+            marginal="box",
+            nbins=40,
+        )
         fig.update_traces(marker_line_width=1, marker_line_color="white", opacity=0.8)
         fig.show()
+
 
 # Creamers V Correlation
 def cramersv(
@@ -509,8 +522,6 @@ def correlation_coef(
             dataset[target_variable], dataset[input_variable]
         )
 
-    
-
     print(
         f"------------------------------------ {kind} correlation ---------------------------------"
     )
@@ -526,9 +537,17 @@ def correlation_coef(
     print(
         "-------------------------------------------------------------------------------------------\n"
     )
-    
+
     if scatter_plot:
-        fig = px.scatter(dataset, x=input_variable, y=target_variable, marginal_x='histogram', marginal_y='histogram', width=1200, height=600)
+        fig = px.scatter(
+            dataset,
+            x=input_variable,
+            y=target_variable,
+            marginal_x="histogram",
+            marginal_y="histogram",
+            width=1200,
+            height=600,
+        )
         fig.update_traces(marker_line_width=1, marker_line_color="white", opacity=0.8)
         fig.show()
 
