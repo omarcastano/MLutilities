@@ -18,6 +18,7 @@ This module provides some exploratory data analysis tools.
 def kolmogorov_test(
     dataset,
     variable: str,
+    transformation: str = None,
     apply_yeo_johnson: bool = False,
     apply_log_transform: bool = False,
     plot_histogram: bool = False,
@@ -36,29 +37,23 @@ def kolmogorov_test(
     if p_value < 0.05 you can reject the null hypohesis
 
     Arguments:
+    ----------
         dataset: pandas dataframe or dict with de format {'col1':np.array, 'col2':np.array}
-        variable: string
-            variable to performe the Kolmogorov test
-        apply_yeo_johnson: bool
-            If True appy yeo johnson transformation to the input variable
-        apply_log_transform: bool
-            If True apply logarithm transformation to the input variable
-        plot_histogram: bool
-            If True plot a histogram of the variable
-        bins: int
-            Number of bins to use when plotting the histogram
-        color: string
-            Name of column in dataset. Values from this column are used to
-            assign color to marks.
-
+        variable: variable to performe the Kolmogorov test
+        transformation: kinf of transformation to apply. Options:
+             - yeo_johnson: appy yeo johnson transformation to the input variable
+             - log: apply logarithm transformation to the input variable
+        plot_histogram:If True plot a histogram of the variable
+        bins: Number of bins to use when plotting the histogram
+        color: Name of column in dataset. Values from this column are used to assign color to marks.
     """
 
     if type(dataset) == dict:
         dataset = pd.DataFrame(dataset)
 
-    if apply_yeo_johnson:
+    if transformation == "yeo_johnson":
         x = stats.yeojohnson(dataset[variable].to_numpy())[0]
-    elif apply_log_transform:
+    elif transformation == "log":
         x = np.log1p(dataset[variable].to_numpy())
     else:
         x = dataset[variable].to_numpy()
@@ -84,7 +79,7 @@ def kolmogorov_test(
             dataset, x=x, nbins=bins, marginal="box", color=color, barmode="overlay"
         )
         fig.update_traces(marker_line_width=1, marker_line_color="white", opacity=0.8)
-        fig.update_layout(xaxis_title=variable)
+        fig.update_layout(xaxis_title=variable, width=1500, height=400)
         fig.show()
 
 
