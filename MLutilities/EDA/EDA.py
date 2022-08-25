@@ -40,7 +40,7 @@ def kolmogorov_test(
     ----------
         dataset: pandas dataframe or dict with de format {'col1':np.array, 'col2':np.array}
         variable: variable to performe the Kolmogorov test
-        transformation: kinf of transformation to apply. Options:
+        transformation: kind of transformation to apply. Options:
              - yeo_johnson: appy yeo johnson transformation to the input variable
              - log: apply logarithm transformation to the input variable
         plot_histogram:If True plot a histogram of the variable
@@ -79,7 +79,7 @@ def kolmogorov_test(
             dataset, x=x, nbins=bins, marginal="box", color=color, barmode="overlay"
         )
         fig.update_traces(marker_line_width=1, marker_line_color="white", opacity=0.8)
-        fig.update_layout(xaxis_title=variable, width=1500, height=400)
+        fig.update_layout(xaxis_title=variable, width=1500, height=600)
         fig.show()
 
 
