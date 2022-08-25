@@ -37,7 +37,7 @@ def kolmogorov_test_widget(dataset: pd.DataFrame):
         style={"description_width": "initial"},
     )
     color = widgets.Dropdown(
-        options=[None] + cat_vars,
+        options=cat_vars,
         description="Color:",
         layout=widgets.Layout(width="20%", height="30px"),
         style={"description_width": "initial"},
