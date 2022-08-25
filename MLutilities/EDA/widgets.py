@@ -3,6 +3,7 @@ import pandas as pd
 import numpy as np
 from functools import partial
 from MLutilities.EDA import kolmogorov_test
+from IPython.display import display
 
 
 def kolmogorov_test_widget(dataset: pd.DataFrame):
