@@ -2,7 +2,7 @@ import ipywidgets as widgets
 import pandas as pd
 import numpy as np
 from functools import partial
-from MLutilities.EDA import kolmogorov_test
+from MLutilities.EDA import kolmogorov_test, correlation_coef
 from IPython.display import display
 
 
@@ -63,3 +63,50 @@ def kolmogorov_test_widget(dataset: pd.DataFrame):
     )
 
     display(widgets.VBox([widgets.HBox([variable, transformation, color]), bins]), w)
+
+
+def correlation_coef_widget(dataset: pd.DataFrame):
+
+    num_vars = dataset.select_dtypes([np.number]).columns
+    cat_vars = dataset.select_dtypes([object]).columns.tolist()
+
+    """
+    This function computes the correlation between two numerical variables.
+
+    H0: variables are not correlated
+    H1: varaibles are correlated
+
+    Arguments:
+        dataset: pandas dataframe or dict with de format {'col1':np.array, 'col2':np.array}
+    
+    """
+
+    variable1 = widgets.Dropdown(
+        options=num_vars,
+        description="Variable 1:",
+        layout=widgets.Layout(width="20%", height="30px"),
+        style={"description_width": "initial"},
+    )
+    variable2 = widgets.Dropdown(
+        options=num_vars,
+        description="Variable 2:",
+        layout=widgets.Layout(width="20%", height="30px"),
+        style={"description_width": "initial"},
+    )
+    kind = widgets.Dropdown(
+        options=["pearson", "spearman", "kendall"],
+        description="Transformation:",
+        layout=widgets.Layout(width="20%", height="30px"),
+        style={"description_width": "initial"},
+    )
+
+    w = widgets.interactive_output(
+        partial(correlation_coef, dataset=dataset, scatter_plot=True),
+        {
+            "input_variable": variable1,
+            "target_variable": variable2,
+            "kind": kind,
+        },
+    )
+
+    display(widgets.HBox([variable1, variable2, kind]), w)
