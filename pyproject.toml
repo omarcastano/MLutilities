@@ -11,6 +11,7 @@ packages = [
 [tool.poetry.dependencies]
 python = ">=3.7.13, <=3.9.0"
 statsmodels = "^0.13.2"
+plotly = "^5.10.0"
 
 [tool.poetry.dev-dependencies]
 numpy = "^1.21.6"
