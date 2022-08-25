@@ -30,14 +30,14 @@ def kolmogorov_test_widget(dataset: pd.DataFrame):
         layout=widgets.Layout(width="20%", height="30px"),
         style={"description_width": "initial"},
     )
-    apply_log_transform = widgets.Dropdown(
-        options=[False, True],
-        description="Apply Log Transform:",
+    transformation = widgets.Dropdown(
+        options=["None", "yeo_johnson", "log"],
+        description="Transformation:",
         layout=widgets.Layout(width="20%", height="30px"),
         style={"description_width": "initial"},
     )
     color = widgets.Dropdown(
-        options=cat_vars,
+        options=[None] + cat_vars,
         description="Color:",
         layout=widgets.Layout(width="20%", height="30px"),
         style={"description_width": "initial"},
@@ -56,12 +56,10 @@ def kolmogorov_test_widget(dataset: pd.DataFrame):
         partial(kolmogorov_test, dataset=dataset, plot_histogram=True),
         {
             "variable": variable,
-            "apply_log_transform": apply_log_transform,
+            "transformation": transformation,
             "color": color,
             "bins": bins,
         },
     )
 
-    display(
-        widgets.VBox([widgets.HBox([variable, apply_log_transform, color]), bins]), w
-    )
+    display(widgets.VBox([widgets.HBox([variable, transformation, color]), bins]), w)
