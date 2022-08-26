@@ -9,6 +9,7 @@ from statsmodels.compat import lzip
 import statsmodels.stats.api as sms
 import statsmodels.formula.api as smf
 from IPython.display import display
+from MLutilities.utils import cramerv_relationship_strength
 
 """
 This module provides some exploratory data analysis tools.
@@ -388,13 +389,23 @@ def cramersv(
 
     dimension = dataset[[input_feature, target_feature]].notnull().prod(axis=1).sum()
     cramer = np.sqrt((chi2 / dimension) / (np.min(obs.shape) - 1))
+    
+    # interpretation
+    n_rows = dataset[target_feature].nunique()
+    n_cols = dataset[input_feature].nunique()
+    degrees_of_freedom = min(n_rows - 1, n_cols - 1)
+    
+    strength = cramerv_relationship_strength(
+        5 if degrees_of_freedom > 4 else degrees_of_freedom, cramer
+        )
+    
     print(
         "---------------------------------------------- Cramer's V --------------------------------------------"
     )
     print(f"CramersV: {cramer:.3f}, chi2:{chi2:.3f}, p_value:{p:.5f}\n")
     if p < 0.05:
         print(
-            f"Since {p:.5f} < 0.05 you can reject the null hypothesis, \nso there is a relationship between the variables."
+            f"Since {p:.5f} < 0.05 you can reject the null hypothesis, \nThere is a {strength} relationship between the variables."
         )
     else:
         print(

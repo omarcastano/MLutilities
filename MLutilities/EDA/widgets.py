@@ -113,6 +113,7 @@ def correlation_coef_widget(dataset: pd.DataFrame):
     display(widgets.HBox([variable1, variable2, kind]), w)
 
 
+
 def countplot_widget(dataset: pd.DataFrame):
 
     """
@@ -120,11 +121,9 @@ def countplot_widget(dataset: pd.DataFrame):
     thought of as a histogram across a categorical, instead of quantitative variable.
     This function will infer data types, so it is highly recomended to set categorical variables
     as string or pd.Categorical
-
     Arguments:
     ---------
         dataset: pandas dataframe or dict with de format {'col1':np.array, 'col2':np.array}
-
     """
 
     num_vars = dataset.select_dtypes([np.number]).columns
@@ -136,6 +135,12 @@ def countplot_widget(dataset: pd.DataFrame):
         layout=widgets.Layout(width="20%", height="30px"),
         style={"description_width": "initial"},
     )
+    color = widgets.Dropdown(
+        options=[None] + cat_vars,
+        description="Color:",
+        layout=widgets.Layout(width="20%", height="30px"),
+        style={"description_width": "initial"},
+    )
 
     def hist(dataset, **kwargs):
 
@@ -143,8 +148,14 @@ def countplot_widget(dataset: pd.DataFrame):
         fig.update_layout(width=1500, height=500)
         fig.show()
 
-    w = widgets.interactive_output(partial(hist, dataset=dataset), {"x": variable})
-    display(variable, w)
+    w = widgets.interactive_output(
+        partial(hist, dataset=dataset), 
+        {
+            "x": variable,
+            "color": color
+         }
+        )
+    display(widgets.HBox([variable, color]), w)
 
 
 def kruskal_test_widget(dataset: pd.DataFrame):
