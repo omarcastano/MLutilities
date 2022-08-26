@@ -77,7 +77,7 @@ def kolmogorov_test(
             dataset, x=x, nbins=bins, marginal="box", color=color, barmode="overlay"
         )
         fig.update_traces(marker_line_width=1, marker_line_color="white", opacity=0.8)
-        fig.update_layout(xaxis_title=variable, width=1500, height=600)
+        fig.update_layout(xaxis_title=variable, width=1500, height=500)
         fig.show()
 
 
