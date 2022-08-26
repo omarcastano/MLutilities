@@ -2,7 +2,7 @@ import ipywidgets as widgets
 import pandas as pd
 import numpy as np
 from functools import partial
-from MLutilities.EDA import kolmogorov_test, correlation_coef
+from MLutilities.EDA import kolmogorov_test, correlation_coef, kruskal_test
 from IPython.display import display
 import plotly.express as px
 
@@ -145,3 +145,47 @@ def countplot_widget(dataset: pd.DataFrame):
 
     w = widgets.interactive_output(partial(hist, dataset=dataset), {"x": variable})
     display(variable, w)
+
+
+def kruskal_test_widget(dataset: pd.DataFrame):
+    """
+    The Kruskal-Wallis H test is a rank-based nonparametric test
+    that can be used to determine if there are statistically significant
+    differences between two or more groups of an independent variable on
+    a continuous or ordinal dependent variable.
+
+    Assumption:
+        - Continuoues variable not need to follow a normal distribution
+        - The distributions in each group should have the same shape.
+
+    H0: medians_1 = medians_2 = .... = medians.
+    H2: medians_1 != medians_2 != .....
+
+    If p_values < 0.05 rejecct the null hypothesis
+
+    Arguments:
+        dataset: pandas dataframe or dict with de format {'col1':np.array, 'col2':np.array}
+    """
+
+    num_vars = dataset.select_dtypes([np.number]).columns
+    cat_vars = dataset.select_dtypes([object]).columns.tolist()
+
+    num_variable = widgets.Dropdown(
+        options=num_vars,
+        description="Numerical Variable:",
+        layout=widgets.Layout(width="20%", height="30px"),
+        style={"description_width": "initial"},
+    )
+    cat_variable = widgets.Dropdown(
+        options=cat_vars,
+        description="Categorical Variable:",
+        layout=widgets.Layout(width="20%", height="30px"),
+        style={"description_width": "initial"},
+    )
+
+    w = widgets.interactive_output(
+        partial(kruskal_test, dataset, plot_boxplot=True),
+        {"target_variable": cat_variable, "input_variable": num_variable},
+    )
+
+    display(widgets.HBox([num_variable, cat_variable]), w)

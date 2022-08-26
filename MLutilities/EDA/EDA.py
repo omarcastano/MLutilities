@@ -248,7 +248,11 @@ def levene_test(dataset, categorical_variable, numerical_variable):
 
 # Kruskall-Wallas Test
 def kruskal_test(
-    dataset, target_variable: str, input_variable: str, plot_histogram: bool = False
+    dataset,
+    target_variable: str,
+    input_variable: str,
+    plot_boxplot: bool = False,
+    show_shapes: bool = False,
 ):
 
     """
@@ -286,19 +290,20 @@ def kruskal_test(
         for unique in y_unique
     ]
 
-    print(
-        "--------------------------------Skewness and Kurtosis-------------------------"
-    )
-
-    for xi, yi in zip(x, y_unique):
-
+    if show_shapes:
         print(
-            f"Skweness and kurtosis for {target_variable}:{yi}. Skweness={xi.skew():.3f}, Kurtosis={xi.kurtosis():.3f}"
+            "--------------------------------Skewness and Kurtosis-------------------------"
         )
 
-    print(
-        "------------------------------------------------------------------------------\n"
-    )
+        for xi, yi in zip(x, y_unique):
+
+            print(
+                f"Skweness and kurtosis for {target_variable}:{yi}. Skweness={xi.skew():.3f}, Kurtosis={xi.kurtosis():.3f}"
+            )
+
+        print(
+            "------------------------------------------------------------------------------\n"
+        )
 
     kruskal = stats.kruskal(*x)
     print(
@@ -317,16 +322,15 @@ def kruskal_test(
         "------------------------------------------------------------------------------\n"
     )
 
-    if plot_histogram:
+    if plot_boxplot:
 
-        fig = px.histogram(
+        fig = px.box(
             data_frame=dataset,
             x=input_variable,
-            color=target_variable,
-            marginal="box",
-            nbins=40,
+            y=target_variable,
+            width=1500,
+            height=500,
         )
-        fig.update_traces(marker_line_width=1, marker_line_color="white", opacity=0.8)
         fig.show()
 
 
@@ -498,21 +502,27 @@ def correlation_coef(
         dataset = pd.DataFrame(dataset)
 
     if kind == "pearson":
+        df = dataset[[target_variable, input_variable]].dropna().copy()
         if kolmogorov:
-            kolmogorov_test(dataset, target_variable)
-            kolmogorov_test(dataset, input_variable)
+            kolmogorov_test(df, target_variable)
+            kolmogorov_test(df, input_variable)
         if breusch_pagan:
-            breusch_pagan_test(dataset, target_variable, input_variable)
+            breusch_pagan_test(df, target_variable, input_variable)
         corr, p_value = stats.pearsonr(
-            dataset[target_variable], dataset[input_variable]
+            df.iloc[:, 0],
+            df.iloc[:, 1],
         )
     elif kind == "spearman":
         corr, p_value = stats.spearmanr(
-            dataset[target_variable], dataset[input_variable]
+            dataset[target_variable],
+            dataset[input_variable],
+            nan_policy="omit",
         )
     elif kind == "kendall":
         corr, p_value = stats.kendalltau(
-            dataset[target_variable], dataset[input_variable]
+            dataset[target_variable],
+            dataset[input_variable],
+            nan_policy="omit",
         )
 
     print(
