@@ -2,7 +2,7 @@ import ipywidgets as widgets
 import pandas as pd
 import numpy as np
 from functools import partial
-from MLutilities.EDA import kolmogorov_test, correlation_coef, kruskal_test
+from MLutilities.EDA import kolmogorov_test, correlation_coef, kruskal_test, cramersv
 from IPython.display import display
 import plotly.express as px
 
@@ -113,7 +113,6 @@ def correlation_coef_widget(dataset: pd.DataFrame):
     display(widgets.HBox([variable1, variable2, kind]), w)
 
 
-
 def countplot_widget(dataset: pd.DataFrame):
 
     """
@@ -149,12 +148,8 @@ def countplot_widget(dataset: pd.DataFrame):
         fig.show()
 
     w = widgets.interactive_output(
-        partial(hist, dataset=dataset), 
-        {
-            "x": variable,
-            "color": color
-         }
-        )
+        partial(hist, dataset=dataset), {"x": variable, "color": color}
+    )
     display(widgets.HBox([variable, color]), w)
 
 
@@ -232,7 +227,7 @@ def barplot_widget(dataset: pd.DataFrame):
     )
     func = widgets.Dropdown(
         options=["mean", "median", "sum", "min", "max", "std"],
-        description="Agg Gunction:",
+        description="Agg Function:",
         layout=widgets.Layout(width="20%", height="30px"),
         style={"description_width": "initial"},
     )
@@ -255,3 +250,51 @@ def barplot_widget(dataset: pd.DataFrame):
     )
 
     display(widgets.HBox([cat_variable, num_variable, func]), w)
+
+
+def cramerv_widget(dataset: pd.DataFrame):
+
+    num_vars = dataset.select_dtypes([np.number]).columns
+    cat_vars = dataset.select_dtypes([object]).columns.tolist()
+
+    """
+    This function computes cramer's V correlation coefficient which is a measure of association between two nominal variables.
+
+    H0: there is not a relationship between the variables.
+    H1: there is a relationship between the variables..
+
+    Arguments:
+        dataset: pandas dataframe or dict with the format {'col1':np.array, 'col2':np.array}
+    
+    """
+
+    variable1 = widgets.Dropdown(
+        options=cat_vars,
+        description="Variable 1:",
+        layout=widgets.Layout(width="20%", height="30px"),
+        style={"description_width": "initial"},
+    )
+    variable2 = widgets.Dropdown(
+        options=cat_vars,
+        description="Variable 2:",
+        layout=widgets.Layout(width="20%", height="30px"),
+        style={"description_width": "initial"},
+    )
+
+    color = widgets.Dropdown(
+        options=[None] + cat_vars,
+        description="Variable 2:",
+        layout=widgets.Layout(width="20%", height="30px"),
+        style={"description_width": "initial"},
+    )
+
+    w = widgets.interactive_output(
+        partial(cramersv, dataset=dataset, plot_histogram=True),
+        {
+            "input_feature": variable1,
+            "target_feature": variable2,
+            "color": color,
+        },
+    )
+
+    display(widgets.HBox([variable1, variable2, color]), w)
