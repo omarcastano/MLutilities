@@ -189,3 +189,58 @@ def kruskal_test_widget(dataset: pd.DataFrame):
     )
 
     display(widgets.HBox([num_variable, cat_variable]), w)
+
+
+def barplot_widget(dataset: pd.DataFrame):
+
+    """
+    A bar plot represents an estimate of central tendency for a numeric variable with the height
+    of each rectangle and provides some indication of the uncertainty around that estimate using
+    error bars. Bar plots include 0 in the quantitative axis range, and they are a good choice when
+    0 is a meaningful value for the quantitative variable, and you want to make comparisons against it.
+
+    Arguments:
+    ----------
+        dataset: pandas dataframe or dict with de format {'col1':np.array, 'col2':np.array}
+
+    """
+    num_vars = dataset.select_dtypes([np.number]).columns
+    cat_vars = dataset.select_dtypes([object]).columns.tolist()
+
+    num_variable = widgets.Dropdown(
+        options=num_vars,
+        description="Numerical Variable:",
+        layout=widgets.Layout(width="20%", height="30px"),
+        style={"description_width": "initial"},
+    )
+    cat_variable = widgets.Dropdown(
+        options=cat_vars,
+        description="Categorical Variable:",
+        layout=widgets.Layout(width="20%", height="30px"),
+        style={"description_width": "initial"},
+    )
+    func = widgets.Dropdown(
+        options=["mean", "median", "sum", "min", "max", "std"],
+        description="Agg Gunction:",
+        layout=widgets.Layout(width="20%", height="30px"),
+        style={"description_width": "initial"},
+    )
+
+    def barplot(dataset, cat_var=None, num_var=None, func="mean"):
+
+        df = dataset.groupby(cat_var, as_index=False).agg({f"{num_var}": [func]})
+        df.columns = ["_".join(col) for col in df.columns.values]
+
+        fig = px.bar(df, x=cat_var + "_", y=f"{num_var}_{func}")
+        fig.show()
+
+    w = widgets.interactive_output(
+        partial(barplot, dataset=dataset),
+        {
+            "cat_var": cat_variable,
+            "num_var": num_variable,
+            "func": func,
+        },
+    )
+
+    display(widgets.HBox([cat_variable, num_variable, func]), w)
