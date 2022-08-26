@@ -349,7 +349,7 @@ def cramersv(
     This function computes cramer's V correlation coefficient which is a measure of association between two nominal variables.
 
     H0: there is not a relationship between the variables.
-    H1: there is a relationship between the variables.
+    H1: there is a relationship between the variables..
 
     Arguments:
         dataset: pandas dataframe or dict with the format {'col1':np.array, 'col2':np.array}
@@ -389,16 +389,16 @@ def cramersv(
 
     dimension = dataset[[input_feature, target_feature]].notnull().prod(axis=1).sum()
     cramer = np.sqrt((chi2 / dimension) / (np.min(obs.shape) - 1))
-    
+
     # interpretation
     n_rows = dataset[target_feature].nunique()
     n_cols = dataset[input_feature].nunique()
     degrees_of_freedom = min(n_rows - 1, n_cols - 1)
-    
+
     strength = cramerv_relationship_strength(
         5 if degrees_of_freedom > 4 else degrees_of_freedom, cramer
-        )
-    
+    )
+
     print(
         "---------------------------------------------- Cramer's V --------------------------------------------"
     )
