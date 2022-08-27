@@ -287,7 +287,7 @@ def cramerv_widget(dataset: pd.DataFrame):
 
     color = widgets.Dropdown(
         options=[None] + cat_vars,
-        description="Variable 2:",
+        description="Color:",
         layout=widgets.Layout(width="20%", height="30px"),
         style={"description_width": "initial"},
     )
