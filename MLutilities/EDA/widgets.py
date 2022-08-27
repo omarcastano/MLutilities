@@ -5,6 +5,10 @@ from functools import partial
 from MLutilities.EDA import kolmogorov_test, correlation_coef, kruskal_test, cramersv
 from IPython.display import display
 import plotly.express as px
+from typing import List
+from sklearn.preprocessing import StandardScaler, MinMaxScaler
+import matplotlib.pyplot as plt
+import seaborn as sns
 
 
 def kolmogorov_test_widget(dataset: pd.DataFrame):
@@ -298,3 +302,68 @@ def cramerv_widget(dataset: pd.DataFrame):
     )
 
     display(widgets.HBox([variable1, variable2, color]), w)
+
+
+def scaler(
+    dataset: pd.DataFrame = None,
+    variables: List[str] = None,
+    kind: str = "standar_scaler",
+):
+
+    """
+    Helper function to visualize the efect of scaling and normalization over continuos variables
+
+    Arguments:
+        dataset: pandas dataframe or dict with the format {'col1':np.array, 'col2':np.array}
+    """
+
+    scale = {
+        "standar_scaler": StandardScaler().fit_transform,
+        "minmax": MinMaxScaler().fit_transform,
+    }
+
+    fig, ax = plt.subplots(1, 2, figsize=(15, 6))
+
+    for i, var in enumerate(variables):
+        sns.kdeplot(dataset[var], ax=ax[0], label=var)
+        sns.kdeplot(scale[kind](dataset[[var]]).ravel(), ax=ax[1], label=var)
+
+    ax[0].set_title("Original")
+    ax[1].set_title("Transform")
+    ax[0].legend()
+    ax[1].legend()
+
+
+def scaler_widget(dataset: pd.DataFrame):
+
+    """
+    Helper function to visualize the efect of scaling and normalization over continuos variables
+
+    Arguments:
+        dataset: pandas dataframe or dict with the format {'col1':np.array, 'col2':np.array}
+    """
+
+    num_vars = dataset.select_dtypes([np.number]).columns
+
+    num_variable = widgets.SelectMultiple(
+        options=num_vars,
+        description="Numerical Variable:",
+        value=[num_vars[0]],
+        disabled=False,
+        layout=widgets.Layout(width="20%", height="100px"),
+        style={"description_width": "initial"},
+    )
+
+    kind = widgets.Dropdown(
+        options=["standar_scaler", "minmax"],
+        description="kind:",
+        layout=widgets.Layout(width="20%", height="30px"),
+        style={"description_width": "initial"},
+    )
+
+    w = widgets.interactive_output(
+        partial(scaler, dataset),
+        {"kind": kind, "variables": num_variable},
+    )
+
+    display(widgets.HBox([num_variable, kind]), w)
