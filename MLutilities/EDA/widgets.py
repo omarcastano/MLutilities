@@ -1,3 +1,4 @@
+from pickle import FALSE
 import ipywidgets as widgets
 import pandas as pd
 import numpy as np
@@ -105,6 +106,12 @@ def correlation_coef_widget(dataset: pd.DataFrame):
         layout=widgets.Layout(width="20%", height="30px"),
         style={"description_width": "initial"},
     )
+    apply_log = widgets.Dropdown(
+        options=[False, True],
+        description="Apply Log:",
+        layout=widgets.Layout(width="20%", height="30px"),
+        style={"description_width": "initial"},
+    )
 
     w = widgets.interactive_output(
         partial(correlation_coef, dataset=dataset, scatter_plot=True),
@@ -112,10 +119,11 @@ def correlation_coef_widget(dataset: pd.DataFrame):
             "input_variable": variable1,
             "target_variable": variable2,
             "kind": kind,
+            "apply_log_transform": apply_log,
         },
     )
 
-    display(widgets.HBox([variable1, variable2, kind]), w)
+    display(widgets.HBox([variable1, variable2, kind, apply_log]), w)
 
 
 def countplot_widget(dataset: pd.DataFrame):

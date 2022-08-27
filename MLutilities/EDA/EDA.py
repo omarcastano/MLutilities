@@ -474,6 +474,7 @@ def correlation_coef(
     kolmogorov: bool = False,
     breusch_pagan: bool = False,
     scatter_plot: bool = False,
+    apply_log_transform: bool = False,
 ):
 
     """
@@ -501,6 +502,8 @@ def correlation_coef(
             correleation is  used.
         scatter_plot: bool
             If True a scatter plot is display
+        apply_log_transform: bool
+            If Ture apply a logarithm transformation to input and target variables
     """
 
     assert kind in [
@@ -510,7 +513,11 @@ def correlation_coef(
     ], "kind must be one of the options in the list ['spearmn', 'kendall', 'pearson']"
 
     if type(dataset) == dict:
-        dataset = pd.DataFrame(dataset)
+        dataset = pd.DataFrame(dataset).copy()
+
+    if (apply_log_transform) and (target_variable != input_variable):
+        dataset = np.log1p(dataset[[target_variable, input_variable]].dropna().copy())
+        print(dataset.head())
 
     if kind == "pearson":
         df = dataset[[target_variable, input_variable]].dropna().copy()
@@ -526,7 +533,7 @@ def correlation_coef(
     elif kind == "spearman":
         corr, p_value = stats.spearmanr(
             dataset[target_variable],
-            dataset[input_variable],
+            df[input_variable],
             nan_policy="omit",
         )
     elif kind == "kendall":
