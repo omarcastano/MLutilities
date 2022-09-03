@@ -533,7 +533,7 @@ def correlation_coef(
     elif kind == "spearman":
         corr, p_value = stats.spearmanr(
             dataset[target_variable],
-            df[input_variable],
+            dataset[input_variable],
             nan_policy="omit",
         )
     elif kind == "kendall":
