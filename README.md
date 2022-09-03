@@ -1,2 +1,2 @@
 # MLutilities
-Machine Learning utilities that can be useful for several Machine Learning projects
+This repository aims to provide modules that can be useful to teach Data Analysis and Machine Learning
