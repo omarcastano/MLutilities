@@ -10,11 +10,16 @@ from sklearn.linear_model import LinearRegression, Ridge, Lasso, ElasticNet
 from yellowbrick.model_selection import LearningCurve
 
 
-def cramerv_relationship_strength(degrees_of_freedom, cramerv):
+def cramerv_relationship_strength(degrees_of_freedom: int, cramerv: float):
     """
     returns the strength of the relationship of two categorical variables
-
     source: https://www.statology.org/interpret-cramers-v/
+
+    Arguments:
+    ----------
+    degrees_of_freedom:  degrees of freedom obtained from a contingency
+                         table as: min(n_rows - 1, n_cols - 1)
+    cramerv:             Cramer's V coefficient
     """
     values = {
         "1": [0.10, 0.50],
@@ -62,9 +67,6 @@ def scaler(
     ax[1].set_title("Transform")
     ax[0].legend()
     ax[1].legend()
-
-
-sns.set()
 
 
 def generate_nonlinear_data(N, seed=1):
