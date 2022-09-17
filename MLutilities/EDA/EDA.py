@@ -51,11 +51,11 @@ def kolmogorov_test(
         dataset = pd.DataFrame(dataset)
 
     if transformation == "yeo_johnson":
-        x = stats.yeojohnson(dataset[variable].to_numpy())[0]
+        x = stats.yeojohnson(dataset[variable].dropna().to_numpy())[0]
     elif transformation == "log":
-        x = np.log1p(dataset[variable].to_numpy())
+        x = np.log1p(dataset[variable].dropna().to_numpy())
     else:
-        x = dataset[variable].to_numpy()
+        x = dataset[variable].dropna().to_numpy()
 
     ktest = stats.kstest(x, "norm")
     print(
