@@ -1,12 +1,12 @@
-from pickle import FALSE
-from typing import List
-from functools import partial
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
 import plotly.express as px
 import ipywidgets as widgets
+from pickle import FALSE
+from typing import List
+from functools import partial
 from sklearn.preprocessing import StandardScaler, MinMaxScaler
 from MLutilities.utils import scaler
 from MLutilities.EDA import kolmogorov_test, correlation_coef, kruskal_test, cramersv
