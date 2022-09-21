@@ -2,7 +2,7 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
-from typing import List
+from typing import List, Tuple
 from sklearn.preprocessing import StandardScaler, MinMaxScaler, PolynomialFeatures
 from sklearn.model_selection import train_test_split
 from sklearn.pipeline import make_pipeline
@@ -69,7 +69,7 @@ def scaler(
     ax[1].legend()
 
 
-def generate_nonlinear_data(N: int, seed: int = 1):
+def generate_nonlinear_data(N: int, seed: int = 1) -> Tuple:
     """
     generate N (x, y) pairs with a non-linear relationship
 
@@ -86,7 +86,7 @@ def generate_nonlinear_data(N: int, seed: int = 1):
 
 def poly_reg(estimator, degree=2):
     """
-    polinomial regression estimator
+    returns a polinomial regression estimator
 
     Arguments:
     ----------
