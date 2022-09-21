@@ -1,6 +1,6 @@
-from MLutilities.utils import plot_polyreg
-from functools import partial
 import ipywidgets as widgets
+from functools import partial
+from MLutilities.utils import plot_polyreg
 
 
 def regularization_widget():

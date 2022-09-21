@@ -1375,6 +1375,21 @@ python-versions = "*"
 notebook = ">=4.4.1"
 
 [[package]]
+name = "yellowbrick"
+version = "1.5"
+description = "A suite of visual analysis and diagnostic tools for machine learning."
+category = "main"
+optional = false
+python-versions = ">=3.4, <4"
+
+[package.dependencies]
+cycler = ">=0.10.0"
+matplotlib = ">=2.0.2,<3.0.0 || >3.0.0"
+numpy = ">=1.16.0"
+scikit-learn = ">=1.0.0"
+scipy = ">=1.0.0"
+
+[[package]]
 name = "zipp"
 version = "3.8.1"
 description = "Backport of pathlib-compatible object wrapper for zip files"
@@ -1389,7 +1404,7 @@ testing = ["pytest (>=6)", "pytest-checkdocs (>=2.4)", "pytest-flake8", "pytest-
 [metadata]
 lock-version = "1.1"
 python-versions = ">=3.7.13, <=3.9.0"
-content-hash = "9c95030b2cefe4011b728436707104bd9568e121039f5ad16f9436ba884e5f85"
+content-hash = "91c71a63add8676e32abb6feddf0ea80cd8df28c08c0b6e240d6e9bca3ae4187"
 
 [metadata.files]
 anyio = [
@@ -2405,6 +2420,10 @@ websocket-client = [
 widgetsnbextension = [
     {file = "widgetsnbextension-3.6.1-py2.py3-none-any.whl", hash = "sha256:954e0faefdd414e4e013f17dbc7fd86f24cf1d243a3ac85d5f0fc2c2d2b50c66"},
     {file = "widgetsnbextension-3.6.1.tar.gz", hash = "sha256:9c84ae64c2893c7cbe2eaafc7505221a795c27d68938454034ac487319a75b10"},
+]
+yellowbrick = [
+    {file = "yellowbrick-1.5-py3-none-any.whl", hash = "sha256:4bb2895cecf94a0e736398bbac6c5d72032ba3ff2273f49df660b14ef419305d"},
+    {file = "yellowbrick-1.5.tar.gz", hash = "sha256:99a6336dd2e7ce586a8cde67966b79c51b479d3759f3c083d7e19ffe949f6076"},
 ]
 zipp = [
     {file = "zipp-3.8.1-py3-none-any.whl", hash = "sha256:47c40d7fe183a6f21403a199b3e4192cca5774656965b0a4988ad2f8feb5f009"},
