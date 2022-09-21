@@ -1,15 +1,15 @@
+import numpy as np
 import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
 import plotly.express as px
-from sklearn.preprocessing import LabelEncoder
-import scipy.stats as stats
-import numpy as np
-from statsmodels.compat import lzip
 import statsmodels.stats.api as sms
 import statsmodels.formula.api as smf
-from IPython.display import display
+import scipy.stats as stats
+from statsmodels.compat import lzip
 from MLutilities.utils import cramerv_relationship_strength
+from sklearn.preprocessing import LabelEncoder
+from IPython.display import display
 
 """
 This module provides some exploratory data analysis tools.

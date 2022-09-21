@@ -1,22 +1,19 @@
 from pickle import FALSE
-import ipywidgets as widgets
-import pandas as pd
-import numpy as np
-from functools import partial
-from MLutilities.EDA import kolmogorov_test, correlation_coef, kruskal_test, cramersv
-from IPython.display import display
-import plotly.express as px
 from typing import List
-from sklearn.preprocessing import StandardScaler, MinMaxScaler
+from functools import partial
+import numpy as np
+import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
+import plotly.express as px
+import ipywidgets as widgets
+from sklearn.preprocessing import StandardScaler, MinMaxScaler
 from MLutilities.utils import scaler
+from MLutilities.EDA import kolmogorov_test, correlation_coef, kruskal_test, cramersv
+from IPython.display import display
 
 
 def kolmogorov_test_widget(dataset: pd.DataFrame):
-
-    num_vars = dataset.select_dtypes([np.number]).columns
-    cat_vars = dataset.select_dtypes([object]).columns.tolist()
 
     """
     This function computes Kolmogorov test to check if the variable
@@ -30,6 +27,9 @@ def kolmogorov_test_widget(dataset: pd.DataFrame):
     Arguments:
         dataset: pandas dataframe or dict with de format {'col1':np.array, 'col2':np.array}
     """
+
+    num_vars = dataset.select_dtypes([np.number]).columns
+    cat_vars = dataset.select_dtypes([object]).columns.tolist()
 
     variable = widgets.Dropdown(
         options=num_vars,
@@ -74,9 +74,6 @@ def kolmogorov_test_widget(dataset: pd.DataFrame):
 
 def correlation_coef_widget(dataset: pd.DataFrame):
 
-    num_vars = dataset.select_dtypes([np.number]).columns
-    cat_vars = dataset.select_dtypes([object]).columns.tolist()
-
     """
     This function computes the correlation between two numerical variables.
 
@@ -85,8 +82,11 @@ def correlation_coef_widget(dataset: pd.DataFrame):
 
     Arguments:
         dataset: pandas dataframe or dict with de format {'col1':np.array, 'col2':np.array}
-    
+
     """
+
+    num_vars = dataset.select_dtypes([np.number]).columns
+    cat_vars = dataset.select_dtypes([object]).columns.tolist()
 
     variable1 = widgets.Dropdown(
         options=num_vars,
@@ -167,6 +167,7 @@ def countplot_widget(dataset: pd.DataFrame):
 
 
 def kruskal_test_widget(dataset: pd.DataFrame):
+
     """
     The Kruskal-Wallis H test is a rank-based nonparametric test
     that can be used to determine if there are statistically significant
@@ -223,6 +224,7 @@ def barplot_widget(dataset: pd.DataFrame):
         dataset: pandas dataframe or dict with de format {'col1':np.array, 'col2':np.array}
 
     """
+
     num_vars = dataset.select_dtypes([np.number]).columns
     cat_vars = dataset.select_dtypes([object]).columns.tolist()
 
@@ -267,9 +269,6 @@ def barplot_widget(dataset: pd.DataFrame):
 
 def cramerv_widget(dataset: pd.DataFrame):
 
-    num_vars = dataset.select_dtypes([np.number]).columns
-    cat_vars = dataset.select_dtypes([object]).columns.tolist()
-
     """
     This function computes cramer's V correlation coefficient which is a measure of association between two nominal variables.
 
@@ -278,8 +277,11 @@ def cramerv_widget(dataset: pd.DataFrame):
 
     Arguments:
         dataset: pandas dataframe or dict with the format {'col1':np.array, 'col2':np.array}
-    
+
     """
+
+    num_vars = dataset.select_dtypes([np.number]).columns
+    cat_vars = dataset.select_dtypes([object]).columns.tolist()
 
     variable1 = widgets.Dropdown(
         options=cat_vars,

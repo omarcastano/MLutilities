@@ -1,17 +1,18 @@
+import logging
 from pickle import FALSE
-import ipywidgets as widgets
-import pandas as pd
-import numpy as np
-from functools import partial
-from MLutilities.EDA import kolmogorov_test, correlation_coef, kruskal_test, cramersv
-from IPython.display import display
-import plotly.express as px
 from typing import List
-from sklearn.preprocessing import StandardScaler, MinMaxScaler
+from functools import partial
+import numpy as np
+import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
+import plotly.express as px
+import ipywidgets as widgets
+from sklearn.preprocessing import StandardScaler, MinMaxScaler
 from MLutilities.utils import scaler
-import logging
+from MLutilities.EDA import kolmogorov_test, correlation_coef, kruskal_test, cramersv
+from IPython.display import display
+
 
 logging.warning(
     """
