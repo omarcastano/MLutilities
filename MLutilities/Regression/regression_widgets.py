@@ -1,6 +1,7 @@
 import ipywidgets as widgets
 from functools import partial
 from MLutilities.utils import plot_polyreg
+from IPython.display import display
 
 
 def regularization_widget():
