@@ -69,14 +69,14 @@ def scaler(
     ax[1].legend()
 
 
-def generate_nonlinear_data(N, seed=1):
+def generate_nonlinear_data(N: int, seed: int = 1):
     """
-    generate (x, y) instances with a non-linear relationship
+    generate N (x, y) pairs with a non-linear relationship
 
     Arguments:
     ----------
-    N (int):     number of instances
-    seed (int):  seed for the random numbers generator
+    N:     number of instances
+    seed:  seed for the random numbers generator
     """
     np.random.seed(seed)
     X = np.random.rand(N) ** 2
