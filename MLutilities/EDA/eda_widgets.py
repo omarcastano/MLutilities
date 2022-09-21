@@ -11,16 +11,6 @@ from sklearn.preprocessing import StandardScaler, MinMaxScaler
 import matplotlib.pyplot as plt
 import seaborn as sns
 from MLutilities.utils import scaler
-import logging
-
-logging.warning(
-    """
-    The widgets module is deprecated and will be removed in future versions. Instead use eda_widgets.
-
-    Example:
-    from MLutilities.EDA import eda_widgets
-    """
-)
 
 
 def kolmogorov_test_widget(dataset: pd.DataFrame):
