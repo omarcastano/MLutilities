@@ -1,15 +1,15 @@
+import numpy as np
 import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
 import plotly.express as px
-from sklearn.preprocessing import LabelEncoder
-import scipy.stats as stats
-import numpy as np
-from statsmodels.compat import lzip
 import statsmodels.stats.api as sms
 import statsmodels.formula.api as smf
-from IPython.display import display
+import scipy.stats as stats
+from statsmodels.compat import lzip
 from MLutilities.utils import cramerv_relationship_strength
+from sklearn.preprocessing import LabelEncoder
+from IPython.display import display
 
 """
 This module provides some exploratory data analysis tools.
@@ -50,11 +50,11 @@ def kolmogorov_test(
         dataset = pd.DataFrame(dataset)
 
     if transformation == "yeo_johnson":
-        x = stats.yeojohnson(dataset[variable].to_numpy())[0]
+        x = stats.yeojohnson(dataset[variable].dropna().to_numpy())[0]
     elif transformation == "log":
-        x = np.log1p(dataset[variable].to_numpy())
+        x = np.log1p(dataset[variable].dropna().to_numpy())
     else:
-        x = dataset[variable].to_numpy()
+        x = dataset[variable].dropna().to_numpy()
 
     ktest = stats.kstest(x, "norm")
     print(f"------------------------- Kolmogorov test fot the variable {variable} --------------------")
