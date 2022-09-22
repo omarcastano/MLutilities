@@ -23,7 +23,7 @@ def logistic_regression_widget():
         style={"description_width": "initial"},
     )
 
-    outlier_pos = widgets.IntSlider(
+    point_position = widgets.IntSlider(
         description="Outlier position",
         min=12,
         max=40,
@@ -39,8 +39,8 @@ def logistic_regression_widget():
         {
             "threshold": threshold,
             "regression": regression,
-            "outlier_pos": outlier_pos,
+            "outlier_pos": point_position,
         },
     )
 
-    display(widgets.VBox([regression, threshold, outlier_pos]), w)
+    display(widgets.VBox([regression, threshold, point_position]), w)
