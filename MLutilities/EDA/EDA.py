@@ -1,12 +1,9 @@
 import numpy as np
 import pandas as pd
-import seaborn as sns
-import matplotlib.pyplot as plt
 import plotly.express as px
 import statsmodels.stats.api as sms
 import statsmodels.formula.api as smf
 import scipy.stats as stats
-from statsmodels.compat import lzip
 from MLutilities.utils import cramerv_relationship_strength
 from sklearn.preprocessing import LabelEncoder
 from IPython.display import display
@@ -63,7 +60,7 @@ def kolmogorov_test(
     print(f"statistic={ktest[0]:.3f}, p_value={ktest[1]:.3f}\n")
     if ktest[1] < 0.05:
         print(
-            f"Since {ktest[1]:.3f} < 0.05 you can reject the null hypothesis, so the variable {variable} \ndo not follow a normal distribution"
+            f"Since {ktest[1]:.3f} < 0.05 you can reject the null hypothesis, so the variable {variable} \ndo not follow a normal distribution"  # noqa: E501
         )
     else:
         print(
@@ -134,7 +131,7 @@ def biserial_correlation(
         )
         print(f"------------------------Kolmogorov Test for {categorical_variable}:{y_unique[1]}---------------------------")
         kolmogorov_test(
-            x1,
+            x2,
             numerical_variable,
             apply_yeo_johnson=apply_yeo_johnson,
             apply_log_transform=apply_log_transform,
@@ -329,7 +326,7 @@ def cramersv(
         display(pd.crosstab(dataset[input_feature], dataset[target_feature], margins=True).style.background_gradient(cmap="Blues"))
         print("------------------------------------------------------------------\n")
 
-    dimension = obs.to_numpy().sum()  # dataset[[input_feature, target_feature]].notnull().prod(axis=1).sum()
+    dimension = obs.to_numpy().sum()
     cramer = np.sqrt((chi2 / dimension) / (np.min(obs.shape) - 1))
 
     # interpretation
@@ -354,7 +351,6 @@ def cramersv(
 
 def breusch_pagan_test(dataset, target_variable: str, input_variable: str):
     """
-
     Breusch-Pagan test is a way to check whether heteroscedasticity exists in regression analysis.
     A Breusch-Pagan test follows the below hypotheses:
 
@@ -379,7 +375,7 @@ def breusch_pagan_test(dataset, target_variable: str, input_variable: str):
     # perform Bresuch-Pagan test
     statistic, p_value, _, _ = sms.het_breuschpagan(fit_lr.resid, fit_lr.model.exog)
 
-    print(f"------------------------------------ Breusch-Pagan test ----------------------------------")
+    print("------------------------------------ Breusch-Pagan test ----------------------------------")
     print(f"statistic={statistic:.3f}, p_value={p_value:.3f}\n")
     if p_value < 0.05:
         print(f"Since {p_value:.3f} < 0.05 you can reject the null hypothesis, so homoscedasticity is not present")
@@ -469,11 +465,11 @@ def correlation_coef(
     print(f"statistic={corr:.3f}, p_value={p_value:.3f}\n")
     if p_value < 0.05:
         print(
-            f"Since {p_value:.3f} < 0.05 you can reject the null hypothesis, so the variables {target_variable} \nand {input_variable} are correlated"
+            f"Since {p_value:.3f} < 0.05 you can reject the null hypothesis, so the variables {target_variable} \nand {input_variable} are correlated"  # noqa: E501
         )
     else:
         print(
-            f"Since {p_value:.3f} > 0.05 you cannot reject the null hypothesis, so the variables {target_variable} \nand {input_variable} are not correlated"
+            f"Since {p_value:.3f} > 0.05 you cannot reject the null hypothesis, so the variables {target_variable} \nand {input_variable} are not correlated"  # noqa: E501
         )
     print("-------------------------------------------------------------------------------------------\n")
 
@@ -493,7 +489,6 @@ def correlation_coef(
 
 
 def contingency_table(dataset, target_variable: str, input_variable: str, table_size: int = 30) -> None:
-
     """
     This function computes the contingency table of the given varaibles
 
