@@ -201,8 +201,10 @@ def plot_log_reg(
         start, classes_intercept + 1, n_instances_negative_class
     )
     instances_positive_class = np.concatenate(
-        [np.linspace(classes_intercept, end, n_instances_positive_class)],
-        [point_position],
+        [
+            np.linspace(classes_intercept, end, n_instances_positive_class),
+            [point_position],
+        ]
     )
     data = np.concatenate([instances_negative_class, instances_positive_class])
 
