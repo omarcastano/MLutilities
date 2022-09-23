@@ -242,6 +242,8 @@ def kruskal_test(
     if type(dataset) == dict:
         dataset = pd.DataFrame(dataset)
 
+    dataset = dataset.dropna(subset=[target_variable, input_variable]).copy()
+
     y_unique = dataset[target_variable].unique()
 
     x = [dataset.loc[dataset[target_variable] == unique, input_variable] for unique in y_unique]
@@ -261,7 +263,7 @@ def kruskal_test(
     if kruskal[1] < 0.05:
         print(f"Since {kruskal[1]:.3f} < 0.05 you can reject the null hypothesis, \nso we have that medians_1 != medians_2 != ....")
     else:
-        print(f"Since {kruskal[1]:.3f} > 0.05 you cannot reject the null hypothesis \nso we have that medians_1 = medians_2 != ....")
+        print(f"Since {kruskal[1]:.3f} > 0.05 you cannot reject the null hypothesis \nso we have that medians_1 = medians_2 = ....")
     print("------------------------------------------------------------------------------\n")
 
     if plot_boxplot:
