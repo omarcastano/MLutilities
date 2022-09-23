@@ -16,6 +16,9 @@ from sklearn.pipeline import make_pipeline
 from yellowbrick.model_selection import LearningCurve
 
 
+sns.set()
+
+
 def cramerv_relationship_strength(degrees_of_freedom: int, cramerv: float):
     """
     returns the strength of the relationship of two categorical variables
