@@ -240,7 +240,7 @@ def plot_log_reg(
                 model.intercept_ + np.log(1 / threshold - 1)
             )
             y_pred = model.predict_proba(x.reshape(-1, 1))[:, 1]
-            y_label = "$\hat P (C_1 | \textbf{x})$"
+            y_label = "$\hat{p} = \sigma(z)$"
 
         ymin = min(y_pred) if min(y_pred) <= 0 else 0
         sns.lineplot(x=x, y=y_pred, color="k", label=y_label)
