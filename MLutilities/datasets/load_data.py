@@ -187,7 +187,6 @@ def penguins(load_as: str = "dict", n=-1):
 
 
 def load_dataset(data_set: str, load_as: str = "dict", n=-1):
-
     """
     Returns a dicctionary with the selected dataset. The dicctionary has
     the follow keys:
@@ -198,6 +197,8 @@ def load_dataset(data_set: str, load_as: str = "dict", n=-1):
     feature_names: the name of the features/columns
 
     Argumetns:
+        dataset: str, possible options: "penguins", "diamonds", "adults", "cars", "cars_nulls"
+            name of the dataset to load
         load_as: str. possible options: 'dict', 'list, 'numpy' or 'dataframe'
             this argument controls how raw data is return.
             * 'dict' : dict like --> {column : [values]}
@@ -205,25 +206,16 @@ def load_dataset(data_set: str, load_as: str = "dict", n=-1):
             * 'numpy1D' : 1D numpy --> like {column: np.array([values])}
             * 'numpy2D': 2D numpy like. shape (rows, columns)
             * 'dataframe: dataframe like pd.DataFrame
-
-
-        n: int default(n=10)
+        n: int, default=10
             number of instances to randommly sample from the complete dataset.
             If n=-1, the whole dataset is return
-
     """
 
-    assert (
-        data_set in DATASETS
-    ), f"This is not an avaliable dataset, the avaliable dataset are {DATASETS}"
+    if data_set not in DATASETS:
+        raise Exception(f"This is not an avaliable dataset, the avaliable dataset are {DATASETS}")
 
-    assert load_as in [
-        "dict",
-        "list",
-        "numpy1D",
-        "numpy2D",
-        "dataframe",
-    ], "load_as mus be on of the possible options: 'dict', 'list, 'numpy1D', 'numpy2D' o 'dataframe'"
+    if load_as not in ["dict", "list", "numpy1D", "numpy2D", "dataframe"]:
+        raise Exception("load_as mus be on of the possible options: 'dict', 'list, 'numpy1D', 'numpy2D' o 'dataframe'")
 
     path_to_data = pkg_resources.resource_filename(__name__, f"{data_set}.pkl")
 
