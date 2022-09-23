@@ -16,6 +16,9 @@ from sklearn.pipeline import make_pipeline
 from yellowbrick.model_selection import LearningCurve
 
 
+sns.set()
+
+
 def cramerv_relationship_strength(degrees_of_freedom: int, cramerv: float):
     """
     returns the strength of the relationship of two categorical variables
@@ -201,8 +204,10 @@ def plot_log_reg(
         start, classes_intercept + 1, n_instances_negative_class
     )
     instances_positive_class = np.concatenate(
-        [np.linspace(classes_intercept, end, n_instances_positive_class)],
-        [point_position],
+        [
+            np.linspace(classes_intercept, end, n_instances_positive_class),
+            [point_position],
+        ]
     )
     data = np.concatenate([instances_negative_class, instances_positive_class])
 
@@ -235,7 +240,7 @@ def plot_log_reg(
                 model.intercept_ + np.log(1 / threshold - 1)
             )
             y_pred = model.predict_proba(x.reshape(-1, 1))[:, 1]
-            y_label = "$\hat P (C_1 | \textbf{x})$"
+            y_label = "$\hat{p} = \sigma(z)$"
 
         ymin = min(y_pred) if min(y_pred) <= 0 else 0
         sns.lineplot(x=x, y=y_pred, color="k", label=y_label)

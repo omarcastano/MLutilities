@@ -24,7 +24,7 @@ def logistic_regression_widget():
     )
 
     point_position = widgets.IntSlider(
-        description="Outlier position",
+        description="Point position",
         min=12,
         max=40,
         value=12,
@@ -39,7 +39,7 @@ def logistic_regression_widget():
         {
             "threshold": threshold,
             "regression": regression,
-            "outlier_pos": point_position,
+            "point_position": point_position,
         },
     )
 
