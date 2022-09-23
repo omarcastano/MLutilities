@@ -26,7 +26,6 @@ def kolmogorov_test(
 ):
 
     """
-
     This function computes Kolmogorov test to check if the variable
     is normaly distributed
 
@@ -58,9 +57,7 @@ def kolmogorov_test(
         x = dataset[variable].dropna().to_numpy()
 
     ktest = stats.kstest(x, "norm")
-    print(
-        f"------------------------- Kolmogorov test fot the variable {variable} --------------------"
-    )
+    print(f"------------------------- Kolmogorov test fot the variable {variable} --------------------")
     print(f"statistic={ktest[0]:.3f}, p_value={ktest[1]:.3f}\n")
     if ktest[1] < 0.05:
         print(
@@ -70,13 +67,9 @@ def kolmogorov_test(
         print(
             f"Since {ktest[1]:.3f} > 0.05 you cannot reject the null hypothesis, so the variable {variable} \nfollows a normal distribution"
         )
-    print(
-        "-------------------------------------------------------------------------------------------\n"
-    )
+    print("-------------------------------------------------------------------------------------------\n")
     if plot_histogram:
-        fig = px.histogram(
-            dataset, x=x, nbins=bins, marginal="box", color=color, barmode="overlay"
-        )
+        fig = px.histogram(dataset, x=x, nbins=bins, marginal="box", color=color, barmode="overlay")
         fig.update_traces(marker_line_width=1, marker_line_color="white", opacity=0.8)
         fig.update_layout(xaxis_title=variable, width=1500, height=500)
         fig.show()
@@ -120,25 +113,17 @@ def biserial_correlation(
         If True test the assuptioms for the continuos variable
     """
 
-    assert (
-        not apply_log_transform or not apply_yeo_johnson
-    ), "apply_log_transform and apply_yeo_johnson cannot be True at the same time"
+    assert not apply_log_transform or not apply_yeo_johnson, "apply_log_transform and apply_yeo_johnson cannot be True at the same time"
 
     if type(dataset) == dict:
         dataset = pd.DataFrame(dataset)
 
     if test_assumptions:
         y_unique = dataset[categorical_variable].unique()
-        x1 = dataset.loc[
-            dataset[categorical_variable] == y_unique[0], [numerical_variable]
-        ]
-        x2 = dataset.loc[
-            dataset[categorical_variable] == y_unique[1], [numerical_variable]
-        ]
+        x1 = dataset.loc[dataset[categorical_variable] == y_unique[0], [numerical_variable]]
+        x2 = dataset.loc[dataset[categorical_variable] == y_unique[1], [numerical_variable]]
 
-        print(
-            f"------------------------Kolmogorov Test for {categorical_variable}:{y_unique[0]}---------------------------"
-        )
+        print(f"------------------------Kolmogorov Test for {categorical_variable}:{y_unique[0]}---------------------------")
         kolmogorov_test(
             x1,
             numerical_variable,
@@ -146,9 +131,7 @@ def biserial_correlation(
             apply_log_transform=apply_log_transform,
             plot_histogram=False,
         )
-        print(
-            f"------------------------Kolmogorov Test for {categorical_variable}:{y_unique[1]}---------------------------"
-        )
+        print(f"------------------------Kolmogorov Test for {categorical_variable}:{y_unique[1]}---------------------------")
         kolmogorov_test(
             x1,
             numerical_variable,
@@ -157,9 +140,7 @@ def biserial_correlation(
             plot_histogram=False,
         )
 
-        print(
-            "--------------------------------Levene Test-----------------------------------"
-        )
+        print("--------------------------------Levene Test-----------------------------------")
         levene_test(dataset, categorical_variable, numerical_variable)
 
     # Point Biserial correlation Test
@@ -173,21 +154,13 @@ def biserial_correlation(
         x = dataset[numerical_variable].to_numpy()
 
     biserial = stats.pointbiserialr(y, x)
-    print(
-        "---------------------------Point Biserial Test--------------------------------"
-    )
+    print("---------------------------Point Biserial Test--------------------------------")
     print(f"statistic={biserial[0]:.3f}, p_value={biserial[1]:.3f}\n")
     if biserial[1] < 0.05:
-        print(
-            f"Since {biserial[1]:.3f} < 0.05 you can reject the null hypothesis, \nso variables are correlated"
-        )
+        print(f"Since {biserial[1]:.3f} < 0.05 you can reject the null hypothesis, \nso variables are correlated")
     else:
-        print(
-            f"Since {biserial[1]:.3f} > 0.05 you cannot reject the null hypothesis, \nso variables are not correlated"
-        )
-    print(
-        "------------------------------------------------------------------------------\n"
-    )
+        print(f"Since {biserial[1]:.3f} > 0.05 you cannot reject the null hypothesis, \nso variables are not correlated")
+    print("------------------------------------------------------------------------------\n")
 
     if box_plot:
         fig = px.box(dataset, x=categorical_variable, y=numerical_variable)
@@ -221,30 +194,18 @@ def levene_test(dataset, categorical_variable, numerical_variable):
 
     y_unique = dataset[categorical_variable].unique()
 
-    x1 = dataset.loc[
-        dataset[categorical_variable] == y_unique[0], numerical_variable
-    ].to_numpy()
-    x2 = dataset.loc[
-        dataset[categorical_variable] == y_unique[1], numerical_variable
-    ].to_numpy()
+    x1 = dataset.loc[dataset[categorical_variable] == y_unique[0], numerical_variable].to_numpy()
+    x2 = dataset.loc[dataset[categorical_variable] == y_unique[1], numerical_variable].to_numpy()
 
     levene = stats.levene(x1, x2)
 
-    print(
-        "------------------------------------------------------------------------------"
-    )
+    print("------------------------------------------------------------------------------")
     print(f"statistic={levene[0]:.3f}, p_value={levene[1]:.3f}\n")
     if levene[1] < 0.05:
-        print(
-            f"Since {levene[1]:.3f} < 0.05 you can reject the null hypothesis, \nso variances_1 != variances_2"
-        )
+        print(f"Since {levene[1]:.3f} < 0.05 you can reject the null hypothesis, \nso variances_1 != variances_2")
     else:
-        print(
-            f"Since {levene[1]:.3f} > 0.05 you cannot reject the null hypothesis, \nso variances_1 = variances_2"
-        )
-    print(
-        "------------------------------------------------------------------------------\n"
-    )
+        print(f"Since {levene[1]:.3f} > 0.05 you cannot reject the null hypothesis, \nso variances_1 = variances_2")
+    print("------------------------------------------------------------------------------\n")
 
 
 # Kruskall-Wallas Test
@@ -286,42 +247,25 @@ def kruskal_test(
 
     y_unique = dataset[target_variable].unique()
 
-    x = [
-        dataset.loc[dataset[target_variable] == unique, input_variable]
-        for unique in y_unique
-    ]
+    x = [dataset.loc[dataset[target_variable] == unique, input_variable] for unique in y_unique]
 
     if show_shapes:
-        print(
-            "--------------------------------Skewness and Kurtosis-------------------------"
-        )
+        print("--------------------------------Skewness and Kurtosis-------------------------")
 
         for xi, yi in zip(x, y_unique):
 
-            print(
-                f"Skweness and kurtosis for {target_variable}:{yi}. Skweness={xi.skew():.3f}, Kurtosis={xi.kurtosis():.3f}"
-            )
+            print(f"Skweness and kurtosis for {target_variable}:{yi}. Skweness={xi.skew():.3f}, Kurtosis={xi.kurtosis():.3f}")
 
-        print(
-            "------------------------------------------------------------------------------\n"
-        )
+        print("------------------------------------------------------------------------------\n")
 
     kruskal = stats.kruskal(*x)
-    print(
-        "------------------------------------------------------------------------------"
-    )
+    print("------------------------------------------------------------------------------")
     print(f"statistic={kruskal[0]:.3f}, p_value={kruskal[1]:.3f}\n")
     if kruskal[1] < 0.05:
-        print(
-            f"Since {kruskal[1]:.3f} < 0.05 you can reject the null hypothesis, \nso we have that medians_1 != medians_2 != ...."
-        )
+        print(f"Since {kruskal[1]:.3f} < 0.05 you can reject the null hypothesis, \nso we have that medians_1 != medians_2 != ....")
     else:
-        print(
-            f"Since {kruskal[1]:.3f} > 0.05 you cannot reject the null hypothesis \nso we have that medians_1 = medians_2 != ...."
-        )
-    print(
-        "------------------------------------------------------------------------------\n"
-    )
+        print(f"Since {kruskal[1]:.3f} > 0.05 you cannot reject the null hypothesis \nso we have that medians_1 = medians_2 != ....")
+    print("------------------------------------------------------------------------------\n")
 
     if plot_boxplot:
 
@@ -380,11 +324,7 @@ def cramersv(
 
     if show_crosstab:
         print("----------------------- Contingency Table -------------------------")
-        display(
-            pd.crosstab(
-                dataset[input_feature], dataset[target_feature], margins=True
-            ).style.background_gradient(cmap="Blues")
-        )
+        display(pd.crosstab(dataset[input_feature], dataset[target_feature], margins=True).style.background_gradient(cmap="Blues"))
         print("------------------------------------------------------------------\n")
 
     dimension = dataset[[input_feature, target_feature]].notnull().prod(axis=1).sum()
@@ -395,30 +335,18 @@ def cramersv(
     n_cols = dataset[input_feature].nunique()
     degrees_of_freedom = min(n_rows - 1, n_cols - 1)
 
-    strength = cramerv_relationship_strength(
-        5 if degrees_of_freedom > 4 else degrees_of_freedom, cramer
-    )
+    strength = cramerv_relationship_strength(5 if degrees_of_freedom > 4 else degrees_of_freedom, cramer)
 
-    print(
-        "---------------------------------------------- Cramer's V --------------------------------------------"
-    )
+    print("---------------------------------------------- Cramer's V --------------------------------------------")
     print(f"CramersV: {cramer:.3f}, chi2:{chi2:.3f}, p_value:{p:.5f}\n")
     if p < 0.05:
-        print(
-            f"Since {p:.5f} < 0.05 you can reject the null hypothesis, \nThere is a {strength} relationship between the variables."
-        )
+        print(f"Since {p:.5f} < 0.05 you can reject the null hypothesis, \nThere is a {strength} relationship between the variables.")
     else:
-        print(
-            f"Since {p:.5f} > 0.05 you cannot reject the null hypothesis, \nso there is not a relationship between the variables."
-        )
-    print(
-        "------------------------------------------------------------------------------------------------------\n"
-    )
+        print(f"Since {p:.5f} > 0.05 you cannot reject the null hypothesis, \nso there is not a relationship between the variables.")
+    print("------------------------------------------------------------------------------------------------------\n")
 
     if plot_histogram:
-        fig = px.histogram(
-            dataset, x=input_feature, histnorm=histnorm, color=color, barmode="group"
-        )
+        fig = px.histogram(dataset, x=input_feature, histnorm=histnorm, color=color, barmode="group")
         fig.show()
 
 
@@ -449,21 +377,13 @@ def breusch_pagan_test(dataset, target_variable: str, input_variable: str):
     # perform Bresuch-Pagan test
     statistic, p_value, _, _ = sms.het_breuschpagan(fit_lr.resid, fit_lr.model.exog)
 
-    print(
-        f"------------------------------------ Breusch-Pagan test ----------------------------------"
-    )
+    print(f"------------------------------------ Breusch-Pagan test ----------------------------------")
     print(f"statistic={statistic:.3f}, p_value={p_value:.3f}\n")
     if p_value < 0.05:
-        print(
-            f"Since {p_value:.3f} < 0.05 you can reject the null hypothesis, so homoscedasticity is not present"
-        )
+        print(f"Since {p_value:.3f} < 0.05 you can reject the null hypothesis, so homoscedasticity is not present")
     else:
-        print(
-            f"Since {p_value:.3f} > 0.05 you cannot reject the null hypothesis, so homoscedasticity is present"
-        )
-    print(
-        "-------------------------------------------------------------------------------------------\n"
-    )
+        print(f"Since {p_value:.3f} > 0.05 you cannot reject the null hypothesis, so homoscedasticity is present")
+    print("-------------------------------------------------------------------------------------------\n")
 
 
 def correlation_coef(
@@ -543,9 +463,7 @@ def correlation_coef(
             nan_policy="omit",
         )
 
-    print(
-        f"------------------------------------ {kind} correlation ---------------------------------"
-    )
+    print(f"------------------------------------ {kind} correlation ---------------------------------")
     print(f"statistic={corr:.3f}, p_value={p_value:.3f}\n")
     if p_value < 0.05:
         print(
@@ -555,9 +473,7 @@ def correlation_coef(
         print(
             f"Since {p_value:.3f} > 0.05 you cannot reject the null hypothesis, so the variables {target_variable} \nand {input_variable} are not correlated"
         )
-    print(
-        "-------------------------------------------------------------------------------------------\n"
-    )
+    print("-------------------------------------------------------------------------------------------\n")
 
     if scatter_plot:
         fig = px.scatter(
@@ -574,9 +490,7 @@ def correlation_coef(
         fig.show()
 
 
-def contingency_table(
-    dataset, target_variable: str, input_variable: str, table_size: int = 30
-) -> None:
+def contingency_table(dataset, target_variable: str, input_variable: str, table_size: int = 30) -> None:
 
     """
     This function computes the contingency table of the given varaibles
@@ -597,9 +511,5 @@ def contingency_table(
     obs = pd.crosstab(dataset[input_variable], dataset[target_variable], margins=True)
 
     print("----------------------- Contingency Table -------------------------")
-    display(
-        obs.style.background_gradient(cmap="Blues").set_table_attributes(
-            f'style="font-size: {table_size}px"'
-        )
-    )
+    display(obs.style.background_gradient(cmap="Blues").set_table_attributes(f'style="font-size: {table_size}px"'))
     print("------------------------------------------------------------------\n")
