@@ -49,12 +49,14 @@ def kolmogorov_test(
     if type(dataset) == dict:
         dataset = pd.DataFrame(dataset)
 
+    dataset = dataset.dropna(subset=[variable]).copy()
+
     if transformation == "yeo_johnson":
-        x = stats.yeojohnson(dataset[variable].dropna().to_numpy())[0]
+        x = stats.yeojohnson(dataset[variable].to_numpy())[0]
     elif transformation == "log":
-        x = np.log1p(dataset[variable].dropna().to_numpy())
+        x = np.log1p(dataset[variable].to_numpy())
     else:
-        x = dataset[variable].dropna().to_numpy()
+        x = dataset[variable].to_numpy()
 
     ktest = stats.kstest(x, "norm")
     print(f"------------------------- Kolmogorov test fot the variable {variable} --------------------")
@@ -84,7 +86,6 @@ def biserial_correlation(
     box_plot: bool = False,
     test_assumptions: bool = False,
 ):
-
     """
     A point-biserial correlation is used to measure the correlation between
     a continuous variable and a binary variable.
@@ -171,7 +172,7 @@ def levene_test(dataset, categorical_variable, numerical_variable):
 
     """
 
-    Levene’s test is used to check that variances are equal for all
+    Levenes test is used to check that variances are equal for all
     samples when your data comes from a non normal distribution. This
     function is created to work only when categorical variable is binary
 
@@ -218,7 +219,6 @@ def kruskal_test(
 ):
 
     """
-
     The Kruskal-Wallis H test is a rank-based nonparametric test
     that can be used to determine if there are statistically significant
     differences between two or more groups of an independent variable on
@@ -319,7 +319,9 @@ def cramersv(
     if type(dataset) == dict:
         dataset = pd.DataFrame(dataset)
 
-    obs = pd.crosstab(dataset[input_feature], dataset[target_feature], margins=True)
+    dataset = dataset.dropna(subset=[input_feature, target_feature])
+
+    obs = pd.crosstab(dataset[input_feature], dataset[target_feature], margins=False)
     chi2, p, dof, ex = stats.chi2_contingency(obs, correction=False)
 
     if show_crosstab:
@@ -327,7 +329,7 @@ def cramersv(
         display(pd.crosstab(dataset[input_feature], dataset[target_feature], margins=True).style.background_gradient(cmap="Blues"))
         print("------------------------------------------------------------------\n")
 
-    dimension = dataset[[input_feature, target_feature]].notnull().prod(axis=1).sum()
+    dimension = obs.to_numpy().sum()  # dataset[[input_feature, target_feature]].notnull().prod(axis=1).sum()
     cramer = np.sqrt((chi2 / dimension) / (np.min(obs.shape) - 1))
 
     # interpretation
