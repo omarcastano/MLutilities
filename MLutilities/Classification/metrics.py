@@ -29,7 +29,7 @@ def threshold_example(threshold=0.5):
     Illustrates how model metrics such as accuracy
     depends on threshold probability
 
-    Argumetns:
+    Arguments:
         threshold: float
             Threshold for the probability
     """
@@ -99,7 +99,7 @@ def threshold_metric_evaluation(y_true, y_score, metric="Accuracy", threshold=0.
         y_true: array-like
             true labels
         y_score: 2D array-like
-            predicted scores for positive and negative class
+            predicted scores for positive and negative classes
         metric: string
             one of the metric from the following list
             Accuracy, Precision, Recall, F1_score, FPR
@@ -249,7 +249,7 @@ def precision_recall_tradeoff(y_true, y_score, threshold=0.5):
         annot_kws={"size": 20},
         ax=ax[1],
     )
-    ax[1].set_title("Congusion Matrix", fontsize=20)
+    ax[1].set_title("Confusion Matrix", fontsize=20)
     ax[1].set_xlabel("Predicted Label", fontsize=20)
     ax[1].set_ylabel("True Label", fontsize=20)
 
