@@ -95,7 +95,7 @@ def threshold_metric_evaluation(y_true, y_score, metric="Accuracy", threshold=0.
     Plot the value of a given metric for several probability threshold. This function
     only work for a binary classification problem
 
-    Argumetns:
+    Arguments:
         y_true: array-like
             true labels
         y_score: 2D array-like
@@ -165,7 +165,7 @@ def threshold_metric_evaluation(y_true, y_score, metric="Accuracy", threshold=0.
         annot_kws={"size": 20},
         ax=ax[1],
     )
-    ax[1].set_title("Congusion Matrix", fontsize=20)
+    ax[1].set_title("Confusion Matrix", fontsize=20)
     ax[1].set_xlabel("Predicted Label", fontsize=20)
     ax[1].set_ylabel("True Label", fontsize=20)
 
