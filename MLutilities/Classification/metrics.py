@@ -69,7 +69,7 @@ def per_class_accuracy(y_true, y_pred):
     """
     Computes per class accuracy
 
-    Argumetns:
+    Arguments:
         y_true: 1D numpy array
             true labels
         y_pred: 1D numpy array
