@@ -93,3 +93,32 @@ def threshold_metric_widget(
     )
 
     display(widgets.VBox([metric, threshold]), w)
+
+
+def precision_recall_tradeoff_widget(
+    y_true: npt.ArrayLike, y_predict_proba: npt.ArrayLike
+) -> None:
+    """
+    This function allows you to evaluate the precision-recall tradeoff
+
+      Arguments:
+          y_true: (1D)
+              true labels
+          y_score: (2D)
+              predicted scores such as probability
+    """
+    threshold = widgets.FloatSlider(
+        min=0.0,
+        max=1,
+        value=0.5,
+        step=0.01,
+        continuous_update=True,
+        layout=widgets.Layout(width="20%", height="50px"),
+    )
+    w = widgets.interactive_output(
+        partial(
+            metrics.precision_recall_tradeoff, y_true=y_true, y_score=y_predict_proba
+        ),
+        {"threshold": threshold},
+    )
+    display(widgets.VBox([threshold]), w)
