@@ -315,7 +315,7 @@ def highlight_quadrants(metric: str, ax=None):
     """
     highlight confusion matrix quadrants associated with a metric
     """
-    with open("data/metrics_data.pkl", "r") as f:
+    with open("MLutilities/data/metrics_data.pkl", "r") as f:
         metrics_data = pickle.load(f)
     quadrant = metrics_data[metric]["quadrant"]
     for i in quadrant:

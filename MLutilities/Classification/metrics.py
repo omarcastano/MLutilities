@@ -26,7 +26,7 @@ from sklearn.metrics import (
 sns.set()
 
 # load metrics data
-with open("data/metrics_data.pkl", "r") as f:
+with open("MLutilities/data/metrics_data.pkl", "r") as f:
     metrics_data = pickle.load(f)
 
 
