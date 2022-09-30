@@ -8,7 +8,7 @@ from MLutilities.Classification import metrics
 
 def logistic_regression_widget():
     threshold = widgets.FloatSlider(
-        description="Threshold",
+        description="Threshold:",
         min=0.01,
         max=0.99,
         value=0.5,
@@ -61,6 +61,7 @@ def threshold_metric_widget(
               predicted scores for positive and negative class
     """
     threshold = widgets.FloatSlider(
+        description="Threshold:",
         min=0.0,
         max=1,
         value=0.5,
@@ -108,6 +109,7 @@ def precision_recall_tradeoff_widget(
               predicted scores such as probability
     """
     threshold = widgets.FloatSlider(
+        description="Threshold:",
         min=0.0,
         max=1,
         value=0.5,
