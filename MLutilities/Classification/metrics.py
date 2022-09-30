@@ -289,7 +289,13 @@ def precision_recall_curve(
 
     ax[0].set_ylabel("Precision", fontsize=20)
     ax[0].set_xlabel("Recall", fontsize=20)
-    ax[0].plot(recall[idx].round(3), precision[idx].round(3), "rD", markersize=10)
+    ax[0].plot(
+        recall[idx].round(3),
+        precision[idx].round(3),
+        "rD",
+        markersize=10,
+        label="Threshold",
+    )
     fig.suptitle(
         f"Precision:{precision[idx].round(3)}\n Recall:{recall[idx].round(3)}\n F1_score:{((2*precision[idx]*recall[idx])/(precision[idx]+recall[idx])).round(2)}",
         fontsize=20,
@@ -301,6 +307,7 @@ def precision_recall_curve(
     ax[0].set_title(
         f"PR AUC:{average_precision_score(y_true, y_score[:,1]).round(3)}", fontsize=25
     )
+    ax[0].legend()
 
     conf_mt_str = conf_mt.copy().astype(str)
     conf_mt_str[0, 0] = "TN = " + str(conf_mt[0, 0])
