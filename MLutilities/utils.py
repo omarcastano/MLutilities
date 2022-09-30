@@ -1,3 +1,4 @@
+import pickle
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -272,3 +273,45 @@ def plot_log_reg(
             label=f"Threshold",
         )
         ax.legend(fontsize=15)
+
+
+def highlight_quadrant(quadrant: int, width=8, color="r", ax=None):
+    """
+    higlight confusion matriz quadrant
+    """
+    xl, xr = ax.get_xlim()
+    yd, yu = ax.get_ylim()
+    xm = (xl + xr) / 2
+    ym = (yd + yu) / 2
+
+    if quadrant == 0:
+        ax.vlines(xl, ym, yu, color=color, linewidth=width)
+        ax.vlines(xm, ym, yu, color=color, linewidth=width / 2)
+        ax.hlines(yu, xl, xm, color=color, linewidth=width)
+        ax.hlines(ym, xl, xm, color=color, linewidth=width / 2)
+    if quadrant == 1:
+        ax.vlines(xr, ym, yu, color=color, linewidth=width)
+        ax.vlines(xm, ym, yu, color=color, linewidth=width / 2)
+        ax.hlines(yu, xm, xr, color=color, linewidth=width)
+        ax.hlines(ym, xm, xr, color=color, linewidth=width / 2)
+    if quadrant == 2:
+        ax.vlines(xl, yd, ym, color=color, linewidth=width)
+        ax.vlines(xm, yd, ym, color=color, linewidth=width / 2)
+        ax.hlines(yd, xl, xm, color=color, linewidth=width)
+        ax.hlines(ym, xl, xm, color=color, linewidth=width / 2)
+    if quadrant == 3:
+        ax.vlines(xr, yd, ym, color=color, linewidth=width)
+        ax.vlines(xm, yd, ym, color=color, linewidth=width / 2)
+        ax.hlines(yd, xm, xr, color=color, linewidth=width)
+        ax.hlines(ym, xm, xr, color=color, linewidth=width / 2)
+
+
+def highlight_quadrants(metric: str, ax=None):
+    """
+    highlight confusion matrix quadrants associated with a metric
+    """
+    with open("data/metrics_data.pkl", "r") as f:
+        metrics_data = pickle.load(f)
+    quadrant = metrics_data[metric]["quadrant"]
+    for i in quadrant:
+        highlight_quadrant(quadrant=i, ax=ax)
