@@ -55,7 +55,8 @@ def threshold_metric_widget(
     y_true: npt.ArrayLike, y_predict_proba: npt.ArrayLike
 ) -> None:
     """
-    Widget that plot the value of a given metric for several probability thresholds. This function only work for a binary classification problem.
+    Widget that plot the value of a given metric for several probability thresholds.
+    This function only work for a binary classification problem.
 
     Arguments:
           y_true: (1D)
@@ -150,6 +151,32 @@ def precision_recall_widget(y_true: npt.ArrayLike, y_score: npt.ArrayLike):
     )
     w = widgets.interactive_output(
         partial(metrics.precision_recall_curve, y_true=y_true, y_score=y_score),
+        {"threshold": threshold},
+    )
+    display(widgets.VBox([threshold]), w)
+
+
+def roc_curve_widget(y_true: npt.ArrayLike, y_score: npt.ArrayLike):
+    """
+    Compute ROC curve and AUC
+
+    Arguments:
+        y_true: (1D)
+            true labels
+        y_score: (2D)
+            predicted scores such as probability
+    """
+    threshold = widgets.FloatSlider(
+        description="Threshold:",
+        min=0.0,
+        max=1,
+        value=0.5,
+        step=0.01,
+        continuous_update=True,
+        layout=widgets.Layout(width="20%", height="50px"),
+    )
+    w = widgets.interactive_output(
+        partial(metrics.ROC_curve, y_true=y_true, y_score=y_score),
         {"threshold": threshold},
     )
     display(widgets.VBox([threshold]), w)
