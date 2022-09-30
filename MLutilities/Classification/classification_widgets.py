@@ -1,9 +1,9 @@
 import ipywidgets as widgets
+import numpy.typing as npt
 from functools import partial
 from IPython.display import display
 from MLutilities.utils import plot_log_reg
 from MLutilities.Classification import metrics
-from nptyping import NDArray, Int, Shape, Float
 
 
 def logistic_regression_widget():
@@ -49,15 +49,15 @@ def logistic_regression_widget():
 
 
 def threshold_metric_widget(
-    y_true: NDArray[Shape["*"], Float], y_predict_proba: NDArray[Shape["*, 2"], Float]
+    y_true: npt.ArrayLike, y_predict_proba: npt.ArrayLike
 ) -> None:
     """
     Widget that plot the value of a given metric for several probability thresholds. This function only work for a binary classification problem.
 
     Arguments:
-          y_true:
+          y_true: (1D)
               true labels
-          y_score:
+          y_score: (2D)
               predicted scores for positive and negative class
     """
     threshold = widgets.FloatSlider(
