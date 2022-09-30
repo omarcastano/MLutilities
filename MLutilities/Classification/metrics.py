@@ -8,7 +8,6 @@ import plotly.express as px
 import scipy.stats as stats
 import numpy.typing as npt
 from ipywidgets import widgets
-from MLutilities.utils import highlight_quadrants
 from sklearn.datasets import make_blobs
 from sklearn.preprocessing import LabelEncoder
 from sklearn.linear_model import LogisticRegression
@@ -23,15 +22,10 @@ from sklearn.metrics import (
     plot_confusion_matrix,
     classification_report,
 )
+from MLutilities.utils import highlight_quadrants, get_metrics_data
 
 sns.set()
-
-# load metrics data
-with importlib.resources.path("MLutilities.data", "metrics_data.pkl") as path:
-    with open(path, "r") as f:
-        metrics_data = pickle.load(f)
         
-
 def threshold_example(threshold: float = 0.5):
 
     """
@@ -122,7 +116,7 @@ def threshold_metric_evaluation(
     """
     metrics = []
     thresholds = []
-
+    metrics_data = get_metrics_data()
     for t in np.arange(0.01, 0.99, 0.01):
 
         y_pred = (y_score[:, 1] >= t).astype(int)
@@ -195,6 +189,8 @@ def precision_recall_tradeoff(
 
     metrics = []
     thresholds = []
+    
+    metrics_data = get_metrics_data()
 
     for t in np.arange(0.01, 0.99, 0.01):
         y_pred = (y_score[:, 1] >= t).astype(int)
@@ -271,6 +267,8 @@ def precision_recall_curve(
 
     metrics = []
     thresholds = []
+    
+    metrics_data = get_metrics_data()
 
     for t in np.arange(0.01, 0.99, 0.01):
         y_pred = (y_score[:, 1] >= t).astype(int)
