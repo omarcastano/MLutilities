@@ -291,7 +291,7 @@ def precision_recall_curve(
     ax[0].set_xlabel("Recall", fontsize=20)
     ax[0].plot(recall[idx].round(3), precision[idx].round(3), "rD", markersize=10)
     fig.suptitle(
-        f"Precisin:{precision[idx].round(3)}\n recall:{recall[idx].round(3)}\n f1_score:{((2*precision[idx]*recall[idx])/(precision[idx]+recall[idx])).round(2)}",
+        f"Precision:{precision[idx].round(3)}\n Recall:{recall[idx].round(3)}\n F1_score:{((2*precision[idx]*recall[idx])/(precision[idx]+recall[idx])).round(2)}",
         fontsize=20,
     )
 
