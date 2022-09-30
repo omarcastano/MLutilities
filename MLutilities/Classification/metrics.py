@@ -95,7 +95,7 @@ def per_class_accuracy(y_true: npt.ArrayLike, y_pred: npt.ArrayLike):
 def threshold_metric_evaluation(
     y_true: npt.ArrayLike,
     y_score: npt.ArrayLike,
-    metric: str = "Accuracy",
+    metric: str = "accuracy",
     threshold: float = 0.5,
 ):
 
