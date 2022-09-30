@@ -124,7 +124,12 @@ def plot_learning_curve(linear_estimator, X, y, degree, ax):
 
 
 def plot_polyreg(
-    N=50, estimator="LinearRegression", degree=2, alpha=1, l1_ratio=1, helper_viz=False
+    N=50,
+    estimator: str = "LinearRegression",
+    degree: int = 2,
+    alpha: float = 1.0,
+    l1_ratio: float = 1.0,
+    helper_viz: bool = False,
 ):
     """
     plot a polynomial regression model with and a helper visualization
