@@ -275,35 +275,35 @@ def plot_log_reg(
         ax.legend(fontsize=15)
 
 
-def highlight_quadrant(quadrant: int, width=8, color="r", ax=None):
+def highlight_quadrant(quadrant: int, width: int = 8, color: str = "r", ax=None):
     """
     higlight confusion matriz quadrant
     """
-    xl, xr = ax.get_xlim()
-    yd, yu = ax.get_ylim()
-    xm = (xl + xr) / 2
-    ym = (yd + yu) / 2
+    x_left, x_right = ax.get_xlim()
+    y_down, y_up = ax.get_ylim()
+    x_middle = (x_left + x_right) / 2
+    y_middle = (y_down + y_up) / 2
 
     if quadrant == 0:
-        ax.vlines(xl, ym, yu, color=color, linewidth=width)
-        ax.vlines(xm, ym, yu, color=color, linewidth=width / 2)
-        ax.hlines(yu, xl, xm, color=color, linewidth=width)
-        ax.hlines(ym, xl, xm, color=color, linewidth=width / 2)
+        ax.vlines(x_left, y_middle, y_up, color=color, linewidth=width)
+        ax.vlines(x_middle, y_middle, y_up, color=color, linewidth=width / 2)
+        ax.hlines(y_up, x_left, x_middle, color=color, linewidth=width)
+        ax.hlines(y_middle, x_left, x_middle, color=color, linewidth=width / 2)
     if quadrant == 1:
-        ax.vlines(xr, ym, yu, color=color, linewidth=width)
-        ax.vlines(xm, ym, yu, color=color, linewidth=width / 2)
-        ax.hlines(yu, xm, xr, color=color, linewidth=width)
-        ax.hlines(ym, xm, xr, color=color, linewidth=width / 2)
+        ax.vlines(x_right, y_middle, y_up, color=color, linewidth=width)
+        ax.vlines(x_middle, y_middle, y_up, color=color, linewidth=width / 2)
+        ax.hlines(y_up, x_middle, x_right, color=color, linewidth=width)
+        ax.hlines(y_middle, x_middle, x_right, color=color, linewidth=width / 2)
     if quadrant == 2:
-        ax.vlines(xl, yd, ym, color=color, linewidth=width)
-        ax.vlines(xm, yd, ym, color=color, linewidth=width / 2)
-        ax.hlines(yd, xl, xm, color=color, linewidth=width)
-        ax.hlines(ym, xl, xm, color=color, linewidth=width / 2)
+        ax.vlines(x_left, y_down, y_middle, color=color, linewidth=width)
+        ax.vlines(x_middle, y_down, y_middle, color=color, linewidth=width / 2)
+        ax.hlines(y_down, x_left, x_middle, color=color, linewidth=width)
+        ax.hlines(y_middle, x_left, x_middle, color=color, linewidth=width / 2)
     if quadrant == 3:
-        ax.vlines(xr, yd, ym, color=color, linewidth=width)
-        ax.vlines(xm, yd, ym, color=color, linewidth=width / 2)
-        ax.hlines(yd, xm, xr, color=color, linewidth=width)
-        ax.hlines(ym, xm, xr, color=color, linewidth=width / 2)
+        ax.vlines(x_right, y_down, y_middle, color=color, linewidth=width)
+        ax.vlines(x_middle, y_down, y_middle, color=color, linewidth=width / 2)
+        ax.hlines(y_down, x_middle, x_right, color=color, linewidth=width)
+        ax.hlines(y_middle, x_middle, x_right, color=color, linewidth=width / 2)
 
 
 def highlight_quadrants(metric: str, ax=None):
