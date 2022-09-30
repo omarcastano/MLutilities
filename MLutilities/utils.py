@@ -277,7 +277,7 @@ def plot_log_reg(
 
 def highlight_quadrant(quadrant: int, width: int = 8, color: str = "r", ax=None):
     """
-    higlight confusion matriz quadrant
+    higlight confusion matrix quadrant
     """
     x_left, x_right = ax.get_xlim()
     y_down, y_up = ax.get_ylim()
