@@ -127,3 +127,29 @@ def precision_recall_tradeoff_widget(
         {"threshold": threshold},
     )
     display(widgets.VBox([threshold]), w)
+
+
+def precision_recall_widget(y_true: npt.ArrayLike, y_score: npt.ArrayLike):
+    """
+    Plots Preciison recall curve and PR AUC
+
+    Arguments:
+        y_true: (1D)
+            true labels
+        y_score: (2D)
+            predicted scores such as probability
+    """
+    threshold = widgets.FloatSlider(
+        description="Threshold:",
+        min=0.0,
+        max=1,
+        value=0.5,
+        step=0.01,
+        continuous_update=True,
+        layout=widgets.Layout(width="20%", height="50px"),
+    )
+    w = widgets.interactive_output(
+        partial(metrics.precision_recall_curve, y_true=y_true, y_score=y_score),
+        {"threshold": threshold},
+    )
+    display(widgets.VBox([threshold]), w)
