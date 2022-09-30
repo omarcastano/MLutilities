@@ -2,6 +2,8 @@ import ipywidgets as widgets
 from functools import partial
 from IPython.display import display
 from MLutilities.utils import plot_log_reg
+from MLutilities.Classification import metrics
+from nptyping import NDArray, Int, Shape, Float
 
 
 def logistic_regression_widget():
@@ -44,3 +46,50 @@ def logistic_regression_widget():
     )
 
     display(widgets.VBox([regression, threshold, point_position]), w)
+
+
+def threshold_metric_widget(
+    y_true: NDArray[Shape["*"], Float], y_predict_proba: NDArray[Shape["*, 2"], Float]
+) -> None:
+    """
+    Widget that plot the value of a given metric for several probability thresholds. This function only work for a binary classification problem.
+
+    Arguments:
+          y_true:
+              true labels
+          y_score:
+              predicted scores for positive and negative class
+    """
+    threshold = widgets.FloatSlider(
+        min=0.0,
+        max=1,
+        value=0.5,
+        step=0.01,
+        continuous_update=True,
+        layout=widgets.Layout(width="20%", height="50px"),
+    )
+
+    metric = widgets.Dropdown(
+        options=[
+            "Accuracy",
+            "Precision",
+            "Recall",
+            "NPV",
+            "TNR",
+            "F1_score",
+            "FPR",
+            "FNR",
+        ],
+        description="Metric:",
+        layout=widgets.Layout(width="20%", height="30px"),
+        style={"description_width": "initial"},
+    )
+
+    w = widgets.interactive_output(
+        partial(
+            metrics.threshold_metric_evaluation, y_true=y_true, y_score=y_predict_proba
+        ),
+        {"metric": metric, "threshold": threshold},
+    )
+
+    display(widgets.VBox([metric, threshold]), w)
