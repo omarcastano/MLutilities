@@ -4,17 +4,17 @@ version = "1.0.0-dev"
 description = "Library to teach Machine Learning"
 authors = ["omarcastano <omar.castano@udea.edu.co>"]
 packages = [
-    { include = "MLutilities/Classification"},
-    { include = "MLutilities"}
+    {include = "MLutilities"}
 ]
 
 [tool.poetry.dependencies]
-python = ">=3.6, <=3.9"
+python = ">=3.8, <=3.9"
 statsmodels = "^0.13.2"
 plotly = "^5.10.0"
 scikit-plot = "^0.3.7"
 yellowbrick = "^1.5"
 mlxtend = ">=0.19.0"
+numpy = "^1.21.6"
 
 [tool.poetry.dev-dependencies]
 numpy = "^1.21.6"
