@@ -71,14 +71,14 @@ def threshold_metric_widget(
 
     metric = widgets.Dropdown(
         options=[
-            "Accuracy",
-            "Precision",
-            "Recall",
-            "NPV",
-            "TNR",
-            "F1_score",
-            "FPR",
-            "FNR",
+            "accuracy",
+            "precision",
+            "recall",
+            "npv",
+            "tnr",
+            "f1_score",
+            "fpr",
+            "fnr",
         ],
         description="Metric:",
         layout=widgets.Layout(width="20%", height="30px"),
