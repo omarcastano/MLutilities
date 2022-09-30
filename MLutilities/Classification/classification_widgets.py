@@ -7,6 +7,9 @@ from MLutilities.Classification import metrics
 
 
 def logistic_regression_widget():
+    """
+    helper widget to illustrate linear and logistic regressions in a 1D binary classification problem
+    """
     threshold = widgets.FloatSlider(
         description="Threshold:",
         min=0.01,
