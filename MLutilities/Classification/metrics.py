@@ -7,7 +7,7 @@ import plotly.express as px
 import scipy.stats as stats
 import numpy.typing as npt
 from ipywidgets import widgets
-from utils import highlight_quadrants
+from MLutilities.utils import highlight_quadrants
 from sklearn.datasets import make_blobs
 from sklearn.preprocessing import LabelEncoder
 from sklearn.linear_model import LogisticRegression
