@@ -17,11 +17,10 @@ yellowbrick = "^1.5"
 mlxtend = ">=0.19.0"
 numpy = "^1.21.5"
 nptyping = "^2.3.1"
+matplotlib = "^3.5.3"
 
 [tool.poetry.dev-dependencies]
-numpy = "^1.21.5"
 nptyping = "^2.3.1"
-matplotlib = "^3.2.2"
 ipywidgets = "^7.7.0"
 scipy = "^1.4.1"
 jupyterlab = "^3.4.3"
