@@ -1,24 +1,11 @@
 import numpy as np
-import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
-import plotly.express as px
-import scipy.stats as stats
 import numpy.typing as npt
-from ipywidgets import widgets
-from sklearn.datasets import make_blobs
-from sklearn.preprocessing import LabelEncoder
-from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import (
     roc_auc_score,
-    accuracy_score,
-    precision_score,
-    f1_score,
-    recall_score,
     average_precision_score,
     confusion_matrix,
-    plot_confusion_matrix,
-    classification_report,
 )
 from MLutilities.utils import highlight_quadrants, get_metrics_data
 
@@ -77,15 +64,13 @@ def per_class_accuracy(y_true: npt.ArrayLike, y_pred: npt.ArrayLike):
         y_pred: (1D)
             predicted class labels
     """
-
-    acc = lambda tn, fp, fn, tp: (tp + tn) / (tp + fp + tn + fn + 10e-8)
-
+    metrics_data = get_metrics_data()
     acc_by_class = []
 
     for y in np.unique(y_true):
 
         tn, fp, fn, tp = confusion_matrix((y_true == y) * 1, (y_pred == y) * 1).ravel()
-        acc_by_class.append(acc(tn, fp, fn, tp))
+        acc_by_class.append(metrics_data["accuracy"]["function"](tn, fp, fn, tp))
 
     return np.array(acc_by_class)
 
@@ -185,10 +170,7 @@ def precision_recall_tradeoff(
 
     precision = []
     recall = []
-
-    metrics = []
     thresholds = []
-
     metrics_data = get_metrics_data()
 
     for t in np.arange(0.01, 0.99, 0.01):
@@ -212,9 +194,12 @@ def precision_recall_tradeoff(
     ax[0].set_xlabel("Threshold", fontsize=15)
     ax[0].set_ylabel("Score", fontsize=15)
 
+    _precision = f"Precision:{precision[idx].round(3)}"
+    _recall = f"Recall:{recall[idx].round(3)}"
+    _f1_score = f"F1_score:{((2*precision[idx]*recall[idx])/(precision[idx]+recall[idx])).round(2)}"
     ax[0].vlines(threshold, ymin=0.0, ymax=1.0, colors="r")
     ax[0].set_title(
-        f"Precision:{precision[idx].round(3)}\n Recall:{recall[idx].round(3)}\n F1_score:{((2*precision[idx]*recall[idx])/(precision[idx]+recall[idx])).round(2)}",
+        f"{_precision}\n {_recall}\n {_f1_score}",
         fontsize=20,
     )
     ax[0].legend()
@@ -261,10 +246,7 @@ def precision_recall_curve(
 
     precision = []
     recall = []
-
-    metrics = []
     thresholds = []
-
     metrics_data = get_metrics_data()
 
     for t in np.arange(0.01, 0.99, 0.01):
@@ -294,8 +276,11 @@ def precision_recall_curve(
         markersize=10,
         label="Threshold",
     )
+    _precision = f"Precision:{precision[idx].round(3)}"
+    _recall = f"Recall:{recall[idx].round(3)}"
+    _f1_score = f"F1_score:{((2*precision[idx]*recall[idx])/(precision[idx]+recall[idx])).round(2)}"
     fig.suptitle(
-        f"Precision:{precision[idx].round(3)}\n Recall:{recall[idx].round(3)}\n F1_score:{((2*precision[idx]*recall[idx])/(precision[idx]+recall[idx])).round(2)}",
+        f"{_precision}\n {_recall}\n {_f1_score}",
         fontsize=20,
     )
 
@@ -305,7 +290,7 @@ def precision_recall_curve(
     ax[0].set_title(
         f"PR AUC:{average_precision_score(y_true, y_score[:,1]).round(3)}", fontsize=25
     )
-    ax[0].legend()
+    ax[0].legend(fontsize=18)
 
     conf_mt_str = conf_mt.copy().astype(str)
     conf_mt_str[0, 0] = "TN = " + str(conf_mt[0, 0])
