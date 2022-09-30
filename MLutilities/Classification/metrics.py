@@ -47,7 +47,7 @@ def threshold_example(threshold: float = 0.5):
     constant = [1] * len(y_pred)
 
     # Plot labels
-    plt.figure(figsize=(15, 2))
+    plt.figure(figsize=(15, 2), tight_layout=True)
     plt.scatter(y_pred, constant, c=y_true, cmap="Set1", s=50)
     plt.yticks(color="w")
     plt.vlines(threshold, ymin=0.95, ymax=1.05, colors="k", lw=5)
@@ -130,7 +130,7 @@ def threshold_metric_evaluation(
 
     idx = (np.abs(np.array(thresholds) - threshold)).argmin()
 
-    fig, ax = plt.subplots(1, 2, figsize=(25, 8))
+    fig, ax = plt.subplots(1, 2, figsize=(25, 8), tight_layout=True)
     ax[0].plot(thresholds, metrics, lw=5)
 
     ax[0].set_xlabel("Threshold", fontsize=15)
@@ -207,7 +207,7 @@ def precision_recall_tradeoff(
 
     idx = (np.abs(np.array(thresholds) - threshold)).argmin()
 
-    fig, ax = plt.subplots(1, 2, figsize=(25, 8))
+    fig, ax = plt.subplots(1, 2, figsize=(25, 8), tight_layout=True)
     ax[0].plot(thresholds, precision, lw=5, label="precision")
     ax[0].plot(thresholds, recall, lw=5, label="recall")
 
@@ -283,7 +283,7 @@ def precision_recall_curve(
 
     idx = (np.abs(np.array(thresholds) - threshold)).argmin()
 
-    fig, ax = plt.subplots(1, 2, figsize=(25, 8))
+    fig, ax = plt.subplots(1, 2, figsize=(25, 8), tight_layout=True)
 
     ax[0].plot(recall, precision, lw=5)
 
@@ -349,7 +349,7 @@ def ROC_curve(y_true: npt.ArrayLike, y_score: npt.ArrayLike, threshold: float = 
 
     idx = (np.abs(np.array(thresholds) - threshold)).argmin()
 
-    fig, ax = plt.subplots(1, 2, figsize=(25, 8))
+    fig, ax = plt.subplots(1, 2, figsize=(25, 8), tight_layout=True)
 
     ax[0].plot(FPR, TPR, lw=5)
 
