@@ -25,7 +25,8 @@ from sklearn.metrics import (
 from MLutilities.utils import highlight_quadrants, get_metrics_data
 
 sns.set()
-        
+
+
 def threshold_example(threshold: float = 0.5):
 
     """
@@ -189,7 +190,7 @@ def precision_recall_tradeoff(
 
     metrics = []
     thresholds = []
-    
+
     metrics_data = get_metrics_data()
 
     for t in np.arange(0.01, 0.99, 0.01):
@@ -214,9 +215,7 @@ def precision_recall_tradeoff(
     ax[0].set_ylabel("Score", fontsize=15)
 
     ax[0].vlines(threshold, ymin=0.0, ymax=1.0, colors="r")
-    ax[0].text(
-        threshold,
-        0.85,
+    ax[0].set_title(
         f"Precisin:{precision[idx].round(3)}\n recall:{recall[idx].round(3)}\n f1_score:{((2*precision[idx]*recall[idx])/(precision[idx]+recall[idx])).round(2)}",
         fontsize=20,
     )
@@ -267,7 +266,7 @@ def precision_recall_curve(
 
     metrics = []
     thresholds = []
-    
+
     metrics_data = get_metrics_data()
 
     for t in np.arange(0.01, 0.99, 0.01):
