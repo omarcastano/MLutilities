@@ -1,4 +1,3 @@
-import pickle
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -319,7 +318,8 @@ def highlight_quadrants(metric: str, ax=None):
     quadrant = metrics_data[metric]["quadrant"]
     for i in quadrant:
         highlight_quadrant(quadrant=i, ax=ax)
-       
+
+
 def get_metrics_data() -> dict:
     """
     returns a dictionary with metrics functions, formulas and confusion matrix quadrants
@@ -340,14 +340,11 @@ def get_metrics_data() -> dict:
     def accuracy(tn, fp, fn, tp):
         return (tp + tn) / (tp + fp + tn + fn + 10e-8)
 
-
     def precision(tn, fp, fn, tp):
         return tp / (tp + fp + 10e-8)
 
-
     def recall(tn, fp, fn, tp):
         return tp / (tp + fn + 10e-8)
-
 
     def f1_score(tn, fp, fn, tp):
         return (
@@ -356,26 +353,20 @@ def get_metrics_data() -> dict:
             / ((tp / (tp + fp)) + (tp / (tp + fn)))
         )
 
-
     def tpr(tn, fp, fn, tp):
         return tp / (tp + fn + 10e-8)
-
 
     def tnr(tn, fp, fn, tp):
         return tn / (tn + fp + 10e-8)
 
-
     def fnr(tn, fp, fn, tp):
         return fn / (fn + tp + 10e-8)
-
 
     def fpr(tn, fp, fn, tp):
         return fp / (fp + tn + 10e-8)
 
-
     def npv(tn, fp, fn, tp):
         return tn / (tn + fn + 10e-8)
-
 
     metrics_functions = [
         accuracy,
