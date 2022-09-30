@@ -318,7 +318,12 @@ def ROC_curve(y_true: npt.ArrayLike, y_score: npt.ArrayLike, threshold: float = 
     Compute ROC curve and AUC
 
     Arguments:
-
+        y_true: (1D)
+            true labels
+        y_score: (2D)
+            predicted scores such as probability
+        threshold: float
+            classification threshold for the probability
     """
 
     TPR = []
@@ -345,10 +350,10 @@ def ROC_curve(y_true: npt.ArrayLike, y_score: npt.ArrayLike, threshold: float = 
 
     ax[0].set_ylabel("TPR", fontsize=20)
     ax[0].set_xlabel("FPR", fontsize=20)
-    ax[0].plot(FPR[idx].round(3), TPR[idx].round(3), "rD", markersize=10)
-    ax[0].text(
-        FPR[idx].round(3),
-        TPR[idx].round(3),
+    ax[0].plot(
+        FPR[idx].round(3), TPR[idx].round(3), "rD", markersize=10, label="Threshold"
+    )
+    fig.suptitle(
         f"TPR:{TPR[idx].round(3)}\n FPR:{FPR[idx].round(3)}",
         fontsize=20,
     )
@@ -365,6 +370,7 @@ def ROC_curve(y_true: npt.ArrayLike, y_score: npt.ArrayLike, threshold: float = 
     ax[0].set_title(
         f"ROC AUC:{roc_auc_score(y_true, y_score[:,1]).round(3)}", fontsize=25
     )
+    ax[0].legend(fontsize=15)
 
     sns.heatmap(
         conf_mt,
