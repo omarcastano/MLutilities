@@ -143,7 +143,7 @@ def threshold_metric_evaluation(y_true, y_score, metric="Accuracy", threshold=0.
     ax[0].set_ylabel(f"{metric}", fontsize=15)
 
     ax[0].vlines(threshold, ymin=np.min(metrics), ymax=1.0, colors="r")
-    ax[0].set_title(threshold, 0.85, f"{metric}:{metrics[idx].round(3)}", fontsize=20)
+    ax[0].set_title(f"{metric}:{metrics[idx].round(3)}", fontsize=20)
 
     ax[0].plot(thresholds[metrics.argmax()], metrics.max(), "rD")
 
