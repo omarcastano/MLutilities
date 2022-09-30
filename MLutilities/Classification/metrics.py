@@ -1,4 +1,5 @@
 import pickle
+import importlib
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -26,9 +27,10 @@ from sklearn.metrics import (
 sns.set()
 
 # load metrics data
-with open("MLutilities/data/metrics_data.pkl", "r") as f:
-    metrics_data = pickle.load(f)
-
+with importlib.resources.path("MLutilities.data", "metrics_data.pkl") as path:
+    with open(path, "r") as f:
+        metrics_data = pickle.load(f)
+        
 
 def threshold_example(threshold: float = 0.5):
 
