@@ -216,7 +216,7 @@ def precision_recall_tradeoff(
 
     ax[0].vlines(threshold, ymin=0.0, ymax=1.0, colors="r")
     ax[0].set_title(
-        f"Precisin:{precision[idx].round(3)}\n recall:{recall[idx].round(3)}\n f1_score:{((2*precision[idx]*recall[idx])/(precision[idx]+recall[idx])).round(2)}",
+        f"Precision:{precision[idx].round(3)}\n Recall:{recall[idx].round(3)}\n F1_score:{((2*precision[idx]*recall[idx])/(precision[idx]+recall[idx])).round(2)}",
         fontsize=20,
     )
     ax[0].legend()
