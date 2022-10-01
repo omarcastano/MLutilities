@@ -2,7 +2,7 @@ import ipywidgets as widgets
 import numpy.typing as npt
 from functools import partial
 from IPython.display import display
-from MLutilities.utils import plot_log_reg
+from MLutilities.utils import plot_log_reg, roc_curve_viz
 from MLutilities.Classification import metrics
 
 
@@ -180,3 +180,33 @@ def roc_curve_widget(y_true: npt.ArrayLike, y_score: npt.ArrayLike):
         {"threshold": threshold},
     )
     display(widgets.VBox([threshold]), w)
+
+
+def roc_widget():
+    pos_dist_mean = widgets.FloatSlider(
+        description="Positive class mean:",
+        min=0.25,
+        max=0.75,
+        value=0.25,
+        step=0.01,
+        continuous_update=False,
+        layout=widgets.Layout(width="20%", height="30px"),
+        style={"description_width": "initial"},
+    )
+
+    neg_dist_mean = widgets.FloatSlider(
+        description="Negative class mean:",
+        min=0.25,
+        max=0.75,
+        value=0.75,
+        step=0.01,
+        continuous_update=False,
+        layout=widgets.Layout(width="20%", height="30px"),
+        style={"description_width": "initial"},
+    )
+
+    w = widgets.interactive_output(
+        partial(roc_curve_viz),
+        {"pos_dist_mean": pos_dist_mean, "neg_dist_mean": neg_dist_mean},
+    )
+    display(widgets.HBox([pos_dist_mean, neg_dist_mean]), w)
