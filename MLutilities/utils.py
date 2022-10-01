@@ -326,15 +326,15 @@ def get_metrics_data() -> dict:
     returns a dictionary with metrics functions, formulas and confusion matrix quadrants
     """
     metrics_keys = [
-        accuracy,
-        precision,
-        recall,
-        f1_score,
-        tpr,
-        tnr,
-        fnr,
-        fpr,
-        npv,
+        "accuracy",
+        "precision",
+        "recall",
+        "f1_score",
+        "tpr",
+        "tnr",
+        "fnr",
+        "fpr",
+        "npv",
     ]
 
     # functions to compute each metric in terms of the confusion matrix entries
