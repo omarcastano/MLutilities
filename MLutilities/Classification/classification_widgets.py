@@ -51,7 +51,9 @@ def logistic_regression_widget():
     display(widgets.VBox([regression, threshold, point_position]), w)
 
 
-def threshold_metric_widget(y_true: npt.ArrayLike, y_score: npt.ArrayLike) -> None:
+def threshold_metric_widget(
+    y_true: npt.ArrayLike, y_score: npt.ArrayLike, label: str = None
+) -> None:
     """
     Widget that plot the value of a given metric for several probability thresholds.
     This function only work for a binary classification problem.
@@ -61,6 +63,7 @@ def threshold_metric_widget(y_true: npt.ArrayLike, y_score: npt.ArrayLike) -> No
               true labels
           y_score: (2D)
               predicted scores for positive and negative class
+          label: Name of the model
     """
     threshold = widgets.FloatSlider(
         description="Threshold:",
@@ -89,7 +92,12 @@ def threshold_metric_widget(y_true: npt.ArrayLike, y_score: npt.ArrayLike) -> No
     )
 
     w = widgets.interactive_output(
-        partial(metrics.threshold_metric_evaluation, y_true=y_true, y_score=y_score),
+        partial(
+            metrics.threshold_metric_evaluation,
+            y_true=y_true,
+            y_score=y_score,
+            label=label,
+        ),
         {"metric": metric, "threshold": threshold},
     )
 
