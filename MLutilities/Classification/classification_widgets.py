@@ -63,7 +63,7 @@ def threshold_metric_widget(
               true labels
           y_score: (2D)
               predicted scores for positive and negative class
-          label: Name of the model
+          label: (optional) Name of the model
     """
     threshold = widgets.FloatSlider(
         description="Threshold:",
