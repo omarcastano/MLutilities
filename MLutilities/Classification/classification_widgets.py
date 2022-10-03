@@ -51,9 +51,7 @@ def logistic_regression_widget():
     display(widgets.VBox([regression, threshold, point_position]), w)
 
 
-def threshold_metric_widget(
-    y_true: npt.ArrayLike, y_predict_proba: npt.ArrayLike
-) -> None:
+def threshold_metric_widget(y_true: npt.ArrayLike, y_score: npt.ArrayLike) -> None:
     """
     Widget that plot the value of a given metric for several probability thresholds.
     This function only work for a binary classification problem.
