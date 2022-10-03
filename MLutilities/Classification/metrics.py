@@ -116,7 +116,7 @@ def threshold_metric_evaluation(
     idx = (np.abs(np.array(thresholds) - threshold)).argmin()
 
     fig, ax = plt.subplots(1, 2, figsize=(25, 8), constrained_layout=True)
-    fig.suptitle(label, fontsize=15)
+    fig.suptitle(label, fontsize=20)
     ax[0].plot(thresholds, metrics, lw=5)
 
     ax[0].set_xlabel("Threshold", fontsize=15)
