@@ -122,7 +122,7 @@ def threshold_metric_evaluation(
     ax[0].set_xlabel("Threshold", fontsize=15)
     ax[0].set_ylabel(f"{metric}", fontsize=15)
 
-    ax[0].vlines(threshold, ymin=np.min(metrics), ymax=1.0, colors="r")
+    ax[0].vlines(threshold, ymin=0, ymax=1.1, colors="r")
     ax[0].set_title(
         f"{metric} = {metrics_data[metric]['formula']} = {metrics[idx].round(3)}",
         fontsize=20,
@@ -199,12 +199,12 @@ def precision_recall_tradeoff(
     _precision = f"Precision:{precision[idx].round(3)}"
     _recall = f"Recall:{recall[idx].round(3)}"
     _f1_score = f"F1_score:{((2*precision[idx]*recall[idx])/(precision[idx]+recall[idx])).round(2)}"
-    ax[0].vlines(threshold, ymin=0.0, ymax=1.0, colors="r")
+    ax[0].vlines(threshold, ymin=0.0, ymax=1.1, colors="r")
     ax[0].set_title(
         f"{_precision}\n {_recall}\n {_f1_score}",
         fontsize=20,
     )
-    ax[0].legend()
+    ax[0].set_ylim(0, 1.1)
 
     # Confusion Matrix
     y_pred = (y_score[:, 1] >= threshold).astype(int)
@@ -285,14 +285,15 @@ def precision_recall_curve(
         f"{_precision}\n {_recall}\n {_f1_score}",
         fontsize=20,
     )
+    ax[0].set_title(
+        f"PR AUC:{average_precision_score(y_true, y_score[:,1]).round(3)}", fontsize=25
+    )
+    ax[0].set_ylim(0, 1.1)
+    ax[0].legend(fontsize=18)
 
     # Confusion Matrix
     y_pred = (y_score[:, 1] >= threshold).astype(int)
     conf_mt = confusion_matrix(y_true, y_pred)
-    ax[0].set_title(
-        f"PR AUC:{average_precision_score(y_true, y_score[:,1]).round(3)}", fontsize=25
-    )
-    ax[0].legend(fontsize=18)
 
     conf_mt_str = conf_mt.copy().astype(str)
     conf_mt_str[0, 0] = "TN = " + str(conf_mt[0, 0])
@@ -359,6 +360,7 @@ def ROC_curve(y_true: npt.ArrayLike, y_score: npt.ArrayLike, threshold: float = 
         f"TPR:{TPR[idx].round(3)}\n FPR:{FPR[idx].round(3)}",
         fontsize=20,
     )
+    ax[0].set_ylim(0, 1.1)
 
     # Confusion Matrix
     y_pred = (y_score[:, 1] >= threshold).astype(int)
