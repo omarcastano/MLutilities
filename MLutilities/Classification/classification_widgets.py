@@ -89,9 +89,7 @@ def threshold_metric_widget(y_true: npt.ArrayLike, y_score: npt.ArrayLike) -> No
     )
 
     w = widgets.interactive_output(
-        partial(
-            metrics.threshold_metric_evaluation, y_true=y_true, y_score=y_predict_proba
-        ),
+        partial(metrics.threshold_metric_evaluation, y_true=y_true, y_score=y_score),
         {"metric": metric, "threshold": threshold},
     )
 
