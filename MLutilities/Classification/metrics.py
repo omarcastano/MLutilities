@@ -81,6 +81,7 @@ def threshold_metric_evaluation(
     y_score: npt.ArrayLike,
     metric: str = "accuracy",
     threshold: float = 0.5,
+    label: str = None,
 ):
 
     """
@@ -97,6 +98,7 @@ def threshold_metric_evaluation(
             Accuracy, Precision, Recall, F1_score, FPR
             FNR, NPV, TNR
         threshold: Threshold for the probability
+        label: Name of the model
     """
     metrics = []
     thresholds = []
@@ -114,6 +116,7 @@ def threshold_metric_evaluation(
     idx = (np.abs(np.array(thresholds) - threshold)).argmin()
 
     fig, ax = plt.subplots(1, 2, figsize=(25, 8), constrained_layout=True)
+    fig.suptitle(label, fontsize=15)
     ax[0].plot(thresholds, metrics, lw=5)
 
     ax[0].set_xlabel("Threshold", fontsize=15)
@@ -148,7 +151,6 @@ def threshold_metric_evaluation(
     ax[1].set_title("Confusion Matrix", fontsize=20)
     ax[1].set_xlabel("Predicted Label", fontsize=20)
     ax[1].set_ylabel("True Label", fontsize=20)
-
     highlight_quadrants(metric, ax=ax[1])
 
 
