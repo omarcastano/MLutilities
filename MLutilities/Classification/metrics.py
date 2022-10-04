@@ -205,6 +205,7 @@ def precision_recall_tradeoff(
         fontsize=20,
     )
     ax[0].set_ylim(0, 1.1)
+    ax[0].legend()
 
     # Confusion Matrix
     y_pred = (y_score[:, 1] >= threshold).astype(int)
