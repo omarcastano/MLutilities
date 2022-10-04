@@ -51,7 +51,7 @@ def logistic_regression_widget():
     display(widgets.VBox([regression, threshold, point_position]), w)
 
 
-def threshold_metric_widget(
+def metrics_evaluation_widget(
     y_true: npt.ArrayLike, y_score: npt.ArrayLike, label: str = None
 ) -> None:
     """
