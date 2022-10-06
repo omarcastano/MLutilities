@@ -2,7 +2,7 @@
 name = "MLutilities"
 version = "1.0.0-dev"
 description = "Library to teach Machine Learning"
-authors = ["omarcastano <omar.castano@udea.edu.co>"]
+authors = ["omarcastano <omar.castano@udea.edu.co>", "deoache <daniel.ocampoh@udea.edu.co>"]
 packages = [
     { include = "MLutilities/Classification"},
     { include = "MLutilities"}
