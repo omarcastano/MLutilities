@@ -14,7 +14,8 @@ from sklearn.linear_model import (
 from sklearn.model_selection import train_test_split
 from sklearn.pipeline import make_pipeline
 from yellowbrick.model_selection import LearningCurve
-
+import scipy.stats as stats
+import scipy.integrate as integrate
 
 sns.set()
 
@@ -123,7 +124,12 @@ def plot_learning_curve(linear_estimator, X, y, degree, ax):
 
 
 def plot_polyreg(
-    N=50, estimator="LinearRegression", degree=2, alpha=1, l1_ratio=1, helper_viz=False
+    N=50,
+    estimator: str = "LinearRegression",
+    degree: int = 2,
+    alpha: float = 1.0,
+    l1_ratio: float = 1.0,
+    helper_viz: bool = False,
 ):
     """
     plot a polynomial regression model with and a helper visualization
@@ -240,7 +246,7 @@ def plot_log_reg(
                 model.intercept_ + np.log(1 / threshold - 1)
             )
             y_pred = model.predict_proba(x.reshape(-1, 1))[:, 1]
-            y_label = "$\hat{p} = \sigma(z)$"
+            y_label = r"$\hat{p} = \sigma(z)$"
 
         ymin = min(y_pred) if min(y_pred) <= 0 else 0
         sns.lineplot(x=x, y=y_pred, color="k", label=y_label)
@@ -269,6 +275,291 @@ def plot_log_reg(
             point_position,
             linestyle="--",
             alpha=0.5,
-            label=f"Threshold",
+            label="Threshold",
         )
         ax.legend(fontsize=15)
+
+
+def highlight_quadrant(quadrant: int, width: int = 8, color: str = "r", ax=None):
+    """
+    higlight confusion matrix quadrant
+    """
+    x_left, x_right = ax.get_xlim()
+    y_down, y_up = ax.get_ylim()
+    x_middle = (x_left + x_right) / 2
+    y_middle = (y_down + y_up) / 2
+
+    if quadrant == 0:
+        ax.vlines(x_left, y_middle, y_up, color=color, linewidth=width)
+        ax.vlines(x_middle, y_middle, y_up, color=color, linewidth=width / 2)
+        ax.hlines(y_up, x_left, x_middle, color=color, linewidth=width)
+        ax.hlines(y_middle, x_left, x_middle, color=color, linewidth=width / 2)
+    if quadrant == 1:
+        ax.vlines(x_right, y_middle, y_up, color=color, linewidth=width)
+        ax.vlines(x_middle, y_middle, y_up, color=color, linewidth=width / 2)
+        ax.hlines(y_up, x_middle, x_right, color=color, linewidth=width)
+        ax.hlines(y_middle, x_middle, x_right, color=color, linewidth=width / 2)
+    if quadrant == 2:
+        ax.vlines(x_left, y_down, y_middle, color=color, linewidth=width)
+        ax.vlines(x_middle, y_down, y_middle, color=color, linewidth=width / 2)
+        ax.hlines(y_down, x_left, x_middle, color=color, linewidth=width)
+        ax.hlines(y_middle, x_left, x_middle, color=color, linewidth=width / 2)
+    if quadrant == 3:
+        ax.vlines(x_right, y_down, y_middle, color=color, linewidth=width)
+        ax.vlines(x_middle, y_down, y_middle, color=color, linewidth=width / 2)
+        ax.hlines(y_down, x_middle, x_right, color=color, linewidth=width)
+        ax.hlines(y_middle, x_middle, x_right, color=color, linewidth=width / 2)
+
+
+def highlight_quadrants(metric: str, ax=None):
+    """
+    highlight confusion matrix quadrants associated with a metric
+    """
+    metrics_data = get_metrics_data()
+    quadrant = metrics_data[metric]["quadrant"]
+    for i in quadrant:
+        highlight_quadrant(quadrant=i, ax=ax)
+
+
+def get_metrics_data() -> dict:
+    """
+    returns a dictionary with metrics functions, formulas and confusion matrix quadrants
+    """
+    metrics_keys = [
+        "accuracy",
+        "precision",
+        "recall",
+        "f1_score",
+        "tpr",
+        "tnr",
+        "fnr",
+        "fpr",
+        "npv",
+    ]
+
+    # functions to compute each metric in terms of the confusion matrix entries
+    def accuracy(tn, fp, fn, tp):
+        return (tp + tn) / (tp + fp + tn + fn + 10e-8)
+
+    def precision(tn, fp, fn, tp):
+        return tp / (tp + fp + 10e-8)
+
+    def recall(tn, fp, fn, tp):
+        return tp / (tp + fn + 10e-8)
+
+    def f1_score(tn, fp, fn, tp):
+        num = (tp / (tp + fp + 10e-8)) * (tp / (tp + fn + 10e-8))
+        den = (tp / (tp + fp)) + (tp / (tp + fn))
+        return 2 * num / den
+
+    def tpr(tn, fp, fn, tp):
+        return tp / (tp + fn + 10e-8)
+
+    def tnr(tn, fp, fn, tp):
+        return tn / (tn + fp + 10e-8)
+
+    def fnr(tn, fp, fn, tp):
+        return fn / (fn + tp + 10e-8)
+
+    def fpr(tn, fp, fn, tp):
+        return fp / (fp + tn + 10e-8)
+
+    def npv(tn, fp, fn, tp):
+        return tn / (tn + fn + 10e-8)
+
+    metrics_functions = [
+        accuracy,
+        precision,
+        recall,
+        f1_score,
+        tpr,
+        tnr,
+        fnr,
+        fpr,
+        npv,
+    ]
+
+    # confusion matrix quadrants asociated with each metric
+    metric_quadrants = [
+        [0, 1, 2, 3],
+        [1, 3],
+        [3, 2],
+        [3, 1, 2],
+        [3, 2],
+        [0, 1],
+        [3, 2],
+        [0, 1],
+        [0, 2],
+    ]
+
+    # mathematical expression for each metric
+    metrics_formulas = [
+        r"$\frac{TP + {TN}}{{TP}+{TN}+{FP}+{FN}}$",
+        r"$\frac{TP}{TP + FP}$",
+        r"$\frac{TP}{TP+FN}$",
+        r"$2 \frac{P*R}{P+R}$",
+        r"$\frac{TP}{TP+FN}$",
+        r"$\frac{TN}{TN + FP}$",
+        r"$\frac{FN}{FN + TP}$",
+        r"$\frac{FP}{FP + TN}$",
+        r"$\frac{TN}{TN + FN}$",
+    ]
+
+    metrics_data = {}
+    for i, key in enumerate(metrics_keys):
+        metrics_data[key] = {}
+        metrics_data[key]["function"] = metrics_functions[i]
+        metrics_data[key]["formula"] = metrics_formulas[i]
+        metrics_data[key]["quadrant"] = metric_quadrants[i]
+
+    return metrics_data
+
+
+def get_xlims(mean, sigma=0.082):
+    """compute normal distribution x limits"""
+    xmin = mean - 3 * sigma
+    xmax = mean + 3 * sigma
+    return xmin, xmax
+
+
+def get_normal_dist(mean, sigma=0.082):
+    """compute normal distribution coordinates"""
+    xmin, xmax = get_xlims(mean, sigma)
+    x = np.linspace(xmin, xmax, 100)
+    y = stats.norm.pdf(x, mean, sigma)
+    return x, y
+
+
+def get_area(min, max, mean, sigma=0.082):
+    """compute the area under a normal distribution"""
+
+    def f(x, mean):
+        return stats.norm.pdf(x, mean, sigma)
+
+    area = integrate.quad(f, min, max, args=(mean))[0]
+    return area
+
+
+def fill_region(mean, min, max, sigma=0.082, label=None, color=None, ax=None):
+    """fill some region of a normal distribution between min and max"""
+    x = np.linspace(min, max, 100)
+    y = stats.norm.pdf(x, mean, sigma)
+    ax.fill_between(x, y, facecolor=color, alpha=0.2, label=label)
+
+
+def fill_false_regions(pos_dist_mean, neg_dist_mean, threshold=0.5, ax=None):
+    """plot false and positive regions"""
+    _, pos_dist_max = get_xlims(pos_dist_mean)
+    neg_dist_min, _ = get_xlims(neg_dist_mean)
+
+    pos_dist_x, pos_dist = get_normal_dist(pos_dist_mean)
+    neg_dist_x, neg_dist = get_normal_dist(neg_dist_mean)
+
+    if neg_dist_min < threshold:
+        fill_region(
+            mean=neg_dist_mean,
+            min=neg_dist_min,
+            max=threshold,
+            label="FP",
+            color="r",
+            ax=ax,
+        )
+
+    if pos_dist_max > threshold:
+        fill_region(
+            mean=pos_dist_mean,
+            min=threshold,
+            max=pos_dist_max,
+            label="FN",
+            color="b",
+            ax=ax,
+        )
+
+
+def plot_probability_distributions(
+    pos_dist_mean, neg_dist_mean, threshold=0.5, ax=None
+):
+    """
+    plot one-dimensional probability distributions for a binary classifier
+    """
+    pos_dist_x, pos_dist = get_normal_dist(pos_dist_mean)
+    neg_dist_x, neg_dist = get_normal_dist(neg_dist_mean)
+
+    ax.plot(pos_dist_x, pos_dist, label="Positive class")
+    ax.plot(neg_dist_x, neg_dist, label="Negative class")
+    ax.set_title("Probability distributions")
+    fill_false_regions(pos_dist_mean, neg_dist_mean, threshold, ax)
+
+
+@np.vectorize
+def get_classification_results(pos_dist_mean, neg_dist_mean, threshold):
+    """compute true and false positive/negative values"""
+    pos_dist_min, pos_dist_max = get_xlims(pos_dist_mean)
+    neg_dist_min, neg_dist_max = get_xlims(neg_dist_mean)
+
+    # area under a normal curve
+    auc = get_area(0, 0.5, 0.25)
+
+    # positive class scenarios
+    if threshold <= pos_dist_min:
+        TP = 0
+        FN = auc
+    elif threshold >= pos_dist_max:
+        TP = auc
+        FN = 0
+    else:
+        TP = get_area(pos_dist_min, threshold, pos_dist_mean)
+        FN = get_area(threshold, pos_dist_max, pos_dist_mean)
+
+    # negative class scenarios
+    if threshold <= neg_dist_min:
+        TN = auc
+        FP = 0
+    elif threshold >= neg_dist_max:
+        TN = 0
+        FP = auc
+    else:
+        TN = get_area(threshold, neg_dist_max, neg_dist_mean)
+        FP = get_area(neg_dist_min, threshold, neg_dist_mean)
+
+    return TP, TN, FP, FN
+
+
+@np.vectorize
+def get_positive_rates(pos_dist_mean, neg_dist_mean, threshold):
+    """compute false and positive rates"""
+    TP, TN, FP, FN = get_classification_results(pos_dist_mean, neg_dist_mean, threshold)
+    fpr = FP / (FP + TN + 1e-5)
+    tpr = TP / (TP + FN + 1e-5)
+    return fpr, tpr
+
+
+def plot_roc_curve(pos_dist_mean, neg_dist_mean, ax):
+    # false and positive rates
+    threshold = np.linspace(0, 1)
+    fpr, tpr = get_positive_rates(pos_dist_mean, neg_dist_mean, threshold)
+
+    # area under the curve
+    auc = np.trapz(tpr, fpr)
+
+    ax.set(title="ROC Curve", xlabel="False positive rate", ylabel="True positive rate")
+    ax.plot([0, 1], [0, 1], "k--")
+    ax.plot(fpr, tpr, "r", label=f"AUC {auc:.2f}")
+    ax.legend()
+
+
+def roc_curve_viz(pos_dist_mean=0.25, neg_dist_mean=0.75):
+    # probability distributions
+    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(25, 8))
+    plot_probability_distributions(pos_dist_mean, neg_dist_mean, ax=ax1)
+
+    # threshold and decision regions
+    threshold = 0.5
+    ax1.vlines(threshold, 0, 5)
+    ax1.axvspan(0, threshold, alpha=0.1, color="blue")
+    ax1.axvspan(threshold, 1, alpha=0.1, color="darkorange")
+    ax1.axis([0, 1, 0, 5])
+    ax1.legend()
+
+    # ROC curve
+    plot_roc_curve(pos_dist_mean, neg_dist_mean, ax=ax2)

@@ -1,35 +1,24 @@
 import numpy as np
-import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
-import plotly.express as px
-import scipy.stats as stats
-from ipywidgets import widgets
-from sklearn.datasets import make_blobs
-from sklearn.preprocessing import LabelEncoder
-from sklearn.linear_model import LogisticRegression
+import numpy.typing as npt
 from sklearn.metrics import (
     roc_auc_score,
-    accuracy_score,
-    precision_score,
-    f1_score,
-    recall_score,
     average_precision_score,
     confusion_matrix,
-    plot_confusion_matrix,
-    classification_report,
 )
+from MLutilities.utils import highlight_quadrants, get_metrics_data
 
 sns.set()
 
 
-def threshold_example(threshold=0.5):
+def threshold_example(threshold: float = 0.5):
 
     """
     Illustrates how model metrics such as accuracy
     depends on threshold probability
 
-    Argumetns:
+    Arguments:
         threshold: float
             Threshold for the probability
     """
@@ -43,7 +32,7 @@ def threshold_example(threshold=0.5):
     constant = [1] * len(y_pred)
 
     # Plot labels
-    plt.figure(figsize=(15, 2))
+    plt.figure(figsize=(15, 2), constrained_layout=True)
     plt.scatter(y_pred, constant, c=y_true, cmap="Set1", s=50)
     plt.yticks(color="w")
     plt.vlines(threshold, ymin=0.95, ymax=1.05, colors="k", lw=5)
@@ -64,71 +53,61 @@ def threshold_example(threshold=0.5):
     print("-------------------------")
 
 
-def per_class_accuracy(y_true, y_pred):
+def per_class_accuracy(y_true: npt.ArrayLike, y_pred: npt.ArrayLike):
 
     """
     Computes per class accuracy
 
     Argumetns:
-        y_true: 1D numpy array
+        y_true: (1D)
             true labels
-        y_pred: 1D numpy array
+        y_pred: (1D)
             predicted class labels
     """
-
-    acc = lambda tn, fp, fn, tp: (tp + tn) / (tp + fp + tn + fn + 10e-8)
-
+    metrics_data = get_metrics_data()
     acc_by_class = []
 
     for y in np.unique(y_true):
 
         tn, fp, fn, tp = confusion_matrix((y_true == y) * 1, (y_pred == y) * 1).ravel()
-        acc_by_class.append(acc(tn, fp, fn, tp))
+        acc_by_class.append(metrics_data["accuracy"]["function"](tn, fp, fn, tp))
 
     return np.array(acc_by_class)
 
 
 # threshold dependence
-def threshold_metric_evaluation(y_true, y_score, metric="Accuracy", threshold=0.5):
+def threshold_metric_evaluation(
+    y_true: npt.ArrayLike,
+    y_score: npt.ArrayLike,
+    metric: str = "accuracy",
+    threshold: float = 0.5,
+    label: str = None,
+):
 
     """
     Plot the value of a given metric for several probability threshold. This function
     only work for a binary classification problem
 
-    Argumetns:
-        y_true: array-like
+    Arguments:
+        y_true: (1D)
             true labels
-        y_score: 2D array-like
-            predicted scores for positive and negative class
+        y_score: (2D)
+            predicted scores for positive and negative classes
         metric: string
             one of the metric from the following list
             Accuracy, Precision, Recall, F1_score, FPR
             FNR, NPV, TNR
         threshold: Threshold for the probability
+        label: Name of the model
     """
-
-    metrics_dict = {
-        "Accuracy": lambda tn, fp, fn, tp: (tp + tn) / (tp + fp + tn + fn + 10e-8),
-        "Precision": lambda tn, fp, fn, tp: (tp) / (tp + fp + 10e-8),
-        "Recall": lambda tn, fp, fn, tp: (tp) / (tp + fn + 10e-8),
-        "F1_score": lambda tn, fp, fn, tp: (
-            2 * ((tp) / (tp + fp + 10e-8)) * ((tp) / (tp + fn + 10e-8))
-        )
-        / (((tp) / (tp + fp + 10e-8)) + ((tp) / (tp + fn + 10e-8))),
-        "FPR": lambda tn, fp, fn, tp: fp / (fp + tn + 10e-8),
-        "FNR": lambda tn, fp, fn, tp: fn / (fn + tp + 10e-8),
-        "NPV": lambda tn, fp, fn, tp: tn / (tn + fn + 10e-8),
-        "TNR": lambda tn, fp, fn, tp: tn / (tn + fp + 10e-8),
-    }
-
     metrics = []
     thresholds = []
-
+    metrics_data = get_metrics_data()
     for t in np.arange(0.01, 0.99, 0.01):
 
         y_pred = (y_score[:, 1] >= t).astype(int)
         tn, fp, fn, tp = confusion_matrix(y_true, y_pred).ravel()
-        metrics.append(metrics_dict[metric](tn, fp, fn, tp))
+        metrics.append(metrics_data[metric]["function"](tn, fp, fn, tp))
         thresholds.append(t)
 
     thresholds = np.array(thresholds)
@@ -136,14 +115,18 @@ def threshold_metric_evaluation(y_true, y_score, metric="Accuracy", threshold=0.
 
     idx = (np.abs(np.array(thresholds) - threshold)).argmin()
 
-    fig, ax = plt.subplots(1, 2, figsize=(25, 8))
+    fig, ax = plt.subplots(1, 2, figsize=(25, 8), constrained_layout=True)
+    fig.suptitle(label, fontsize=20)
     ax[0].plot(thresholds, metrics, lw=5)
 
     ax[0].set_xlabel("Threshold", fontsize=15)
     ax[0].set_ylabel(f"{metric}", fontsize=15)
 
-    ax[0].vlines(threshold, ymin=np.min(metrics), ymax=1.0, colors="r")
-    ax[0].text(threshold, 0.85, f"{metric}:{metrics[idx].round(3)}", fontsize=20)
+    ax[0].vlines(threshold, ymin=0, ymax=1.1, colors="r")
+    ax[0].set_title(
+        f"{metric} = {metrics_data[metric]['formula']} = {metrics[idx].round(3)}",
+        fontsize=20,
+    )
 
     ax[0].plot(thresholds[metrics.argmax()], metrics.max(), "rD")
 
@@ -165,20 +148,23 @@ def threshold_metric_evaluation(y_true, y_score, metric="Accuracy", threshold=0.
         annot_kws={"size": 20},
         ax=ax[1],
     )
-    ax[1].set_title("Congusion Matrix", fontsize=20)
+    ax[1].set_title("Confusion Matrix", fontsize=20)
     ax[1].set_xlabel("Predicted Label", fontsize=20)
     ax[1].set_ylabel("True Label", fontsize=20)
+    highlight_quadrants(metric, ax=ax[1])
 
 
-def precision_recall_tradeoff(y_true, y_score, threshold=0.5):
+def precision_recall_tradeoff(
+    y_true: npt.ArrayLike, y_score: npt.ArrayLike, threshold: float = 0.5
+):
 
     """
     This function allow you to evaluate the precision-recall tradeoff
 
     Arguments:
-        y_true: numpy array
+        y_true: (1D)
             true labels
-        y_score: numpy array
+        y_score: (2D)
             predicted scores such as probability
         threshold: float
             classification threshold for the probability
@@ -186,25 +172,14 @@ def precision_recall_tradeoff(y_true, y_score, threshold=0.5):
 
     precision = []
     recall = []
-
-    metrics_dict = {
-        "Accuracy": lambda tn, fp, fn, tp: (tp + tn) / (tp + fp + tn + fn + 10e-8),
-        "Precision": lambda tn, fp, fn, tp: (tp) / (tp + fp + 10e-8),
-        "Recall": lambda tn, fp, fn, tp: (tp) / (tp + fn + 10e-8),
-        "f1_score": lambda tn, fp, fn, tp: (
-            2 * ((tp) / (tp + fp + 10e-8)) * ((tp) / (tp + fn + 10e-8))
-        )
-        / (((tp) / (tp + fp + 10e-8)) + ((tp) / (tp + fn + 10e-8))),
-    }
-
-    metrics = []
     thresholds = []
+    metrics_data = get_metrics_data()
 
     for t in np.arange(0.01, 0.99, 0.01):
         y_pred = (y_score[:, 1] >= t).astype(int)
         tn, fp, fn, tp = confusion_matrix(y_true, y_pred).ravel()
-        precision.append(metrics_dict["Precision"](tn, fp, fn, tp))
-        recall.append(metrics_dict["Recall"](tn, fp, fn, tp))
+        precision.append(metrics_data["precision"]["function"](tn, fp, fn, tp))
+        recall.append(metrics_data["recall"]["function"](tn, fp, fn, tp))
         thresholds.append(t)
 
     thresholds = np.array(thresholds)
@@ -214,20 +189,22 @@ def precision_recall_tradeoff(y_true, y_score, threshold=0.5):
 
     idx = (np.abs(np.array(thresholds) - threshold)).argmin()
 
-    fig, ax = plt.subplots(1, 2, figsize=(25, 8))
+    fig, ax = plt.subplots(1, 2, figsize=(25, 8), constrained_layout=True)
     ax[0].plot(thresholds, precision, lw=5, label="precision")
     ax[0].plot(thresholds, recall, lw=5, label="recall")
 
     ax[0].set_xlabel("Threshold", fontsize=15)
     ax[0].set_ylabel("Score", fontsize=15)
 
-    ax[0].vlines(threshold, ymin=0.0, ymax=1.0, colors="r")
-    ax[0].text(
-        threshold,
-        0.85,
-        f"Precisin:{precision[idx].round(3)}\n recall:{recall[idx].round(3)}\n f1_score:{((2*precision[idx]*recall[idx])/(precision[idx]+recall[idx])).round(2)}",
+    _precision = f"Precision:{precision[idx].round(3)}"
+    _recall = f"Recall:{recall[idx].round(3)}"
+    _f1_score = f"F1_score:{((2*precision[idx]*recall[idx])/(precision[idx]+recall[idx])).round(2)}"
+    ax[0].vlines(threshold, ymin=0.0, ymax=1.1, colors="r")
+    ax[0].set_title(
+        f"{_precision}\n {_recall}\n {_f1_score}",
         fontsize=20,
     )
+    ax[0].set_ylim(0, 1.1)
     ax[0].legend()
 
     # Confusion Matrix
@@ -249,20 +226,22 @@ def precision_recall_tradeoff(y_true, y_score, threshold=0.5):
         annot_kws={"size": 20},
         ax=ax[1],
     )
-    ax[1].set_title("Congusion Matrix", fontsize=20)
+    ax[1].set_title("Confusion Matrix", fontsize=20)
     ax[1].set_xlabel("Predicted Label", fontsize=20)
     ax[1].set_ylabel("True Label", fontsize=20)
 
 
-def precision_recall_curve(y_true, y_score, threshold=0.5):
+def precision_recall_curve(
+    y_true: npt.ArrayLike, y_score: npt.ArrayLike, threshold: float = 0.5
+):
 
     """
     Plots Preciison recall curve and PR AUC
 
     Arguments:
-        y_true: numpy array
+        y_true: (1D)
             true labels
-        y_score: numpy array
+        y_score: (2D)
             predicted scores such as probability
         threshold: float
             classification threshold for the probability
@@ -270,25 +249,14 @@ def precision_recall_curve(y_true, y_score, threshold=0.5):
 
     precision = []
     recall = []
-
-    metrics_dict = {
-        "Accuracy": lambda tn, fp, fn, tp: (tp + tn) / (tp + fp + tn + fn + 10e-8),
-        "Precision": lambda tn, fp, fn, tp: (tp) / (tp + fp + 10e-8),
-        "Recall": lambda tn, fp, fn, tp: (tp) / (tp + fn + 10e-8),
-        "f1_score": lambda tn, fp, fn, tp: (
-            2 * ((tp) / (tp + fp + 10e-8)) * ((tp) / (tp + fn + 10e-8))
-        )
-        / (((tp) / (tp + fp + 10e-8)) + ((tp) / (tp + fn + 10e-8))),
-    }
-
-    metrics = []
     thresholds = []
+    metrics_data = get_metrics_data()
 
     for t in np.arange(0.01, 0.99, 0.01):
         y_pred = (y_score[:, 1] >= t).astype(int)
         tn, fp, fn, tp = confusion_matrix(y_true, y_pred).ravel()
-        precision.append(metrics_dict["Precision"](tn, fp, fn, tp))
-        recall.append(metrics_dict["Recall"](tn, fp, fn, tp))
+        precision.append(metrics_data["precision"]["function"](tn, fp, fn, tp))
+        recall.append(metrics_data["recall"]["function"](tn, fp, fn, tp))
         thresholds.append(t)
 
     thresholds = np.array(thresholds)
@@ -298,26 +266,35 @@ def precision_recall_curve(y_true, y_score, threshold=0.5):
 
     idx = (np.abs(np.array(thresholds) - threshold)).argmin()
 
-    fig, ax = plt.subplots(1, 2, figsize=(25, 8))
+    fig, ax = plt.subplots(1, 2, figsize=(25, 8), constrained_layout=True)
 
     ax[0].plot(recall, precision, lw=5)
 
     ax[0].set_ylabel("Precision", fontsize=20)
     ax[0].set_xlabel("Recall", fontsize=20)
-    ax[0].plot(recall[idx].round(3), precision[idx].round(3), "rD", markersize=10)
-    ax[0].text(
+    ax[0].plot(
         recall[idx].round(3),
         precision[idx].round(3),
-        f"Precisin:{precision[idx].round(3)}\n recall:{recall[idx].round(3)}\n f1_score:{((2*precision[idx]*recall[idx])/(precision[idx]+recall[idx])).round(2)}",
+        "rD",
+        markersize=10,
+        label="Threshold",
+    )
+    _precision = f"Precision:{precision[idx].round(3)}"
+    _recall = f"Recall:{recall[idx].round(3)}"
+    _f1_score = f"F1_score:{((2*precision[idx]*recall[idx])/(precision[idx]+recall[idx])).round(2)}"
+    fig.suptitle(
+        f"{_precision}\n {_recall}\n {_f1_score}",
         fontsize=20,
     )
+    ax[0].set_title(
+        f"PR AUC:{average_precision_score(y_true, y_score[:,1]).round(3)}", fontsize=25
+    )
+    ax[0].set_ylim(0, 1.1)
+    ax[0].legend(fontsize=18)
 
     # Confusion Matrix
     y_pred = (y_score[:, 1] >= threshold).astype(int)
     conf_mt = confusion_matrix(y_true, y_pred)
-    ax[0].set_title(
-        f"PR AUC:{average_precision_score(y_true, y_score[:,1]).round(3)}", fontsize=25
-    )
 
     conf_mt_str = conf_mt.copy().astype(str)
     conf_mt_str[0, 0] = "TN = " + str(conf_mt[0, 0])
@@ -339,13 +316,18 @@ def precision_recall_curve(y_true, y_score, threshold=0.5):
     ax[1].set_ylabel("True Label", fontsize=20)
 
 
-def ROC_curve(y_true, y_score, threshold=0.5):
+def ROC_curve(y_true: npt.ArrayLike, y_score: npt.ArrayLike, threshold: float = 0.5):
 
     """
     Compute ROC curve and AUC
 
     Arguments:
-
+        y_true: (1D)
+            true labels
+        y_score: (2D)
+            predicted scores such as probability
+        threshold: float
+            classification threshold for the probability
     """
 
     TPR = []
@@ -366,19 +348,20 @@ def ROC_curve(y_true, y_score, threshold=0.5):
 
     idx = (np.abs(np.array(thresholds) - threshold)).argmin()
 
-    fig, ax = plt.subplots(1, 2, figsize=(25, 8))
+    fig, ax = plt.subplots(1, 2, figsize=(25, 8), constrained_layout=True)
 
     ax[0].plot(FPR, TPR, lw=5)
 
     ax[0].set_ylabel("TPR", fontsize=20)
     ax[0].set_xlabel("FPR", fontsize=20)
-    ax[0].plot(FPR[idx].round(3), TPR[idx].round(3), "rD", markersize=10)
-    ax[0].text(
-        FPR[idx].round(3),
-        TPR[idx].round(3),
+    ax[0].plot(
+        FPR[idx].round(3), TPR[idx].round(3), "rD", markersize=10, label="Threshold"
+    )
+    fig.suptitle(
         f"TPR:{TPR[idx].round(3)}\n FPR:{FPR[idx].round(3)}",
         fontsize=20,
     )
+    ax[0].set_ylim(0, 1.1)
 
     # Confusion Matrix
     y_pred = (y_score[:, 1] >= threshold).astype(int)
@@ -392,6 +375,7 @@ def ROC_curve(y_true, y_score, threshold=0.5):
     ax[0].set_title(
         f"ROC AUC:{roc_auc_score(y_true, y_score[:,1]).round(3)}", fontsize=25
     )
+    ax[0].legend(fontsize=15)
 
     sns.heatmap(
         conf_mt,

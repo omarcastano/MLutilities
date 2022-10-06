@@ -4,8 +4,7 @@ version = "1.0.0-dev"
 description = "Library to teach Machine Learning"
 authors = ["omarcastano <omar.castano@udea.edu.co>", "deoache <daniel.ocampoh@udea.edu.co>"]
 packages = [
-    { include = "MLutilities/Classification"},
-    { include = "MLutilities"}
+    {include = "MLutilities"}
 ]
 
 [tool.poetry.dependencies]
@@ -15,6 +14,7 @@ plotly = "^5.10.0"
 scikit-plot = "^0.3.7"
 yellowbrick = "^1.5"
 mlxtend = ">=0.19.0"
+numpy = "^1.21.6"
 
 [tool.poetry.dev-dependencies]
 numpy = "^1.21.6"
@@ -28,6 +28,7 @@ seaborn = "^0.11.2"
 ipykernel = "^6.15.1"
 plotly = "^5.9.0"
 black = "^22.6.0"
+sklearn = "^0.0"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
