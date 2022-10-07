@@ -57,9 +57,9 @@ def plot_lofo_importance(
             scoring = "f1_macro"
 
         # check if n_samples > 1000
-        if dataset.shape[0] < 1000:
+        if df.shape[0] < 1000:
             # repeat more data since FLOFO needs > 1000 samples
-            repeats = 2000 / dataset.shape[0]
+            repeats = 2000 / df.shape[0]
             df = pd.DataFrame(
                 np.repeat(df.values, repeats=repeats, axis=0), columns=df.columns
             )
