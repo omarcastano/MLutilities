@@ -13,9 +13,11 @@ from sklearn.linear_model import (
 )
 from sklearn.model_selection import train_test_split
 from sklearn.pipeline import make_pipeline
+from sklearn.tree import DecisionTreeClassifier, plot_tree
 from yellowbrick.model_selection import LearningCurve
 import scipy.stats as stats
 import scipy.integrate as integrate
+from mlxtend.plotting import plot_decision_regions
 
 sns.set()
 
@@ -563,3 +565,28 @@ def roc_curve_viz(pos_dist_mean=0.25, neg_dist_mean=0.75):
 
     # ROC curve
     plot_roc_curve(pos_dist_mean, neg_dist_mean, ax=ax2)
+
+
+def plot_iris_decision_tree(max_depth: int = 1):
+    """
+    trains a decision tree on the iris dataset and show the decision regions
+
+    Arguments:
+    ----------
+        max_depth:
+            Decision tree maximum depth
+    """
+    data = sns.load_dataset("iris")
+    X = data[["petal_length", "petal_width"]]
+    y = data["species"].map({"setosa": 0, "versicolor": 1, "virginica": 2})
+
+    dt_clf = DecisionTreeClassifier(random_state=42, max_depth=max_depth).fit(
+        X.values, y.values
+    )
+
+    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(20, 9))
+    sns.scatterplot(data=data, x="petal_length", y="petal_width", hue="species", ax=ax1)
+    plot_decision_regions(X.values, y.values, dt_clf, legend=0, ax=ax1)
+    plot_tree(
+        dt_clf, feature_names=["petal_length", "petal_width"], filled=True, ax=ax2
+    )
