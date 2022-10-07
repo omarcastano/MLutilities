@@ -569,7 +569,7 @@ def roc_curve_viz(pos_dist_mean=0.25, neg_dist_mean=0.75):
 
 def plot_iris_decision_tree(max_depth: int = 1):
     """
-    trains a decision tree on the iris dataset and show the decision regions
+    trains a decision tree on the iris dataset and shows the tree and decision regions
 
     Arguments:
     ----------
