@@ -1,9 +1,8 @@
-from random import random
 import numpy as np
 import pandas as pd
 from sklearn.ensemble import RandomForestClassifier
-from lofo import LOFOImportance, FLOFOImportance, Dataset, plot_importance
 from sklearn.model_selection import KFold
+from lofo import LOFOImportance, FLOFOImportance, Dataset, plot_importance
 
 
 def plot_lofo_importance(
@@ -54,6 +53,7 @@ def plot_flofo_importance(
     scoring: str = "f1_macro",
     cv=None,
     figsize: tuple = (12, 20),
+    model=None,
 ):
     """
     plot fast LOFO (FLOFO) importance.
@@ -69,10 +69,10 @@ def plot_flofo_importance(
             Same as scoring in in Sklearn API
         cv:
             Cross validation scheme. Same as cv in Sklearn API
+        model: (default RandomForestClassifier)
+            Sklearn API model
         figsize: (default (12, 20))
             Size of figure
-        model:
-            Sklearn API model
     """
     X = df.drop(columns=target)
     y = df[target]
