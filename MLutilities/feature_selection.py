@@ -15,7 +15,7 @@ def plot_lofo_importance(
     """
     plot LOFO importance (binary classification)
 
-    taken from: github.com/aerdem4/lofo-importance
+    github.com/aerdem4/lofo-importance
 
     Arguments:
     ----------
@@ -55,7 +55,7 @@ def plot_flofo_importance(
     plot fast LOFO (FLOFO) importance.
     Applies a trained model on validation set by noising one feature each time
 
-    taken from: github.com/aerdem4/lofo-importance
+    github.com/aerdem4/lofo-importance
 
     Arguments:
     ----------
