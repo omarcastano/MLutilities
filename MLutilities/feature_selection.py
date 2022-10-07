@@ -1,14 +1,16 @@
+from random import random
 import numpy as np
 import pandas as pd
 from sklearn.ensemble import RandomForestClassifier
 from lofo import LOFOImportance, FLOFOImportance, Dataset, plot_importance
+from sklearn.model_selection import KFold
 
 
 def plot_lofo_importance(
     df: pd.DataFrame,
     target: str,
-    cv,
     scoring: str,
+    cv=None,
     figsize: tuple = (12, 20),
     model=None,
 ):
@@ -31,8 +33,11 @@ def plot_lofo_importance(
         model:
             Sklearn API model (used in FLOFO)
     """
-    X = df.drop(target)
+    X = df.drop(columns=target)
     y = df[target]
+
+    if not cv:
+        cv = KFold(n_splits=5, shuffle=True, random_state=42)
 
     n_labels = y.nunique()
     if n_labels == 2:
