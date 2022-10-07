@@ -74,7 +74,6 @@ def plot_lofo_importance(
             validation_df=df,
             target=target,
             features=[col for col in df.columns if col != target],
-            cv=cv,
             scoring=scoring,
             trained_model=model,
         )
