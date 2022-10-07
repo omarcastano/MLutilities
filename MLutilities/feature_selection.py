@@ -5,7 +5,7 @@ from lofo import LOFOImportance, FLOFOImportance, Dataset, plot_importance
 
 
 def plot_lofo_importance(
-    dataset: pd.DataFrame,
+    df: pd.DataFrame,
     target: str,
     cv,
     scoring: str,
@@ -23,8 +23,9 @@ def plot_lofo_importance(
             target feature
         cv:
             Cross validation scheme. Same as cv in Sklearn API
-        scoring: (default f1)
-            Same as scoring in in Sklearn API
+        scoring:
+            Same as scoring in in Sklearn API. defaults: f1 for binary classification
+            and f1_macro for multiclass classification
         figsize: (default (12, 20))
             Size of figure
         model:
