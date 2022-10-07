@@ -2,7 +2,7 @@ import ipywidgets as widgets
 import numpy.typing as npt
 from functools import partial
 from IPython.display import display
-from MLutilities.utils import plot_log_reg, roc_curve_viz
+from MLutilities.utils import plot_log_reg, roc_curve_viz, plot_iris_decision_tree
 from MLutilities.Classification import metrics
 
 
@@ -214,3 +214,28 @@ def roc_widget():
         {"pos_dist_mean": pos_dist_mean, "neg_dist_mean": neg_dist_mean},
     )
     display(widgets.HBox([pos_dist_mean, neg_dist_mean]), w)
+
+
+def iris_decision_tree_widget():
+    """
+    Helper widget to visualize a decision tree classifier on the iris dataset
+    """
+    max_depth = widgets.IntSlider(
+        description="Max Depth:",
+        min=1,
+        max=10,
+        value=1,
+        step=1,
+        continuous_update=False,
+        layout=widgets.Layout(width="20%", height="30px"),
+        style={"description_width": "initial"},
+    )
+
+    w = widgets.interactive_output(
+        partial(
+            plot_iris_decision_tree,
+        ),
+        {"max_depth": max_depth},
+    )
+
+    display(widgets.VBox([max_depth]), w)
