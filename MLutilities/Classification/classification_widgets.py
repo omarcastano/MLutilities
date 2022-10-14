@@ -257,13 +257,9 @@ def kernelPCA_widget(df: pd.DataFrame, target: str):
     target:
         target variable
     """
-    n_components = widgets.IntSlider(
+    n_components = widgets.Dropdown(
         description="Number of components:",
-        min=2,
-        max=3,
-        value=2,
-        step=1,
-        continuous_update=False,
+        options=[2, 3],
         layout=widgets.Layout(width="20%", height="30px"),
         style={"description_width": "initial"},
     )
