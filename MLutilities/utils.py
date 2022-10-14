@@ -2,6 +2,7 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
+import plotly.express as px
 from typing import List, Tuple
 from sklearn.preprocessing import StandardScaler, MinMaxScaler, PolynomialFeatures
 from sklearn.linear_model import (
@@ -14,10 +15,12 @@ from sklearn.linear_model import (
 from sklearn.model_selection import train_test_split
 from sklearn.pipeline import make_pipeline
 from sklearn.tree import DecisionTreeClassifier, plot_tree
+from sklearn.decomposition import KernelPCA
 from yellowbrick.model_selection import LearningCurve
 import scipy.stats as stats
 import scipy.integrate as integrate
 from mlxtend.plotting import plot_decision_regions
+
 
 sns.set()
 
@@ -590,3 +593,67 @@ def plot_iris_decision_tree(max_depth: int = 1):
     plot_tree(
         dt_clf, feature_names=["petal_length", "petal_width"], filled=True, ax=ax2
     )
+
+
+def plot_kernel_pca(
+    df: pd.DataFrame,
+    target: str,
+    n_components: int = 2,
+    standarized: bool = True,
+    kernel: str = "linear",
+    coef0: float = 1,
+    gamma: str = None,
+    degree: int = 2,
+):
+    """
+    Reduce the dimensionality of a dataset using a kernelized PCA and plot the result.
+
+    Arguments:
+    ----------
+    df:
+        dataset
+    target:
+        target variable
+    n_components:
+        Number of principal components (2 or 3)
+    standarized:
+        If True standarizes the features before the PCA
+    kernel:
+        kernel to use in PCA {linear, poly, rbf, sigmoid, cosine}
+    coef0:
+        Independent term in poly and sigmoid kernels. Ignored by other kernels
+    gamma:
+        Kernel coefficient for rbf, poly and sigmoid kernels. Ignored by other kernels
+    degree:
+        Degree for poly kernels. Ignored by other kernels
+    """
+    X = df.drop(columns=target).select_dtypes(exclude="object")
+    y = df[target]
+
+    pca = KernelPCA(
+        n_components=n_components,
+        kernel=kernel,
+        gamma=gamma,
+        degree=degree,
+        coef0=coef0,
+    )
+
+    X_pca = (
+        make_pipeline(StandardScaler(), pca).fit_transform(X)
+        if standarized
+        else pca.fit_transform(X)
+    )
+
+    labels = (
+        {"x": "PC1", "y": "PC2"}
+        if n_components == 2
+        else {"x": "PC1", "y": "PC2", "z": "PC3"}
+    )
+
+    if n_components == 2:
+        fig = px.scatter(x=X_pca[:, 0], y=X_pca[:, 1], color=y, labels=labels)
+    elif n_components == 3:
+        fig = px.scatter_3d(
+            x=X_pca[:, 0], y=X_pca[:, 1], z=X_pca[:, 2], color=y, labels=labels
+        )
+    fig.show()

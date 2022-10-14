@@ -1,8 +1,15 @@
+import pandas as pd
 import ipywidgets as widgets
 import numpy.typing as npt
 from functools import partial
 from IPython.display import display
-from MLutilities.utils import plot_log_reg, roc_curve_viz, plot_iris_decision_tree
+from MLutilities.utils import (
+    fill_false_regions,
+    plot_log_reg,
+    roc_curve_viz,
+    plot_iris_decision_tree,
+    plot_kernel_pca,
+)
 from MLutilities.Classification import metrics
 
 
@@ -239,3 +246,86 @@ def iris_decision_tree_widget():
     )
 
     display(widgets.VBox([max_depth]), w)
+
+
+def kernelPCA_widget(df: pd.DataFrame, target: str):
+    """
+    Helper widget to visualize the effect of a kernelized PCA transformation
+
+    df:
+        dataset
+    target:
+        target variable
+    """
+    n_components = widgets.IntSlider(
+        description="Number of components:",
+        min=2,
+        max=3,
+        value=2,
+        step=1,
+        continuous_update=False,
+        layout=widgets.Layout(width="20%", height="30px"),
+        style={"description_width": "initial"},
+    )
+    standarized = widgets.Dropdown(
+        options=[True, False],
+        description="Standarize:",
+        layout=widgets.Layout(width="20%", height="30px"),
+        style={"description_width": "initial"},
+    )
+    kernel = widgets.Dropdown(
+        options=[
+            "linear",
+            "poly",
+            "rbf",
+            "sigmoid",
+            "cosine",
+        ],
+        description="kernel:",
+        layout=widgets.Layout(width="20%", height="30px"),
+        style={"description_width": "initial"},
+    )
+    coef0 = widgets.FloatSlider(
+        description="coef0:",
+        min=-5,
+        max=5,
+        value=1,
+        step=0.5,
+        continuous_update=False,
+        layout=widgets.Layout(width="20%", height="30px"),
+        style={"description_width": "initial"},
+    )
+    gamma = widgets.FloatSlider(
+        description="gamma:",
+        min=0.01,
+        max=10,
+        value=0.01,
+        step=0.01,
+        continuous_update=False,
+        layout=widgets.Layout(width="20%", height="30px"),
+        style={"description_width": "initial"},
+    )
+    degree = widgets.IntSlider(
+        description="degree:",
+        min=2,
+        max=10,
+        value=2,
+        step=1,
+        continuous_update=False,
+        layout=widgets.Layout(width="20%", height="30px"),
+        style={"description_width": "initial"},
+    )
+
+    w = widgets.interactive_output(
+        partial(plot_kernel_pca, df, target),
+        {
+            "n_components": n_components,
+            "standarized": standarized,
+            "kernel": kernel,
+            "coef0": coef0,
+            "gamma": gamma,
+            "degree": degree,
+        },
+    )
+
+    display(widgets.VBox([n_components, standarized, kernel, coef0, gamma, degree]), w)
