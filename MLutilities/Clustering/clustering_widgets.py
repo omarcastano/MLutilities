@@ -1,7 +1,7 @@
 import ipywidgets as widgets
 from functools import partial
 from IPython.display import display
-from utils import plot_blobs_clustering
+from .utils import plot_blobs_clustering
 
 
 def blobs_clustering_widget():
