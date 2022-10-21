@@ -4,7 +4,6 @@ import numpy.typing as npt
 from functools import partial
 from IPython.display import display
 from MLutilities.utils import (
-    fill_false_regions,
     plot_log_reg,
     roc_curve_viz,
     plot_iris_decision_tree,
@@ -58,9 +57,7 @@ def logistic_regression_widget():
     display(widgets.VBox([regression, threshold, point_position]), w)
 
 
-def metrics_evaluation_widget(
-    y_true: npt.ArrayLike, y_score: npt.ArrayLike, label: str = None
-) -> None:
+def metrics_evaluation_widget(y_true: npt.ArrayLike, y_score: npt.ArrayLike, label: str = None) -> None:
     """
     Widget that plot the value of a given metric for several probability thresholds.
     This function only work for a binary classification problem.
@@ -111,9 +108,7 @@ def metrics_evaluation_widget(
     display(widgets.VBox([metric, threshold]), w)
 
 
-def precision_recall_tradeoff_widget(
-    y_true: npt.ArrayLike, y_predict_proba: npt.ArrayLike
-) -> None:
+def precision_recall_tradeoff_widget(y_true: npt.ArrayLike, y_predict_proba: npt.ArrayLike) -> None:
     """
     This function allows you to evaluate the precision-recall tradeoff
 
@@ -133,9 +128,7 @@ def precision_recall_tradeoff_widget(
         layout=widgets.Layout(width="20%", height="50px"),
     )
     w = widgets.interactive_output(
-        partial(
-            metrics.precision_recall_tradeoff, y_true=y_true, y_score=y_predict_proba
-        ),
+        partial(metrics.precision_recall_tradeoff, y_true=y_true, y_score=y_predict_proba),
         {"threshold": threshold},
     )
     display(widgets.VBox([threshold]), w)
@@ -172,6 +165,7 @@ def roc_curve_widget(y_true: npt.ArrayLike, y_score: npt.ArrayLike):
     Compute ROC curve and AUC
 
     Arguments:
+    ----------
         y_true: (1D)
             true labels
         y_score: (2D)
@@ -248,14 +242,16 @@ def iris_decision_tree_widget():
     display(widgets.VBox([max_depth]), w)
 
 
-def kernelPCA_widget(df: pd.DataFrame, target: str):
+def kernelPCA_widget(dataset: pd.DataFrame, target: str):
     """
     Helper widget to visualize the effect of a kernelized PCA transformation
 
-    df:
-        dataset
-    target:
-        target variable
+    Arguments:
+    ----------
+        dataset:
+            pandas dataframe having the input data
+        target:
+            name of the target variable
     """
     n_components = widgets.Dropdown(
         description="Number of components:",
@@ -313,7 +309,7 @@ def kernelPCA_widget(df: pd.DataFrame, target: str):
     )
 
     w = widgets.interactive_output(
-        partial(plot_kernel_pca, df, target),
+        partial(plot_kernel_pca, dataset, target),
         {
             "n_components": n_components,
             "standarized": standarized,
