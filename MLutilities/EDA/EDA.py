@@ -412,7 +412,7 @@ def cramersv(
     print("------------------------------------------------------------------------------------------------------\n")
 
     if plot_histogram:
-        fig = px.histogram(dataset, x=input_feature, histnorm=histnorm, color=color, barmode="group")
+        fig = px.histogram(dataset, x=input_feature, histnorm=histnorm, color=color, barmode="group", width=1500, height=500)
         fig.show()
 
 
