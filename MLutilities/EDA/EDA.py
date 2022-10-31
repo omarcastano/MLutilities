@@ -54,6 +54,8 @@ def kolmogorov_test(
         x = np.log1p(dataset[variable].to_numpy())
     else:
         x = dataset[variable].to_numpy()
+        
+    x = (x - x.mean()) / x.std()
 
     ktest = stats.kstest(x, "norm")
     print(f"------------------------- Kolmogorov test fot the variable {variable} --------------------")
