@@ -54,11 +54,74 @@ def kolmogorov_test(
         x = np.log1p(dataset[variable].to_numpy())
     else:
         x = dataset[variable].to_numpy()
-        
-    x = (x - x.mean()) / x.std()
 
-    ktest = stats.kstest(x, "norm")
+    x_scale = (x - x.mean()) / x.std()
+
+    ktest = stats.kstest(x_scale, "norm")
     print(f"------------------------- Kolmogorov test fot the variable {variable} --------------------")
+    print(f"statistic={ktest[0]:.3f}, p_value={ktest[1]:.3f}\n")
+    if ktest[1] < 0.05:
+        print(
+            f"Since {ktest[1]:.3f} < 0.05 you can reject the null hypothesis, so the variable {variable} \ndo not follow a normal distribution"  # noqa: E501
+        )
+    else:
+        print(
+            f"Since {ktest[1]:.3f} > 0.05 you cannot reject the null hypothesis, so the variable {variable} \nfollows a normal distribution"
+        )
+    print("-------------------------------------------------------------------------------------------\n")
+    if plot_histogram:
+        fig = px.histogram(dataset, x=x, nbins=bins, marginal="box", color=color, barmode="overlay")
+        fig.update_traces(marker_line_width=1, marker_line_color="white", opacity=0.8)
+        fig.update_layout(xaxis_title=variable, width=1500, height=500)
+        fig.show()
+
+
+def shapiro_test(
+    dataset,
+    variable: str,
+    transformation: str = None,
+    plot_histogram: bool = False,
+    bins: int = 30,
+    color: str = None,
+):
+
+    """
+    This function computes Shapiro test to check if the variable
+    is normaly distributed
+
+    H0: The variable follows a normal distribution
+    H1: The variable do not follow a normal distribution
+
+    if p_value < 0.05 you can reject the null hypothesis
+
+    Arguments:
+    ----------
+        dataset: pandas dataframe or dict with de format {'col1':np.array, 'col2':np.array}
+        variable: variable to perform the Shapiro test
+        transformation: kind of transformation to apply. Options:
+             - yeo_johnson: apply yeo johnson transformation to the input variable
+             - log: apply logarithm transformation to the input variable
+        plot_histogram:If True plot a histogram of the variable
+        bins: Number of bins to use when plotting the histogram
+        color: Name of column in dataset. Values from this column are used to assign color to marks.
+    """
+
+    if type(dataset) == dict:
+        dataset = pd.DataFrame(dataset)
+
+    dataset = dataset.dropna(subset=[variable]).copy()
+
+    if transformation == "yeo_johnson":
+        x = stats.yeojohnson(dataset[variable].to_numpy())[0]
+    elif transformation == "log":
+        x = np.log1p(dataset[variable].to_numpy())
+    else:
+        x = dataset[variable].to_numpy()
+
+    x_scale = (x - x.mean()) / x.std()
+
+    ktest = stats.shapiro(x_scale)
+    print(f"------------------------- Shapiro test fot the variable {variable} --------------------")
     print(f"statistic={ktest[0]:.3f}, p_value={ktest[1]:.3f}\n")
     if ktest[1] < 0.05:
         print(
