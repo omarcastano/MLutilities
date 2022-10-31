@@ -24,7 +24,7 @@ def kolmogorov_test_widget(dataset: pd.DataFrame):
     """
 
     num_vars = dataset.select_dtypes([np.number]).columns
-    cat_vars = dataset.select_dtypes([object]).columns.tolist()
+    cat_vars = dataset.select_dtypes([object, "category"]).columns.tolist()
 
     variable = widgets.Dropdown(
         options=num_vars,
@@ -83,7 +83,7 @@ def shapiro_test_widget(dataset: pd.DataFrame):
     """
 
     num_vars = dataset.select_dtypes([np.number]).columns
-    cat_vars = dataset.select_dtypes([object]).columns.tolist()
+    cat_vars = dataset.select_dtypes([object, "category"]).columns.tolist()
 
     variable = widgets.Dropdown(
         options=num_vars,
@@ -238,7 +238,7 @@ def kruskal_test_widget(dataset: pd.DataFrame):
     """
 
     num_vars = dataset.select_dtypes([np.number]).columns
-    cat_vars = dataset.select_dtypes([object]).columns.tolist()
+    cat_vars = dataset.select_dtypes([object, "category"]).columns.tolist()
 
     num_variable = widgets.Dropdown(
         options=num_vars,
@@ -276,7 +276,7 @@ def barplot_widget(dataset: pd.DataFrame):
     """
 
     num_vars = dataset.select_dtypes([np.number]).columns
-    cat_vars = dataset.select_dtypes([object]).columns.tolist()
+    cat_vars = dataset.select_dtypes([object, "category"]).columns.tolist()
 
     num_variable = widgets.Dropdown(
         options=num_vars,
@@ -330,7 +330,7 @@ def cramerv_widget(dataset: pd.DataFrame):
 
     """
 
-    cat_vars = dataset.select_dtypes([object]).columns.tolist()
+    cat_vars = dataset.select_dtypes([object, "category"]).columns.tolist()
 
     variable1 = widgets.Dropdown(
         options=cat_vars,
