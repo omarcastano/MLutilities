@@ -1,12 +1,10 @@
 import pickle
 import pkg_resources
-import logging
 
 DATASETS = ["penguins", "diamonds", "adults", "cars", "cars_nulls", "imdb"]
 
 
 def data_format(data: pickle, load_as: str, n: int):
-
     """
     Return data in different formats (Dataframe, dict, 2D numpy array, List)
 
@@ -76,110 +74,6 @@ def data_format(data: pickle, load_as: str, n: int):
 
     elif load_as == "dataframe":
         return data
-
-
-def diamonds(load_as: str = "dict", n=-1):
-
-    """
-
-    Returns a dicctionary that loads Diamonds dataset. The dicctionary has
-    the follow keys:
-
-    DESC: a breve description of the dataset and its columns
-    data: raw data (rows and columns)
-    feature_names: the name of the features/columns
-
-    Argumetns:
-        load_as: str. possible options: 'dict', 'list, 'numpy' or 'dataframe'
-            this argument controls how raw data is return.
-            * 'dict' : dict like --> {column : [values]}
-            * 'list' : list like --> [[column 1],[column 2],[column 3]]
-            * 'numpy1D' : 1D numpy --> like {column: np.array([values])}
-            * 'numpy2D': 2D numpy like. shape (rows, columns)
-            * 'dataframe: dataframe like pd.DataFrame
-
-
-        n: int default(n=10)
-            number of instances to randommly sample from the complete dataset.
-            If n=-1, the whole dataset is return
-
-    """
-
-    logging.warning(
-        """
-        The function diamonds is deprected and will be remove in future versions, instead use the function load_dataset to load this data.
-        Example:
-        from MLutilities.datasets import load_dataset
-        diamonds = load_dataset(data_set="diamonds")
-        """
-    )
-
-    assert load_as in [
-        "dict",
-        "list",
-        "numpy1D",
-        "numpy2D",
-        "dataframe",
-    ], "load_as mus be on of the possible options: 'dict', 'list, 'numpy1D', 'numpy2D' o 'dataframe'"
-
-    path_to_data = pkg_resources.resource_filename(__name__, "diamonds.pkl")
-
-    with open(path_to_data, "rb") as f:
-        data = pickle.load(f)
-
-    return data_format(data, load_as, n)
-
-
-def penguins(load_as: str = "dict", n=-1):
-
-    """
-
-    Returns a dicctionary that loads Peguins dataset. The dicctionary has
-    the follow keys:
-
-    DESC: a breve description of the dataset and its columns
-    data: raw data (rows and columns)
-    image: Image o penguin body parts
-    feature_names: the name of the features/columns
-
-    Argumetns:
-        load_as: str. possible options: 'dict', 'list, 'numpy' or 'dataframe'
-            this argument controls how raw data is return.
-            * 'dict' : dict like --> {column : [values]}
-            * 'list' : list like --> [[column 1],[column 2],[column 3]]
-            * 'numpy1D' : 1D numpy --> like {column: np.array([values])}
-            * 'numpy2D': 2D numpy like. shape (rows, columns)
-            * 'dataframe: dataframe like pd.DataFrame
-
-
-        n: int default(n=10)
-            number of instances to randommly sample from the complete dataset.
-            If n=-1, the whole dataset is return. If load_as='datarame', n will be
-            ignore and the hole dataset is return
-    """
-    logging.warning(
-        """
-        The function penguins is deprected and will be remove in future versions, instead use the function load_dataset to load this data.
-        Example:
-        from MLutilities.datasets import load_dataset
-        diamonds = load_dataset(data_set="penguins")
-        """
-    )
-
-    assert load_as in [
-        "dict",
-        "list",
-        "numpy1D",
-        "numpy2D",
-        "dataframe",
-    ], "load_as mus be on of the possible options: 'dict', 'list, 'numpy1D', 'numpy2D' o 'dataframe'"
-
-    path_to_data = pkg_resources.resource_filename(__name__, "penguins.pkl")
-
-    with open(path_to_data, "rb") as f:
-        data = pickle.load(f)
-
-    return data_format(data, load_as, n)
 
 
 def load_dataset(data_set: str, load_as: str = "dict", n=-1):
