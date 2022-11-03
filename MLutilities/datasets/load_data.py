@@ -1,10 +1,8 @@
 import pickle
-import pandas as pd
-import numpy as np
 import pkg_resources
 import logging
 
-DATASETS = ["penguins", "diamonds", "adults", "cars", "cars_nulls"]
+DATASETS = ["penguins", "diamonds", "adults", "cars", "cars_nulls", "imdb"]
 
 
 def data_format(data: pickle, load_as: str, n: int):
@@ -111,7 +109,6 @@ def diamonds(load_as: str = "dict", n=-1):
         """
         The function diamonds is deprected and will be remove in future versions, instead use the function load_dataset to load this data.
         Example:
-        
         from MLutilities.datasets import load_dataset
         diamonds = load_dataset(data_set="diamonds")
         """
@@ -164,7 +161,6 @@ def penguins(load_as: str = "dict", n=-1):
         """
         The function penguins is deprected and will be remove in future versions, instead use the function load_dataset to load this data.
         Example:
-        
         from MLutilities.datasets import load_dataset
         diamonds = load_dataset(data_set="penguins")
         """
