@@ -1,4 +1,6 @@
 # imporotamos librerias
+import nltk
+import re
 import seaborn as sns
 import pandas as pd
 import plotly.express as px
@@ -32,8 +34,6 @@ def outlier_detection(
     upper = q3 + factor * IQR
     lower = q1 - factor * IQR
 
-    idx = dataset.query(f"({variable} > {upper}) or ({variable} < {lower})")
-
     if replace_outliers:
 
         dataset.loc[dataset[variable] > upper, variable] = upper
@@ -43,3 +43,30 @@ def outlier_detection(
 
         fig = px.box(dataset, x=variable)
         fig.show()
+
+
+def text_cleaning(text: str) -> str:
+    """
+    Basic text preprocessing
+
+    Arguments:
+    ----------
+    text: str
+        input string to be preprocessed
+
+    Returns
+    -------
+    str
+        preprocessed text
+    """
+
+    nltk.download("stopwords")
+
+    stopwords = nltk.corpus.stopwords.words("english")
+    text = text.lower()
+    text = re.sub(r"\d+", " ", text)
+    text = " ".join([word for word in text.split() if word not in stopwords])
+    text = re.sub(r"[^\w\s\']", " ", text)
+    text = re.sub(r" +", " ", text)
+
+    return text
