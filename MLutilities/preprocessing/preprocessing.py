@@ -5,6 +5,8 @@ import seaborn as sns
 import pandas as pd
 import plotly.express as px
 
+nltk.download("stopwords")
+
 sns.set()
 
 
@@ -59,8 +61,6 @@ def text_cleaning(text: str) -> str:
     str
         preprocessed text
     """
-
-    nltk.download("stopwords")
 
     stopwords = nltk.corpus.stopwords.words("english")
     text = text.lower()
