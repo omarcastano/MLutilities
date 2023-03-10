@@ -20,17 +20,15 @@ def kolmogorov_test(
     plot_histogram: bool = False,
     bins: int = 30,
     color: str = None,
+    plot_boxplot: bool = False,
+    backend: str = "seaborn",
 ):
-
     """
     This function computes Kolmogorov test to check if the variable
     is normaly distributed
-
     H0: The variable follows a normal distribution
     H1: The variable do not follow a normal distribution
-
     if p_value < 0.05 you can reject the null hypohesis
-
     Arguments:
     ----------
         dataset: pandas dataframe or dict with de format {'col1':np.array, 'col2':np.array}
@@ -41,11 +39,12 @@ def kolmogorov_test(
         plot_histogram:If True plot a histogram of the variable
         bins: Number of bins to use when plotting the histogram
         color: Name of column in dataset. Values from this column are used to assign color to marks.
+        plot_boxplot: if True add a boxplot as margin
+        backend: plotting backend {'seaborn', 'plotly'}
     """
 
     if type(dataset) == dict:
         dataset = pd.DataFrame(dataset)
-
     dataset = dataset.dropna(subset=[variable]).copy()
 
     if transformation == "yeo_johnson":
@@ -54,11 +53,12 @@ def kolmogorov_test(
         x = np.log1p(dataset[variable].to_numpy())
     else:
         x = dataset[variable].to_numpy()
-
     x_scale = (x - x.mean()) / x.std()
 
     ktest = stats.kstest(x_scale, "norm")
-    print(f"------------------------- Kolmogorov test fot the variable {variable} --------------------")
+    print(
+        f"------------------------- Kolmogorov test fot the variable {variable} --------------------"
+    )
     print(f"statistic={ktest[0]:.3f}, p_value={ktest[1]:.3f}\n")
     if ktest[1] < 0.05:
         print(
@@ -68,12 +68,43 @@ def kolmogorov_test(
         print(
             f"Since {ktest[1]:.3f} > 0.05 you cannot reject the null hypothesis, so the variable {variable} \nfollows a normal distribution"
         )
-    print("-------------------------------------------------------------------------------------------\n")
+    print(
+        "-------------------------------------------------------------------------------------------\n"
+    )
     if plot_histogram:
-        fig = px.histogram(dataset, x=x, nbins=bins, marginal="box", color=color, barmode="overlay")
-        fig.update_traces(marker_line_width=1, marker_line_color="white", opacity=0.8)
-        fig.update_layout(xaxis_title=variable, width=1500, height=500)
-        fig.show()
+        if backend == "plotly":
+            fig = px.histogram(
+                dataset,
+                x=x,
+                nbins=bins,
+                marginal="box" if plot_boxplot else None,
+                color=color,
+                barmode="overlay",
+            )
+            fig.update_traces(
+                marker_line_width=1, marker_line_color="white", opacity=0.8
+            )
+            fig.update_layout(xaxis_title=variable, width=1500, height=500)
+            fig.show()
+        elif backend == "seaborn":
+            if plot_boxplot:
+                mosaic = """
+            aaaaa
+            AAAAA
+            AAAAA
+            AAAAA
+            AAAAA
+            """
+                fig, ax = plt.subplot_mosaic(mosaic, figsize=(20, 10))
+                sns.kdeplot(x=x, hue=dataset[color] if color else None, ax=ax["A"])
+                sns.boxplot(x=x, y=dataset[color] if color else None, ax=ax["a"])
+                ax["A"].set_ylabel("Density", size=15)
+                ax["A"].set_xlabel(variable, size=15)
+            else:
+                fig, ax = plt.subplots(figsize=(20, 10))
+                sns.kdeplot(x=x, hue=dataset[color] if color else None, ax=ax)
+                ax.set_ylabel("Density", size=15)
+                ax.set_xlabel(variable, size=15)
 
 
 def shapiro_test(
