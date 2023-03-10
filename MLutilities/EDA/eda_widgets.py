@@ -208,7 +208,7 @@ def countplot_widget(dataset: pd.DataFrame):
 
     def hist(dataset, **kwargs):
 
-        fig = px.histogram(data_frame=dataset, **kwargs)
+        fig = px.histogram(data_frame=dataset, barmode="overlay", **kwargs)
         fig.update_layout(width=1500, height=500)
         fig.show()
 
