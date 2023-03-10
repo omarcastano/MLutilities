@@ -4,12 +4,17 @@ import plotly.express as px
 import ipywidgets as widgets
 from functools import partial
 from MLutilities.utils import scaler
-from MLutilities.EDA import kolmogorov_test, shapiro_test, correlation_coef, kruskal_test, cramersv
+from MLutilities.EDA import (
+    kolmogorov_test,
+    shapiro_test,
+    correlation_coef,
+    kruskal_test,
+    cramersv,
+)
 from IPython.display import display
 
 
 def kolmogorov_test_widget(dataset: pd.DataFrame):
-
     """
     This function computes Kolmogorov test to check if the variable
     is normaly distributed
@@ -53,6 +58,18 @@ def kolmogorov_test_widget(dataset: pd.DataFrame):
         layout=widgets.Layout(width="20%", height="100px"),
         style={"description_width": "initial"},
     )
+    plot_boxplot = widgets.Checkbox(
+        value=False,
+        description="Plot boxplot",
+        layout=widgets.Layout(width="20%", height="30px"),
+        style={"description_width": "initial"},
+    )
+    backend = widgets.Dropdown(
+        options=["seaborn", "plotly"],
+        description="Backend:",
+        layout=widgets.Layout(width="20%", height="30px"),
+        style={"description_width": "initial"},
+    )
 
     w = widgets.interactive_output(
         partial(kolmogorov_test, dataset=dataset, plot_histogram=True),
@@ -61,14 +78,24 @@ def kolmogorov_test_widget(dataset: pd.DataFrame):
             "transformation": transformation,
             "color": color,
             "bins": bins,
+            "plot_boxplot": plot_boxplot,
+            "backend": backend,
         },
     )
 
-    display(widgets.VBox([widgets.HBox([variable, transformation, color]), bins]), w)
+    display(
+        widgets.VBox(
+            [
+                widgets.VBox([variable, color, transformation, backend]),
+                plot_boxplot,
+                bins,
+            ]
+        ),
+        w,
+    )
 
 
 def shapiro_test_widget(dataset: pd.DataFrame):
-
     """
     This function computes Shapiro test to check if the variable
     is normaly distributed
@@ -127,7 +154,6 @@ def shapiro_test_widget(dataset: pd.DataFrame):
 
 
 def correlation_coef_widget(dataset: pd.DataFrame):
-
     """
     This function computes the correlation between two numerical variables.
 
@@ -180,7 +206,6 @@ def correlation_coef_widget(dataset: pd.DataFrame):
 
 
 def countplot_widget(dataset: pd.DataFrame):
-
     """
     Show the counts of observations in each categorical bin using bars. A count plot can be
     thought of as a histogram across a categorical, instead of quantitative variable.
@@ -207,17 +232,17 @@ def countplot_widget(dataset: pd.DataFrame):
     )
 
     def hist(dataset, **kwargs):
-
         fig = px.histogram(data_frame=dataset, **kwargs)
         fig.update_layout(width=1500, height=500)
         fig.show()
 
-    w = widgets.interactive_output(partial(hist, dataset=dataset), {"x": variable, "color": color})
+    w = widgets.interactive_output(
+        partial(hist, dataset=dataset), {"x": variable, "color": color}
+    )
     display(widgets.HBox([variable, color]), w)
 
 
 def kruskal_test_widget(dataset: pd.DataFrame):
-
     """
     The Kruskal-Wallis H test is a rank-based nonparametric test
     that can be used to determine if there are statistically significant
@@ -262,7 +287,6 @@ def kruskal_test_widget(dataset: pd.DataFrame):
 
 
 def barplot_widget(dataset: pd.DataFrame):
-
     """
     A bar plot represents an estimate of central tendency for a numeric variable with the height
     of each rectangle and provides some indication of the uncertainty around that estimate using
@@ -298,7 +322,6 @@ def barplot_widget(dataset: pd.DataFrame):
     )
 
     def barplot(dataset, cat_var=None, num_var=None, func="mean"):
-
         df = dataset.groupby(cat_var, as_index=False).agg({f"{num_var}": [func]})
         df.columns = ["_".join(col) for col in df.columns.values]
 
@@ -318,7 +341,6 @@ def barplot_widget(dataset: pd.DataFrame):
 
 
 def cramerv_widget(dataset: pd.DataFrame):
-
     """
     This function computes cramer's V correlation coefficient which is a measure of association between two nominal variables.
 
@@ -365,7 +387,6 @@ def cramerv_widget(dataset: pd.DataFrame):
 
 
 def scaler_widget(dataset: pd.DataFrame):
-
     """
     Helper function to visualize the efect of scaling and normalization over continuos variables
 
