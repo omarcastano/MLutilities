@@ -191,7 +191,7 @@ def countplot_widget(dataset: pd.DataFrame):
         dataset: pandas dataframe or dict with de format {'col1':np.array, 'col2':np.array}
     """
 
-    cat_vars = dataset.select_dtypes([object, pd.Categorical]).columns.tolist()
+    cat_vars = dataset.select_dtypes([object, "category"]).columns.tolist()
 
     variable = widgets.Dropdown(
         options=cat_vars,
