@@ -156,42 +156,32 @@ def biserial_correlation(
     dataset,
     categorical_variable: str,
     numerical_variable: str,
-    apply_yeo_johnson: bool = False,
-    apply_log_transform: bool = False,
+    transformation: str = None,
     box_plot: bool = False,
     test_assumptions: bool = False,
 ):
     """
     A point-biserial correlation is used to measure the correlation between
     a continuous variable and a binary variable.
-
     Assumption: continuous data within each group created by the binary variable
     are normally distributed with equal variances and possibly different means.
-
     H0: variables are not correlated
     H1: variables are correlated
-
     If p_value < 0.05 reject the null hypothesis
-
     Arguments:
     dataset: pandas dataframe or dict with de format {'col1':np.array, 'col2':np.array}
     categorical_variable: string
         Name of the binary categorical variable
     numerical_varaible: string
         Name of the numercial variable
-    apply_yeo_johnson: bool
-        If True appy yeo johnson transformation to the input variable
-    apply_log_transform: bool
-        If True apply logarithm transformation to the input variable
+    transformation: kind of transformation to apply. Options:
+        - yeo_johnson: appy yeo johnson transformation to the input variable
+        - log: apply logarithm transformation to the input variable
     box_plot:bool
         If Ture display a boxplot
     test_assumptions: bool
         If True test the assuptioms for the continuos variable
     """
-
-    assert (
-        not apply_log_transform or not apply_yeo_johnson
-    ), "apply_log_transform and apply_yeo_johnson cannot be True at the same time"
 
     if type(dataset) == dict:
         dataset = pd.DataFrame(dataset)
@@ -211,8 +201,7 @@ def biserial_correlation(
         kolmogorov_test(
             x1,
             numerical_variable,
-            apply_yeo_johnson=apply_yeo_johnson,
-            apply_log_transform=apply_log_transform,
+            transformation=transformation,
             plot_histogram=False,
         )
         print(
@@ -221,8 +210,7 @@ def biserial_correlation(
         kolmogorov_test(
             x2,
             numerical_variable,
-            apply_yeo_johnson=apply_yeo_johnson,
-            apply_log_transform=apply_log_transform,
+            transformation=transformation,
             plot_histogram=False,
         )
 
@@ -234,9 +222,9 @@ def biserial_correlation(
     # Point Biserial correlation Test
     y = LabelEncoder().fit_transform(dataset[categorical_variable])
 
-    if apply_yeo_johnson:
+    if transformation == "yeo_johnson":
         x = stats.yeojohnson(dataset[numerical_variable].to_numpy())[0]
-    elif apply_log_transform:
+    elif transformation == "log":
         x = np.log1p(dataset[numerical_variable].to_numpy())
     else:
         x = dataset[numerical_variable].to_numpy()
