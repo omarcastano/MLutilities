@@ -351,7 +351,6 @@ def cramerv_widget(dataset: pd.DataFrame):
         {
             "input_feature": variable1,
             "target_feature": variable2,
-            "color": color,
         },
     )
 
