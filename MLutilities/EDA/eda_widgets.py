@@ -346,15 +346,8 @@ def cramerv_widget(dataset: pd.DataFrame):
         style={"description_width": "initial"},
     )
 
-    color = widgets.Dropdown(
-        options=[None] + cat_vars,
-        description="Color:",
-        layout=widgets.Layout(width="20%", height="30px"),
-        style={"description_width": "initial"},
-    )
-
     w = widgets.interactive_output(
-        partial(cramersv, dataset=dataset, plot_histogram=True),
+        partial(cramersv, dataset=dataset, show_crosstab=True, plot_histogram=True),
         {
             "input_feature": variable1,
             "target_feature": variable2,
@@ -362,7 +355,7 @@ def cramerv_widget(dataset: pd.DataFrame):
         },
     )
 
-    display(widgets.HBox([variable1, variable2, color]), w)
+    display(widgets.HBox([variable1, variable2]), w)
 
 
 def scaler_widget(dataset: pd.DataFrame):
