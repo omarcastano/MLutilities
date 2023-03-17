@@ -397,7 +397,6 @@ def cramersv(
     show_crosstab: bool = False,
     plot_histogram: bool = False,
     histnorm: str = "percent",
-    color: str = None,
 ):
     """
     This function computes cramer's V correlation coefficient which is a measure of association between two nominal variables.
@@ -419,9 +418,6 @@ def cramersv(
             It can be either 'percent' or 'count'. If 'percent'
             show the percengate of each category, if 'count' show
             the frequency of each category.
-        color: string
-            Name of column in dataset. Values from this column are used to
-            assign color to markers.
 
     If p_value < 0.5 you can reject the null hypothesis
     """
@@ -476,7 +472,7 @@ def cramersv(
             dataset,
             x=input_feature,
             histnorm=histnorm,
-            color=color,
+            color=target_feature,
             barmode="group",
             width=1500,
             height=500,
