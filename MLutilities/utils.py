@@ -725,3 +725,34 @@ def show_merge(
     merge_df = pd.merge(left, right, **merge_kwargs)
     print(f"\npd.merge(left, right, {str_kwargs})")
     display(merge_df.style.set_table_styles({**style_keys}))
+
+def show_join(
+    left: pd.DataFrame, right: pd.DataFrame, **join_kwargs: Dict[str, Any]
+) -> None:
+    """
+    Helper function to visualize the join of two Pandas DataFrames.
+
+    Arguments
+    ----------
+        left : pandas.DataFrame
+            The left DataFrame to join.
+        right : pandas.DataFrame
+            The right DataFrame to join.
+        **join_kwargs
+            Additional keyword arguments to pass to `pd.DataFrame.join()`.
+    """
+    # display left and right DataFrames
+    print(f"left:")
+    display(left)
+    print(f"\nright:")
+    display(right)
+
+    # create a string representation for join_kwargs
+    str_kwargs = ""
+    for key, value in join_kwargs.items():
+        str_kwargs += f"{key}='{value}', "
+    str_kwargs = str_kwargs.rstrip(", ")
+
+    # display left and right join
+    print(f"\nleft.join(right, {str_kwargs})")
+    display(left.join(right, **join_kwargs))
