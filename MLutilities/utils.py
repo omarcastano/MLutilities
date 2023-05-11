@@ -20,7 +20,8 @@ from yellowbrick.model_selection import LearningCurve
 import scipy.stats as stats
 import scipy.integrate as integrate
 from mlxtend.plotting import plot_decision_regions
-
+from typing import Any, Dict
+from IPython.display import display
 
 sns.set()
 
@@ -657,3 +658,70 @@ def plot_kernel_pca(
             x=X_pca[:, 0], y=X_pca[:, 1], z=X_pca[:, 2], color=y, labels=labels
         )
     fig.show()
+
+    
+def show_merge(
+    left: pd.DataFrame,
+    right: pd.DataFrame,
+    left_color: str = "yellow",
+    right_color: str = "orange",
+    **merge_kwargs: Dict[str, Any],
+) -> None:
+    """
+    Helper function to visualize the merge of two Pandas DataFrames.
+
+    Arguments:
+    ----------
+        left : pandas.DataFrame
+            The left DataFrame to merge.
+        right : pandas.DataFrame
+            The right DataFrame to merge.
+        left_color : str, optional
+            The background color for the left DataFrame, by default "yellow".
+        right_color : str, optional
+            The background color for the right DataFrame, by default "orange".
+        **merge_kwargs
+            Additional keyword arguments to pass to `pd.merge()`.
+
+    Example:
+    --------
+    >>> left = pd.DataFrame({"key": ["A", "B", "C"], "value": [1, 2, 3]})
+    >>> right = pd.DataFrame({"key": ["B", "C", "D"], "value": [4, 5, 6]})
+    >>> show_merge(left, right, how="inner", on="key")
+    """
+    # display left and right DataFrames
+    colors = {"left": left_color, "right": right_color}
+    print(f"left:")
+    display(left.style.set_properties(**{"background-color": colors["left"]}))
+    print(f"\nright:")
+    display(right.style.set_properties(**{"background-color": colors["right"]}))
+
+    # determine which columns are unique to each DataFrame
+    # and assign them to left_col and right_col respectively
+    if not set(left.columns).intersection(right.columns):
+        left_col = list(left.columns)
+        right_col = list(right.columns)
+    else:
+        left_col = set(left.columns) - set(right.columns)
+        right_col = set(right.columns) - set(left.columns)
+
+    # create a string representation for merge_kwargs
+    str_kwargs = ""
+    for key, value in merge_kwargs.items():
+        str_kwargs += f"{key}='{value}', "
+    str_kwargs = str_kwargs.rstrip(", ")
+
+    # create a dictionary of styles for the merged DataFrame
+    style_keys = {}
+    for lcol, rcol in zip(left_col, right_col):
+        style_keys[lcol] = [
+            {"selector": "td", "props": f"background-color:{colors['left']}"}
+        ]
+        style_keys[rcol] = [
+            {"selector": "td", "props": f"background-color:{colors['right']}"}
+        ]
+
+    # display left and right merge
+    merge_df = pd.merge(left, right, **merge_kwargs)
+    print(f"\npd.merge(left, right, {str_kwargs})")
+    display(merge_df.style.set_table_styles({**style_keys}))
