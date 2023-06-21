@@ -85,7 +85,7 @@ def scaler(
     ax[1].set_title("Transform")
     ax[0].legend()
     ax[1].legend()
-    plt.show()
+    fig.show()
 
 
 def generate_nonlinear_data(N: int, seed: int = 1) -> Tuple:
