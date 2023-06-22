@@ -377,7 +377,7 @@ def scaler_widget(dataset: pd.DataFrame):
     )
 
     kind = widgets.Dropdown(
-        options=["standar_scaler", "minmax"],
+        options=["standard_scaler", "minmax_scaler"],
         description="kind:",
         layout=widgets.Layout(width="20%", height="30px"),
         style={"description_width": "initial"},
