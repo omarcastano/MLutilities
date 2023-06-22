@@ -56,89 +56,24 @@ def cramerv_relationship_strength(degrees_of_freedom: int, cramerv: float):
         return "medium"
 
 
-def get_kde(data):
-    """
-    Perform kernel density estimation (KDE) on a given dataset.
 
-    This function calculates the kernel density estimation of a dataset using a Gaussian kernel.
-    It returns the x-axis and y-axis values representing the KDE curve.
-
-    Arguments:
-    -----------
-    data : array-like
-        One-dimensional array-like object containing the dataset on which to perform KDE.
-
-    Returns:
-    --------
-    x : ndarray
-        One-dimensional array of x-axis values for the KDE curve.
-    y : ndarray
-        One-dimensional array of y-axis values representing the estimated density values.
-
-    Example:
-    --------
-    data = [1.2, 1.5, 2.1, 1.8, 3.2]
-    x, y = get_kde(data)
-    # x contains the x-axis values for plotting the KDE curve
-    # y contains the corresponding y-axis values representing the estimated density
-    """
-    # Create the kernel density estimation
-    kde = gaussian_kde(data)
-
-    # Generate the x-axis values for the plot
-    x = np.linspace(data.min(), data.max(), 200)
-
-    # Calculate the y-axis values by evaluating the KDE at each x value
-    y = kde(x)
-
-    return x, y
-
-
-def scaler(
-    dataset: pd.DataFrame = None,
-    variables: List[str] = None,
-    kind: str = "standard_scaler",
-):
-    """
-    Helper function to visualize the effect of scaling and normalization over continuous variables
-
-    Arguments:
-    ----------
-    dataset:   pandas dataframe or dict with the format {'col1':np.array, 'col2':np.array}
-    variables: list with the name of the features to scale
-    kind:      name of the transformation to perform. Options ["standard_scaler", "minmax_scaler"]
-    """
-    # drop nan values
-    dataset = dataset.dropna()
-
-    scale = {
-        "standard_scaler": StandardScaler().fit_transform,
-        "minmax_scaler": MinMaxScaler().fit_transform,
-    }
-
-    fig = make_subplots(rows=1, cols=2, subplot_titles=("Original", "Transformed"))
-
-    for var in variables:
-        original_data = dataset[var]
-        x, y = get_kde(original_data)
-        fig.add_trace(go.Scatter(x=x, y=y, mode="lines", name=var), row=1, col=1)
-
-        scaled_data = pd.Series(scale[kind](dataset[[var]]).reshape(-1))
-        x, y = get_kde(scaled_data)
-        fig.add_trace(
-            go.Scatter(x=x, y=y, mode="lines", name=f"scaled {var}"), row=1, col=2
-        )
-
-    fig.update_layout(
-        xaxis=dict(title="Value"),
-        yaxis=dict(title="Count"),
-        legend=dict(orientation="h", y=-0.25),
-    )
-
-    fig.show()
 
 
 def generate_nonlinear_data(N: int, seed: int = 1) -> Tuple:
+    logging.warning(
+        """
+    ---------------------------------------------------------------------------------
+    This function (MLutilities.utils.generate_nonlinear_data) will be deprecated use 
+    MLutilities.regression.utils.generate_nonlinear_data instead
+    ---------------------------------------------------------------------------------
+    ---------
+    >>> from MLutilities.regression.utils import generate_nonlinear_data
+    >>> X, y = generate_nonlinear_data(N=50)
+    >>> print(X.shape)
+    (50, 1)
+    """
+    )
+
     """
     generate N (x, y) pairs with a non-linear relationship
 
@@ -154,6 +89,24 @@ def generate_nonlinear_data(N: int, seed: int = 1) -> Tuple:
 
 
 def poly_reg(estimator, degree: int = 2):
+    logging.warning(
+        """
+    ---------------------------------------------------------------------------------
+    This function (MLutilities.utils.poly_reg) will be deprecated use 
+    MLutilities.regression.PolynomialRegression  instead
+    ---------------------------------------------------------------------------------
+    Example:
+    ---------
+    >>> from sklearn.datasets import load_boston
+    >>> from sklearn.linear_model import LinearRegression
+    >>> from MLutilities.regression import PolynomialRegression
+    >>> X, y = load_boston(return_X_y=True)
+    >>> model = PolynomialRegression(degree=2, estimator=LinearRegression())
+    >>> model.fit(X, y)
+    >>> model.plot_fitted_model(X, y)
+    """
+    )
+
     """
     returns a polinomial regression estimator
 
@@ -168,6 +121,24 @@ def poly_reg(estimator, degree: int = 2):
 
 
 def plot_learning_curve(linear_estimator, X, y, degree, ax):
+    logging.warning(
+        """
+    ---------------------------------------------------------------------------------
+    This function (MLutilities.utils.plot_learning_curve) will be deprecated, use 
+    MLutilities.model_selection.plot_learning_curve   instead
+    ---------------------------------------------------------------------------------
+    Example:
+    ---------
+    >>> from sklearn.datasets import load_iris
+    >>> from sklearn.linear_model import LogisticRegression
+    >>> from sklearn.model_selection import train_test_split
+    >>> from MLutilities.model_selection import plot_learning_curve
+    >>> X, y = load_iris(return_X_y=True)
+    >>> X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=0)
+    >>> clf = LogisticRegression(max_iter=1000).fit(X_train, y_train)
+    >>> plot_learning_curve(clf, X_train, y_train, scoring='accuracy')
+    """
+    )
     visualizer = LearningCurve(
         estimator=poly_reg(linear_estimator, degree),
         scoring="r2",
@@ -202,9 +173,7 @@ def plot_polyreg(
     """
     # train and test data
     X, y = generate_nonlinear_data(N=N, seed=1)
-    X_train, X_test, y_train, y_test = train_test_split(
-        X, y, test_size=0.2, random_state=1
-    )
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=1)
 
     # model training
     estimators = {
@@ -263,9 +232,7 @@ def plot_log_reg(
     end = 12
     classes_intercept = 5
 
-    instances_negative_class = np.linspace(
-        start, classes_intercept + 1, n_instances_negative_class
-    )
+    instances_negative_class = np.linspace(start, classes_intercept + 1, n_instances_negative_class)
     instances_positive_class = np.concatenate(
         [
             np.linspace(classes_intercept, end, n_instances_positive_class),
@@ -299,9 +266,7 @@ def plot_log_reg(
             y_pred = model.predict(x.reshape(-1, 1))
             y_label = "$y=w_0 + w_1 x_1$"
         elif regression == "logistic":
-            decision_frontier = (-1 / model.coef_[0]) * (
-                model.intercept_ + np.log(1 / threshold - 1)
-            )
+            decision_frontier = (-1 / model.coef_[0]) * (model.intercept_ + np.log(1 / threshold - 1))
             y_pred = model.predict_proba(x.reshape(-1, 1))[:, 1]
             y_label = r"$\hat{p} = \sigma(z)$"
 
@@ -533,9 +498,7 @@ def fill_false_regions(pos_dist_mean, neg_dist_mean, threshold=0.5, ax=None):
         )
 
 
-def plot_probability_distributions(
-    pos_dist_mean, neg_dist_mean, threshold=0.5, ax=None
-):
+def plot_probability_distributions(pos_dist_mean, neg_dist_mean, threshold=0.5, ax=None):
     """
     plot one-dimensional probability distributions for a binary classifier
     """
@@ -635,16 +598,12 @@ def plot_iris_decision_tree(max_depth: int = 1):
     X = data[["petal_length", "petal_width"]]
     y = data["species"].map({"setosa": 0, "versicolor": 1, "virginica": 2})
 
-    dt_clf = DecisionTreeClassifier(random_state=42, max_depth=max_depth).fit(
-        X.values, y.values
-    )
+    dt_clf = DecisionTreeClassifier(random_state=42, max_depth=max_depth).fit(X.values, y.values)
 
     fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(20, 9))
     sns.scatterplot(data=data, x="petal_length", y="petal_width", hue="species", ax=ax1)
     plot_decision_regions(X.values, y.values, dt_clf, legend=0, ax=ax1)
-    plot_tree(
-        dt_clf, feature_names=["petal_length", "petal_width"], filled=True, ax=ax2
-    )
+    plot_tree(dt_clf, feature_names=["petal_length", "petal_width"], filled=True, ax=ax2)
 
 
 def plot_kernel_pca(
@@ -690,24 +649,14 @@ def plot_kernel_pca(
         coef0=coef0,
     )
 
-    X_pca = (
-        make_pipeline(StandardScaler(), pca).fit_transform(X)
-        if standarized
-        else pca.fit_transform(X)
-    )
+    X_pca = make_pipeline(StandardScaler(), pca).fit_transform(X) if standarized else pca.fit_transform(X)
 
-    labels = (
-        {"x": "PC1", "y": "PC2"}
-        if n_components == 2
-        else {"x": "PC1", "y": "PC2", "z": "PC3"}
-    )
+    labels = {"x": "PC1", "y": "PC2"} if n_components == 2 else {"x": "PC1", "y": "PC2", "z": "PC3"}
 
     if n_components == 2:
         fig = px.scatter(x=X_pca[:, 0], y=X_pca[:, 1], color=y, labels=labels)
     elif n_components == 3:
-        fig = px.scatter_3d(
-            x=X_pca[:, 0], y=X_pca[:, 1], z=X_pca[:, 2], color=y, labels=labels
-        )
+        fig = px.scatter_3d(x=X_pca[:, 0], y=X_pca[:, 1], z=X_pca[:, 2], color=y, labels=labels)
     fig.show()
 
 
@@ -765,12 +714,8 @@ def show_merge(
     # create a dictionary of styles for the merged DataFrame
     style_keys = {}
     for lcol, rcol in zip(left_col, right_col):
-        style_keys[lcol] = [
-            {"selector": "td", "props": f"background-color:{colors['left']}"}
-        ]
-        style_keys[rcol] = [
-            {"selector": "td", "props": f"background-color:{colors['right']}"}
-        ]
+        style_keys[lcol] = [{"selector": "td", "props": f"background-color:{colors['left']}"}]
+        style_keys[rcol] = [{"selector": "td", "props": f"background-color:{colors['right']}"}]
 
     # display left and right merge
     merge_df = pd.merge(left, right, **merge_kwargs)
@@ -778,9 +723,7 @@ def show_merge(
     display(merge_df.style.set_table_styles({**style_keys}))
 
 
-def show_join(
-    left: pd.DataFrame, right: pd.DataFrame, **join_kwargs: Dict[str, Any]
-) -> None:
+def show_join(left: pd.DataFrame, right: pd.DataFrame, **join_kwargs: Dict[str, Any]) -> None:
     """
     Helper function to visualize the join of two Pandas DataFrames.
 
