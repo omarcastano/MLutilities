@@ -2,12 +2,30 @@ import ipywidgets as widgets
 from functools import partial
 from MLutilities.utils import plot_polyreg
 from IPython.display import display
+import logging
+
+
+logging.warning(
+    """
+    ------------------------------------------------------------------------------------
+    The module Regression will be remove. Pleas use regression (with lower case) instead.     
+    ------------------------------------------------------------------------------------
+    """
+)
 
 
 def regularization_widget():
     """
     this function helps to visualize the effect of regularization in a regression model
     """
+    logging.warning(
+        """
+        ------------------------------------------------------------------------------------
+        This function (MLutilities.Regression.regression_widgets.regularization_widget) is deprecated. 
+        Please use MLutilities.regression.regression_widget.polynomial_regression_widget  instead.          
+        ------------------------------------------------------------------------------------
+        """
+    )
     N = widgets.IntSlider(
         description="Number of points",
         min=50,
