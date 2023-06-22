@@ -1,9 +1,20 @@
 import numpy as np
 import pandas as pd
-import matplotlib.pyplot as plt
 import seaborn as sns
 import plotly.express as px
-from typing import List, Tuple
+import scipy.stats as stats
+import matplotlib.pyplot as plt
+import plotly.graph_objects as go
+import scipy.integrate as integrate
+from IPython.display import display
+from typing import List, Tuple, Any, Dict
+from plotly.subplots import make_subplots
+from sklearn.pipeline import make_pipeline
+from sklearn.decomposition import KernelPCA
+from sklearn.model_selection import train_test_split
+from yellowbrick.model_selection import LearningCurve
+from sklearn.tree import DecisionTreeClassifier, plot_tree
+from mlxtend.plotting import plot_decision_regions
 from sklearn.preprocessing import StandardScaler, MinMaxScaler, PolynomialFeatures
 from sklearn.linear_model import (
     LinearRegression,
@@ -12,16 +23,6 @@ from sklearn.linear_model import (
     ElasticNet,
     LogisticRegression,
 )
-from sklearn.model_selection import train_test_split
-from sklearn.pipeline import make_pipeline
-from sklearn.tree import DecisionTreeClassifier, plot_tree
-from sklearn.decomposition import KernelPCA
-from yellowbrick.model_selection import LearningCurve
-import scipy.stats as stats
-import scipy.integrate as integrate
-from mlxtend.plotting import plot_decision_regions
-from typing import Any, Dict
-from IPython.display import display
 
 sns.set()
 
@@ -55,13 +56,12 @@ def cramerv_relationship_strength(degrees_of_freedom: int, cramerv: float):
 
 
 def scaler(
-    dataset: pd.DataFrame = None,
-    variables: List[str] = None,
+    dataset=None,
+    variables=None,
     kind: str = "standar_scaler",
 ):
-
     """
-    Helper function to visualize the efect of scaling and normalization over continuos variables
+    Helper function to visualize the effect of scaling and normalization over continuous variables
 
     Arguments:
     ----------
@@ -75,17 +75,28 @@ def scaler(
         "minmax": MinMaxScaler().fit_transform,
     }
 
-    fig, ax = plt.subplots(1, 2, figsize=(15, 6))
+    fig = make_subplots(rows=1, cols=2, subplot_titles=("Original", "Transformed"))
 
-    for i, var in enumerate(variables):
-        sns.kdeplot(dataset[var], ax=ax[0], label=var)
-        sns.kdeplot(scale[kind](dataset[[var]]).ravel(), ax=ax[1], label=var)
+    for var in variables:
+        fig.add_trace(go.Histogram(x=dataset[var], name=var, opacity=0.7), row=1, col=1)
+        fig.add_trace(
+            go.Histogram(
+                x=scale[kind](dataset[[var]]).ravel(),
+                name=var + " (Transformed)",
+                opacity=0.7,
+            ),
+            row=1,
+            col=2,
+        )
 
-    ax[0].set_title("Original")
-    ax[1].set_title("Transform")
-    ax[0].legend()
-    ax[1].legend()
-    plt.ion()
+    fig.update_layout(
+        xaxis=dict(title="Value"),
+        yaxis=dict(title="Count"),
+        title_text="Original vs. Transformed",
+        legend=dict(orientation="h", y=-0.25),
+    )
+
+    fig.show()
 
 
 def generate_nonlinear_data(N: int, seed: int = 1) -> Tuple:
@@ -660,7 +671,7 @@ def plot_kernel_pca(
         )
     fig.show()
 
-    
+
 def show_merge(
     left: pd.DataFrame,
     right: pd.DataFrame,
@@ -726,6 +737,7 @@ def show_merge(
     merge_df = pd.merge(left, right, **merge_kwargs)
     print(f"\npd.merge(left, right, {str_kwargs})")
     display(merge_df.style.set_table_styles({**style_keys}))
+
 
 def show_join(
     left: pd.DataFrame, right: pd.DataFrame, **join_kwargs: Dict[str, Any]
