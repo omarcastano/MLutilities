@@ -215,9 +215,7 @@ def countplot_widget(dataset: pd.DataFrame):
         fig.update_layout(width=1500, height=500)
         fig.show()
 
-    w = widgets.interactive_output(
-        partial(hist, dataset=dataset), {"x": variable, "color": color}
-    )
+    w = widgets.interactive_output(partial(hist, dataset=dataset), {"x": variable, "color": color})
     display(widgets.HBox([variable, color]), w)
 
 
@@ -355,40 +353,6 @@ def cramerv_widget(dataset: pd.DataFrame):
     )
 
     display(widgets.HBox([variable1, variable2]), w)
-
-
-def scaler_widget(dataset: pd.DataFrame):
-    """
-    Helper function to visualize the efect of scaling and normalization over continuos variables
-
-    Arguments:
-        dataset: pandas dataframe or dict with the format {'col1':np.array, 'col2':np.array}
-    """
-
-    num_vars = dataset.select_dtypes([np.number]).columns
-
-    num_variable = widgets.SelectMultiple(
-        options=num_vars,
-        description="Numerical Variable:",
-        value=[num_vars[0]],
-        disabled=False,
-        layout=widgets.Layout(width="20%", height="100px"),
-        style={"description_width": "initial"},
-    )
-
-    kind = widgets.Dropdown(
-        options=["standard_scaler", "minmax_scaler"],
-        description="kind:",
-        layout=widgets.Layout(width="20%", height="30px"),
-        style={"description_width": "initial"},
-    )
-
-    w = widgets.interactive_output(
-        partial(scaler, dataset),
-        {"kind": kind, "variables": num_variable},
-    )
-
-    display(widgets.HBox([num_variable, kind]), w)
 
 
 def kde_widget(dataset: Union[pd.DataFrame, Dict[str, np.ndarray]]):
