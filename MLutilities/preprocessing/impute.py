@@ -58,12 +58,11 @@ class LinearModelImputer(BaseEstimator, TransformerMixin):
             numeric_cols = (
                 X_copy.select_dtypes(include=np.number).columns.copy().drop(self.target)
             )
-            target_col = X_copy.loc[:, self.target]
 
             if len(numeric_cols) == 0:
                 raise ValueError("No numeric columns found in the input data.")
 
-            correlation_matrix = X_train.corr(method="spearman", numeric_only=True)
+            correlation_matrix = X_copy.corr(method="spearman", numeric_only=True)
             most_correlated_feature = (
                 correlation_matrix.loc[self.target].abs().iloc[1:].idxmax()
             )
