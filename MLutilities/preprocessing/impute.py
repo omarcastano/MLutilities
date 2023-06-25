@@ -165,18 +165,20 @@ class GroupImputer(BaseEstimator, TransformerMixin):
         Imputes missing values in the 'impute_feature' by replacing them with the most common value within the group.
 
         Parameters:
-          X (pd.DataFrame):
+        -----------
+          X:
             The input DataFrame to be transformed.
 
-          y (Optional[pd.Series]):
+          y:
             The target variable (ignored).
 
         Returns:
+        --------
           The transformed DataFrame (only with 'impute_feature') with missing values imputed
         """
         X_copy = X.copy()
 
-        # get multi-index to sample from 'group_mapping'
+        # get index to sample from 'group_mapping'
         index = (
             X_copy.loc[X_copy[self.impute_feature].isna()]
             .set_index(self.group_features)
@@ -186,13 +188,12 @@ class GroupImputer(BaseEstimator, TransformerMixin):
         # initialize series with imputed values
         imputed_values = pd.Series(index=index, dtype="object")
 
-        # if tuple index is not present in 'group_mapping', replace its value by 'impute_feature_mode'
+        # if index is not present in 'group_mapping' keys, replace its value by 'impute_feature_mode'
         diff_ids = index.difference(self.group_mapping.index)
         if not diff_ids.empty:
-            for id in diff_ids:
-                imputed_values.loc[id] = self.impute_feature_mode
+            imputed_values.loc[diff_ids.values] = self.impute_feature_mode
 
-        # sample values from group_mapping using the common tuple index
+        # sample values from group_mapping
         common_ids = index.intersection(self.group_mapping.index)
         imputed_values.loc[common_ids] = self.group_mapping.get(common_ids)
 
