@@ -64,11 +64,11 @@ class LinearModelImputer(BaseEstimator, TransformerMixin):
             raise ValueError("The feature column contains NaN values.")
 
         # get instances with impute_feature missing values
-        self.nan_instances = X_copy.loc[:, self.impute_feature].isna()
+        nan_instances = X_copy.loc[:, self.impute_feature].isna()
 
         # use instances with no missing impute_feature values to train the linear model
-        feature_train = X_copy.loc[~self.nan_instances, [self.feature]]
-        target_train = X_copy.loc[~self.nan_instances, self.impute_feature]
+        feature_train = X_copy.loc[~nan_instances, [self.feature]]
+        target_train = X_copy.loc[~nan_instances, self.impute_feature]
 
         # train the linear model
         self.linear_model.fit(feature_train, target_train)
@@ -92,12 +92,15 @@ class LinearModelImputer(BaseEstimator, TransformerMixin):
         """
         X_copy = X.copy().select_dtypes(include=np.number)
 
+        # get instances with impute_feature missing values
+        nan_instances = X_copy.loc[:, self.impute_feature].isna()
+
         # extract instances with missing impute_feature values and their corresponding feature values
-        feature_test = X_copy.loc[self.nan_instances, [self.feature]]
+        feature_test = X_copy.loc[nan_instances, [self.feature]]
 
         # predict and replace the missing impute_feature values using the trained linear regression model
         target_predict = self.linear_model.predict(feature_test)
-        X_copy.loc[self.nan_instances, self.impute_feature] = target_predict
+        X_copy.loc[nan_instances, self.impute_feature] = target_predict
 
         return X_copy.loc[:, [self.impute_feature]]
 
