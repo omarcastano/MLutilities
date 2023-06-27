@@ -5,7 +5,6 @@ from plotly import graph_objects as go
 import numpy as np
 from plotly.subplots import make_subplots
 
-
 class PolynomialRegression:
     """
     Fits a polynomial regression model.
@@ -97,12 +96,12 @@ class PolynomialRegression:
         fig = make_subplots(rows=1, cols=2)
         fig.add_trace(
             go.Scatter(
-                x=X_train.ravel(), y=y_train, mode="markers", name=f"Training data: <br>$MAE: {mae_train:.3f}$ <br>$R^2: {r2_train:.3f}$"
+                x=X_train.ravel(), y=y_train, mode="markers", name=f"Training data: <br>MAE: {mae_train:.3f} <br>R^2: {r2_train:.3f}"
             )
         )
         if X_test is not None and y_test is not None:
             fig.add_scatter(
-                x=X_test.ravel(), y=y_test, mode="markers", name=f"Test data: <br>$MAE: {mae_test:.3f}$ <br>$R^2: {r2_test:.3f}$"
+                x=X_test.ravel(), y=y_test, mode="markers", name=f"Test data: <br>MAE: {mae_test:.3f} <br>R^2: {r2_test:.3f}"
             )
 
         x_dummy = np.linspace(X_train.min(), X_train.max(), 100)
@@ -121,8 +120,8 @@ class PolynomialRegression:
 
         fig.update_layout(
             title={"text": "Polynomial regression", "x": 0.45, "xanchor": "center", "yanchor": "middle", "font": {"size": 24}},
-            width=1200,
+            width=1300,
             height=600,
         )
 
-        fig.show(renderer="notebook")
+        fig.show()
