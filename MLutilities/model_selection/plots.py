@@ -47,4 +47,4 @@ def plot_learning_curve(estimator, X, y, scoring=None):
 
     fig.update_layout(title="Learning Curve", xaxis_title="Training Set Size", yaxis_title=scoring, width=800, height=600)
 
-    fig.show(renderer="notebook")
+    fig.show()
