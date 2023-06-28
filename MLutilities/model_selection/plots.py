@@ -34,7 +34,13 @@ def plot_learning_curve(estimator, X, y, scoring=None):
     """
 
     train_sizes, train_scores, test_scores = learning_curve(
-        estimator, X, y, cv=10, n_jobs=1, scoring=scoring, train_sizes=np.linspace(0.1, 1.0, 10)
+        estimator,
+        X,
+        y,
+        cv=10,
+        n_jobs=1,
+        scoring=scoring,
+        train_sizes=np.linspace(0.1, 1.0, 10),
     )
 
     train_scores_mean = np.mean(train_scores, axis=1)
@@ -42,9 +48,24 @@ def plot_learning_curve(estimator, X, y, scoring=None):
 
     # plot learning curve using plotly
     fig = go.Figure()
-    fig.add_trace(go.Scatter(x=train_sizes, y=train_scores_mean, mode="lines", name="Training score"))
-    fig.add_trace(go.Scatter(x=train_sizes, y=test_scores_mean, mode="lines", name="Testing score"))
+    fig.add_trace(
+        go.Scatter(
+            x=train_sizes, y=train_scores_mean, mode="lines", name="Training score"
+        )
+    )
+    fig.add_trace(
+        go.Scatter(
+            x=train_sizes, y=test_scores_mean, mode="lines", name="Testing score"
+        )
+    )
 
-    fig.update_layout(title="Learning Curve", xaxis_title="Training Set Size", yaxis_title=scoring, width=800, height=600)
+    fig.update_layout(
+        title="Learning Curve",
+        xaxis_title="Training Set Size",
+        yaxis_title=scoring,
+        width=800,
+        height=600,
+        yaxis_range=[0, 1.1]
+    )
 
     fig.show()
