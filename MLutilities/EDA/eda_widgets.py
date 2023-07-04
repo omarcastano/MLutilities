@@ -5,7 +5,6 @@ import ipywidgets as widgets
 from functools import partial
 from IPython.display import display
 from typing import Union, Dict
-from MLutilities.utils import scaler
 from MLutilities.EDA import (
     kolmogorov_test,
     shapiro_test,
