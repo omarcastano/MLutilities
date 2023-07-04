@@ -1,3 +1,4 @@
+import numpy as np
 from sklearn.pipeline import make_pipeline
 from sklearn.model_selection import learning_curve
 from sklearn.model_selection import train_test_split
