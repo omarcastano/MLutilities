@@ -1,7 +1,7 @@
 import ipywidgets as widgets
 from functools import partial
 from IPython.display import display
-from MLutilities.classification.plots import plot_1d_classification
+from MLutilities.classification.plots import plot_1d_binary_classification
 
 
 def binary_1d_widget():
@@ -35,7 +35,7 @@ def binary_1d_widget():
         style={"description_width": "initial"},
     )
     w = widgets.interactive_output(
-        partial(plot_1d_classification),
+        partial(plot_1d_binary_classification),
         {
             "threshold": threshold,
             "regression": regression,
