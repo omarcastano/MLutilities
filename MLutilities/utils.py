@@ -226,6 +226,15 @@ def plot_log_reg(
     regression:     regression to use ("none", "linear", "logistic")
     point_position: position of a positive class point
     """
+    logging.warning(
+        """
+        ---------------------------------------------------------------------
+        This function (MLutilities.utils.plot_log_reg) will be deprecated, 
+        use MLutilities.classification.plot_1d_classification instead
+        ---------------------------------------------------------------------
+        """
+    )
+    
     n_instances_negative_class = 6
     n_instances_positive_class = 12
     start = 1
