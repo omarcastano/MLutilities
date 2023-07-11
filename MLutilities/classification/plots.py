@@ -6,7 +6,7 @@ from sklearn.linear_model import (
     LogisticRegression,
 )
 
-def plot_1d_classification(
+def plot_1d_binary_classification(
     threshold: float = 0.5,
     regression: str = "none",
     instance_position: int = 12,
