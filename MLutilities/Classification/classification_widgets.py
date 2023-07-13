@@ -10,7 +10,16 @@ from MLutilities.utils import (
     plot_kernel_pca,
 )
 from MLutilities.Classification import metrics
+import logging
 
+
+logging.warning(
+    """
+    ---------------------------------------------------------------------------
+    The module Classification will be remove. Please use classification instead.     
+    ----------------------------------------------------------------------------
+    """
+)
 
 def logistic_regression_widget():
     """
