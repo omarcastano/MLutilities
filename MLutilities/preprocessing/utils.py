@@ -78,6 +78,8 @@ def scaler(dataset: pd.DataFrame = None, variables: List[str] = None, kind: str 
     fig.update_layout(
         xaxis=dict(title="Value"),
         yaxis=dict(title="Count"),
+        width=1000,
+        height=500,
         # legend=dict(orientation="h", y=-0.25),
     )
 
