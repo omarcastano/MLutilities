@@ -81,4 +81,4 @@ def scaler(dataset: pd.DataFrame = None, variables: List[str] = None, kind: str 
         # legend=dict(orientation="h", y=-0.25),
     )
 
-    fig.show(renderer="notebook")
+    fig.show()
