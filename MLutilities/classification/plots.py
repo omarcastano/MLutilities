@@ -1,5 +1,7 @@
 import numpy as np
 import pandas as pd
+import seaborn as sns
+import matplotlib.pyplot as plt
 import plotly.graph_objects as go
 from sklearn.linear_model import (
     LinearRegression,
@@ -133,3 +135,84 @@ def plot_1d_binary_classification(
         legend_traceorder="reversed",
     )
     fig.show()
+
+def plot_gaussian_distributions(X: pd.DataFrame, y: pd.Series):
+    """
+    Plot gaussian distributions for features conditioned on class labels.
+
+    This function visualizes Gaussian distributions for each feature in a dataset 'X',
+    conditioned on their respective class labels in 'y'. The function creates a scatter plot
+    of the data points colored by their class labels and overlays contour lines for the
+    Gaussian probability density functions (PDFs) corresponding to each class. It also
+    plots 1D Gaussian PDFs for each feature conditioned on the class labels.
+
+    Parameters:
+    -----------
+        X:
+          The input dataset with feature columns.
+        y:
+          The class labels corresponding to each data point in X.
+
+    Example:
+    --------
+      # load penguins dataset
+      penguins = sns.load_dataset("penguins").dropna()
+
+      # define the feature matrix and label vector
+      X = df[["bill_depth_mm", "flipper_length_mm"]]
+      y = df.species
+
+      # plot gaussians
+      plot_gaussians(X, y)
+    """
+
+    def gaussian(X: pd.Series):
+        """
+        Compute Gaussian Probability Density Function (PDF) for a 1D array
+        """
+        x = np.linspace(X.min(), X.max(), 100)
+        mu = X.mean()
+        std = X.std()
+        pdf = np.exp(-0.5 * (x - mu) ** 2 / std ** 2)
+        return x, pdf
+
+    # define figure layout
+    mosaic = """
+           AAA.
+           BBBC
+           BBBC
+           BBBC
+           """
+    fig, ax = plt.subplot_mosaic(mosaic, figsize=(10, 10), tight_layout=True)
+
+    # scatterplot of the data points
+    sns.scatterplot(x=X.iloc[:, 0], y=X.iloc[:, 1], hue=y, ax=ax["B"])
+
+    # compute the limits of the 'x' and 'y' axes for the "B" subplot and creates
+    # a grid of points 'Xgrid' that spans the range of these axes.
+    xlim = ax["B"].get_xlim()
+    ylim = ax["B"].get_ylim()
+    xg = np.linspace(xlim[0], xlim[1], 60)
+    yg = np.linspace(ylim[0], ylim[1], 40)
+    xx, yy = np.meshgrid(xg, yg)
+    Xgrid = np.vstack([xx.ravel(), yy.ravel()]).T
+
+    for label, color in zip(y.unique(), ["blue", "darkorange"]):
+        # for each unique class label in 'y', compute the joint probability density function (PDF)
+        # and plot the contour lines of the PDF on the "B" subplot,
+        # creating regions of equal probability density for each class.
+        mask = y == label
+        mu, std = X[mask].mean().values, X[mask].std().values
+        P = np.exp(-0.5 * (Xgrid - mu) ** 2 / std ** 2).prod(1)
+        ax["B"].contour(xx, yy, P.reshape(xx.shape), levels=10, colors=color, alpha=0.4)
+
+        # call the 'gaussian' function to compute the 1D Gaussian PDFs for each feature conditioned on the current class.
+        # plot these Gaussian PDFs on the "A" and "C" subplots for the first and second features, respectively.
+        # These plots represent the conditional probabilities of each feature given the class label.
+        x1, p1 = gaussian(X.loc[mask, X.columns[0]])
+        ax["A"].plot(x1, p1, label=f"$P(x^1 | y=${label})")
+        ax["A"].legend()
+
+        x2, p2 = gaussian(X.loc[mask, X.columns[1]])
+        ax["C"].plot(p2, x2, label=f"$P(x^2 | y=${label})")
+        ax["C"].legend()
