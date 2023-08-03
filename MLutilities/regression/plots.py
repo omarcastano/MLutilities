@@ -146,3 +146,45 @@ def compare_learning_curves(
         height=600,
     )
     fig.show()
+
+def plot_regularized_poly_reg(
+    estimator: str = "Linear", degree: int = 2, N: int = 50, alpha: int = 1, l1_ratio: float = 0.5
+) -> None:
+    """
+    Perform regularized polynomial regression using the specified estimator and plot the fitted model.
+
+    Parameters:
+    -----------
+        estimator:
+          The name of the estimator to use for regularized polynomial regression.
+          Available options: "Linear", "Ridge", "Lasso", "ElasticNet". Default is "Linear".
+
+        degree:
+          The degree of the polynomial regression model. Default is 2.
+
+        N:
+          The number of data points to generate for training and testing. Default is 50.
+
+        alpha:
+          Regularization strength (alpha) for Ridge, Lasso, and ElasticNet regressions. Default is 1.
+
+        l1_ratio:
+          ElasticNet mixing parameter (l1_ratio) between L1 and L2 regularization. Default is 0.5.
+    """
+    # model training
+    estimators = {
+        "Linear": LinearRegression(),
+        "Ridge": Ridge(alpha=alpha),
+        "Lasso": Lasso(alpha=alpha),
+        "ElasticNet": ElasticNet(alpha=alpha, l1_ratio=l1_ratio),
+    }
+    # generate data
+    X, y = generate_nonlinear_data(N=N)
+
+    # train test split
+    X_train, X_test, y_train, y_test = train_test_split(
+        X, y, test_size=0.2, random_state=42
+    )
+    model = PolynomialRegression(degree=degree, estimator=estimators[estimator])
+    model.fit(X_train, y_train)
+    model.plot_fitted_model(X_train, y_train, X_test, y_test)
