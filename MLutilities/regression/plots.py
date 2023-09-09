@@ -188,3 +188,66 @@ def plot_regularized_poly_reg(
     model = PolynomialRegression(degree=degree, estimator=estimators[estimator])
     model.fit(X_train, y_train)
     model.plot_fitted_model(X_train, y_train, X_test, y_test)
+
+
+def plot_gradient_descent(m=100, eta=0.01, n_iter=10, seed=42):
+    """
+    Visualize the gradient descent process for linear regression.
+
+    This function generates random linear data points, performs gradient descent
+    to fit a linear regression model, and visualizes the model's convergence over
+    a specified number of iterations using an interactive Plotly figure.
+
+    Parameters:
+    -----------
+      m:
+        The number of instances (data points). Default is 100.
+
+      eta:
+        The learning rate for gradient descent. Default is 0.01.
+
+      n_iter:
+        The number of iterations for gradient descent. Default is 10.
+
+      seed:
+        The random seed for reproducibility. Default is 42.
+    """
+    # define seed
+    np.random.seed(seed)
+
+    # linear data
+    X = 2 * np.random.rand(m, 1)
+    y = 4 + 3 * X + np.random.rand(m, 1)
+
+    # create figure
+    fig = go.Figure()
+
+    # add scatter plot of data points
+    trace_scatter = go.Scatter(
+        x=X.flatten(), y=y.flatten(), mode="markers", name="Data"
+    )
+    fig.add_trace(trace_scatter)
+
+    # feature matrix with bias term
+    X_b = np.c_[np.ones((m, 1)), X]
+
+    # initial random parameter values
+    w = np.random.rand(2, 1)
+
+    for i in range(n_iter):
+        # compute gradient
+        gradient = 2 / m * X_b.T @ (X_b @ w - y)
+
+        # cet model weights for the iteration
+        w = w - eta * gradient
+        w0, w1 = w[0], w[1]
+
+        # Create a line plot for the current model
+        x_line = np.linspace(0, 2)
+        y_line = w0 + w1 * x_line
+        trace_line = go.Scatter(x=x_line, y=y_line, mode="lines", name=f"Iteration {i}")
+        fig.add_trace(trace_line)
+
+    # update layout
+    fig.update_layout(width=1000, height=700)
+    fig.show()
