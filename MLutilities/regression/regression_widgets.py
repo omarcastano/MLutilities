@@ -5,9 +5,9 @@ from . import PolynomialRegression
 from IPython.display import display
 from MLutilities.utils import plot_polyreg
 from sklearn.model_selection import train_test_split
-from MLutilities.regression.plots import compare_learning_curves
 from MLutilities.regression.utils import generate_nonlinear_data
 from sklearn.linear_model import LinearRegression, Ridge, Lasso, ElasticNet
+from MLutilities.regression.plots import compare_learning_curves, plot_gradient_descent
 
 
 def regularization_widget():
@@ -275,3 +275,33 @@ def compare_learning_curves_widget():
         ),
         w,
     )
+
+def gradient_descent_widget():
+    """
+    helper widget to illustrate gradient descent dependence on
+    learning rate and number o iterations
+    """
+    eta = widgets.Dropdown(
+        options=[0.001, 0.01, 0.1, 1],
+        description="Learning rate:",
+        layout=widgets.Layout(width="20%", height="30px"),
+        style={"description_width": "initial"},
+    )
+    n_iter = widgets.IntSlider(
+        description="Number of iterations",
+        min=10,
+        max=500,
+        value=10,
+        step=10,
+        continuous_update=False,
+        layout=widgets.Layout(width="20%", height="30px"),
+        style={"description_width": "initial"},
+    )
+    w = widgets.interactive_output(
+        partial(plot_gradient_descent, m=100, seed=42),
+        {
+            "eta": eta,
+            "n_iter": n_iter,
+        },
+    )
+    display(widgets.VBox([eta, n_iter]), w)
