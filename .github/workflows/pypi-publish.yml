@@ -12,22 +12,17 @@ on:
 jobs:
   publish:
     runs-on: ubuntu-latest
-
-    strategy:
-      matrix:
-        python-version:
-          - 3.8.x
-          - 3.9.x
-          - 3.10.x
+    permissions:
+      contents: write
 
     steps:
-      - name: Checkout code
+      - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Set up Python
+      - name: Install Python
         uses: actions/setup-python@v3
         with:
-          python-version: ${{ matrix.python-version }}
+          python-version: 3.9
 
       - name: Install Poetry
         run: |
