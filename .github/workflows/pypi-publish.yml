@@ -34,4 +34,4 @@ jobs:
           poetry build
           poetry publish --build
         env:
-          POETRY_PYPI_TOKEN: ${{ secrets.PYPI_API_TOKEN }}
+          POETRY_PYPI_TOKEN: ${{secrets.PYPI_API_TOKEN}}
