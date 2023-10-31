@@ -2,8 +2,12 @@ name: Publish to PyPI
 
 on:
   push:
-    tags:
-      - "*"
+    branches:
+      - main
+    paths:
+      - "**"
+    commit_message:
+      contains: release
 
 jobs:
   publish:
