@@ -10,28 +10,23 @@ on:
       contains: release
 
 jobs:
-  publish:
+  publish-package:
     runs-on: ubuntu-latest
     permissions:
       contents: write
-
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
-
-      - name: Install Python
+      - name: Set up Python
         uses: actions/setup-python@v3
         with:
-          python-version: 3.9
+          python-version: "3.9"
 
       - name: Install Poetry
-        run: |
-          pip install poetry
-          poetry install
+        run: pip install poetry
 
-      - name: Build and Publish
-        run: |
-          poetry build
-          poetry publish --build
-        env:
-          POETRY_PYPI_TOKEN: ${{secrets.PYPI_API_TOKEN}}
+      - name: Build the package
+        run: poetry build
+
+      - name: Publish the package to PyPI
+        uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          pypi_token: "${{secrets.PYPI_API_TOKEN}}"
