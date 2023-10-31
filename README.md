@@ -14,3 +14,5 @@ Version Compatibility
 | MLutilities version | Supported Python version |
 |---------------------|--------------------------|
 |    0.0.2             |     >=3.8.5, <=3.11.0    |
+|    0.0.3            |     >=3.8.5, <=3.11.0    |
+
