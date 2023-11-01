@@ -225,7 +225,7 @@ def countplot_widget(dataset: pd.DataFrame, plotly_renderer: str = "notebook"):
     display(widgets.HBox([variable, color]), w)
 
 
-def kruskal_test_widget(dataset: pd.DataFrame):
+def kruskal_test_widget(dataset: pd.DataFrame, plotly_renderer: str = "notebook"):
     """
     The Kruskal-Wallis H test is a rank-based nonparametric test
     that can be used to determine if there are statistically significant
@@ -262,7 +262,7 @@ def kruskal_test_widget(dataset: pd.DataFrame):
     )
 
     w = widgets.interactive_output(
-        partial(kruskal_test, dataset, plot_boxplot=True),
+        partial(kruskal_test, dataset, plot_boxplot=True, plotly_renderer=plotly_renderer),
         {"target_variable": cat_variable, "input_variable": num_variable},
     )
 
