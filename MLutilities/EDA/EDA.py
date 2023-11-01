@@ -6,7 +6,6 @@ import plotly.express as px
 import statsmodels.stats.api as sms
 import statsmodels.formula.api as smf
 import scipy.stats as stats
-from MLutilities.utils import cramerv_relationship_strength
 from sklearn.preprocessing import LabelEncoder
 from IPython.display import display
 from typing import Union, Dict, Optional
@@ -23,6 +22,7 @@ def kolmogorov_test(
     plot_histogram: bool = False,
     bins: int = 30,
     color: str = None,
+    plotly_renderer: str = "notebook",
 ):
     """
     This function computes Kolmogorov test to check if the variable
@@ -43,6 +43,9 @@ def kolmogorov_test(
         plot_histogram:If True plot a histogram of the variable
         bins: Number of bins to use when plotting the histogram
         color: Name of column in dataset. Values from this column are used to assign color to marks.
+        plotly_renderer: renderer to use when plotting plotly figures. Options:
+            - notebook: render plotly figures in a jupyter notebook
+            - colab: render plotly figures in a google colab notebook
     """
 
     if type(dataset) == dict:
@@ -60,9 +63,7 @@ def kolmogorov_test(
     x_scale = (x - x.mean()) / x.std()
 
     ktest = stats.kstest(x_scale, "norm")
-    print(
-        f"------------------------- Kolmogorov test fot the variable {variable} --------------------"
-    )
+    print(f"------------------------- Kolmogorov test fot the variable {variable} --------------------")
     print(f"statistic={ktest[0]:.3f}, p_value={ktest[1]:.3f}\n")
     if ktest[1] < 0.05:
         print(
@@ -72,16 +73,12 @@ def kolmogorov_test(
         print(
             f"Since {ktest[1]:.3f} > 0.05 you cannot reject the null hypothesis, so the variable {variable} \nfollows a normal distribution"
         )
-    print(
-        "-------------------------------------------------------------------------------------------\n"
-    )
+    print("-------------------------------------------------------------------------------------------\n")
     if plot_histogram:
-        fig = px.histogram(
-            dataset, x=x, nbins=bins, marginal="box", color=color, barmode="overlay"
-        )
+        fig = px.histogram(dataset, x=x, nbins=bins, marginal="box", color=color, barmode="overlay")
         fig.update_traces(marker_line_width=1, marker_line_color="white", opacity=0.8)
         fig.update_layout(xaxis_title=variable, width=1500, height=500)
-        fig.show()
+        fig.show(renderer=plotly_renderer)
 
 
 def shapiro_test(
@@ -91,6 +88,7 @@ def shapiro_test(
     plot_histogram: bool = False,
     bins: int = 30,
     color: str = None,
+    plotly_renderer: str = "notebook",
 ):
     """
     This function computes Shapiro test to check if the variable
@@ -111,6 +109,9 @@ def shapiro_test(
         plot_histogram:If True plot a histogram of the variable
         bins: Number of bins to use when plotting the histogram
         color: Name of column in dataset. Values from this column are used to assign color to marks.
+        plotly_renderer: renderer to use when plotting plotly figures. Options:
+            - notebook: render plotly figures in a jupyter notebook
+            - colab: render plotly figures in a google colab notebook
     """
 
     if type(dataset) == dict:
@@ -128,9 +129,7 @@ def shapiro_test(
     x_scale = (x - x.mean()) / x.std()
 
     ktest = stats.shapiro(x_scale)
-    print(
-        f"------------------------- Shapiro test fot the variable {variable} --------------------"
-    )
+    print(f"------------------------- Shapiro test fot the variable {variable} --------------------")
     print(f"statistic={ktest[0]:.3f}, p_value={ktest[1]:.3f}\n")
     if ktest[1] < 0.05:
         print(
@@ -140,16 +139,12 @@ def shapiro_test(
         print(
             f"Since {ktest[1]:.3f} > 0.05 you cannot reject the null hypothesis, so the variable {variable} \nfollows a normal distribution"
         )
-    print(
-        "-------------------------------------------------------------------------------------------\n"
-    )
+    print("-------------------------------------------------------------------------------------------\n")
     if plot_histogram:
-        fig = px.histogram(
-            dataset, x=x, nbins=bins, marginal="box", color=color, barmode="overlay"
-        )
+        fig = px.histogram(dataset, x=x, nbins=bins, marginal="box", color=color, barmode="overlay")
         fig.update_traces(marker_line_width=1, marker_line_color="white", opacity=0.8)
         fig.update_layout(xaxis_title=variable, width=1500, height=500)
-        fig.show()
+        fig.show(renderer=plotly_renderer)
 
 
 def biserial_correlation(
@@ -157,30 +152,38 @@ def biserial_correlation(
     categorical_variable: str,
     numerical_variable: str,
     transformation: str = None,
-    box_plot: bool = False,
-    test_assumptions: bool = False,
+    box_plot: bool = True,
+    test_assumptions: bool = True,
+    plotly_renderer: str = "notebook",
 ):
     """
     A point-biserial correlation is used to measure the correlation between
     a continuous variable and a binary variable.
     Assumption: continuous data within each group created by the binary variable
     are normally distributed with equal variances and possibly different means.
+
     H0: variables are not correlated
     H1: variables are correlated
+
     If p_value < 0.05 reject the null hypothesis
+
     Arguments:
-    dataset: pandas dataframe or dict with de format {'col1':np.array, 'col2':np.array}
-    categorical_variable: string
-        Name of the binary categorical variable
-    numerical_varaible: string
-        Name of the numercial variable
-    transformation: kind of transformation to apply. Options:
-        - yeo_johnson: appy yeo johnson transformation to the input variable
-        - log: apply logarithm transformation to the input variable
-    box_plot:bool
-        If Ture display a boxplot
-    test_assumptions: bool
-        If True test the assuptioms for the continuos variable
+    ----------
+        dataset: pandas dataframe or dict with de format {'col1':np.array, 'col2':np.array}
+        categorical_variable: string
+            Name of the binary categorical variable
+        numerical_varaible: string
+            Name of the numercial variable
+        transformation: kind of transformation to apply. Options:
+            - yeo_johnson: appy yeo johnson transformation to the input variable
+            - log: apply logarithm transformation to the input variable
+        box_plot:bool
+            If Ture display a boxplot
+        test_assumptions: bool
+            If True test the assuptioms for the continuos variable
+        plotly_renderer: renderer to use when plotting plotly figures. Options:
+            - notebook: render plotly figures in a jupyter notebook
+            - colab: render plotly figures in a google colab notebook
     """
 
     if type(dataset) == dict:
@@ -188,25 +191,17 @@ def biserial_correlation(
 
     if test_assumptions:
         y_unique = dataset[categorical_variable].unique()
-        x1 = dataset.loc[
-            dataset[categorical_variable] == y_unique[0], [numerical_variable]
-        ]
-        x2 = dataset.loc[
-            dataset[categorical_variable] == y_unique[1], [numerical_variable]
-        ]
+        x1 = dataset.loc[dataset[categorical_variable] == y_unique[0], [numerical_variable]]
+        x2 = dataset.loc[dataset[categorical_variable] == y_unique[1], [numerical_variable]]
 
-        print(
-            f"------------------------Kolmogorov Test for {categorical_variable}:{y_unique[0]}---------------------------"
-        )
+        print(f"------------------------Kolmogorov Test for {categorical_variable}:{y_unique[0]}---------------------------")
         kolmogorov_test(
             x1,
             numerical_variable,
             transformation=transformation,
             plot_histogram=False,
         )
-        print(
-            f"------------------------Kolmogorov Test for {categorical_variable}:{y_unique[1]}---------------------------"
-        )
+        print(f"------------------------Kolmogorov Test for {categorical_variable}:{y_unique[1]}---------------------------")
         kolmogorov_test(
             x2,
             numerical_variable,
@@ -214,9 +209,7 @@ def biserial_correlation(
             plot_histogram=False,
         )
 
-        print(
-            "--------------------------------Levene Test-----------------------------------"
-        )
+        print("--------------------------------Levene Test-----------------------------------")
         levene_test(dataset, categorical_variable, numerical_variable)
 
     # Point Biserial correlation Test
@@ -230,25 +223,17 @@ def biserial_correlation(
         x = dataset[numerical_variable].to_numpy()
 
     biserial = stats.pointbiserialr(y, x)
-    print(
-        "---------------------------Point Biserial Test--------------------------------"
-    )
+    print("---------------------------Point Biserial Test--------------------------------")
     print(f"statistic={biserial[0]:.3f}, p_value={biserial[1]:.3f}\n")
     if biserial[1] < 0.05:
-        print(
-            f"Since {biserial[1]:.3f} < 0.05 you can reject the null hypothesis, \nso variables are correlated"
-        )
+        print(f"Since {biserial[1]:.3f} < 0.05 you can reject the null hypothesis, \nso variables are correlated")
     else:
-        print(
-            f"Since {biserial[1]:.3f} > 0.05 you cannot reject the null hypothesis, \nso variables are not correlated"
-        )
-    print(
-        "------------------------------------------------------------------------------\n"
-    )
+        print(f"Since {biserial[1]:.3f} > 0.05 you cannot reject the null hypothesis, \nso variables are not correlated")
+    print("------------------------------------------------------------------------------\n")
 
     if box_plot:
         fig = px.box(dataset, x=categorical_variable, y=numerical_variable)
-        fig.show()
+        fig.show(renderer=plotly_renderer)
 
 
 def levene_test(dataset, categorical_variable, numerical_variable):
@@ -277,30 +262,18 @@ def levene_test(dataset, categorical_variable, numerical_variable):
 
     y_unique = dataset[categorical_variable].unique()
 
-    x1 = dataset.loc[
-        dataset[categorical_variable] == y_unique[0], numerical_variable
-    ].to_numpy()
-    x2 = dataset.loc[
-        dataset[categorical_variable] == y_unique[1], numerical_variable
-    ].to_numpy()
+    x1 = dataset.loc[dataset[categorical_variable] == y_unique[0], numerical_variable].to_numpy()
+    x2 = dataset.loc[dataset[categorical_variable] == y_unique[1], numerical_variable].to_numpy()
 
     levene = stats.levene(x1, x2)
 
-    print(
-        "------------------------------------------------------------------------------"
-    )
+    print("------------------------------------------------------------------------------")
     print(f"statistic={levene[0]:.3f}, p_value={levene[1]:.3f}\n")
     if levene[1] < 0.05:
-        print(
-            f"Since {levene[1]:.3f} < 0.05 you can reject the null hypothesis, \nso variances_1 != variances_2"
-        )
+        print(f"Since {levene[1]:.3f} < 0.05 you can reject the null hypothesis, \nso variances_1 != variances_2")
     else:
-        print(
-            f"Since {levene[1]:.3f} > 0.05 you cannot reject the null hypothesis, \nso variances_1 = variances_2"
-        )
-    print(
-        "------------------------------------------------------------------------------\n"
-    )
+        print(f"Since {levene[1]:.3f} > 0.05 you cannot reject the null hypothesis, \nso variances_1 = variances_2")
+    print("------------------------------------------------------------------------------\n")
 
 
 # Kruskall-Wallas Test
@@ -310,6 +283,7 @@ def kruskal_test(
     input_variable: str,
     plot_boxplot: bool = False,
     show_shapes: bool = False,
+    plotly_renderer: str = "notebook",
 ):
     """
     The Kruskal-Wallis H test is a rank-based nonparametric test
@@ -327,12 +301,19 @@ def kruskal_test(
     If p_values < 0.05 rejecct the null hypothesis
 
     Arguments:
+    ----------
         dataset: pandas dataframe or dict with de format {'col1':np.array, 'col2':np.array}
         target_variable: string
             Name of the categorical variable
         input_varaible: string
             Name of the numerical variable
-
+        plot_boxplot: bool
+            If True display a boxplot
+        show_shapes: bool
+            If True print the skewness and kurtosis of the input_variable
+        plotly_renderer: renderer to use when plotting plotly figures. Options:
+            - notebook: render plotly figures in a jupyter notebook
+            - colab: render plotly figures in a google colab notebook
     """
 
     if type(dataset) == dict:
@@ -342,41 +323,24 @@ def kruskal_test(
 
     y_unique = dataset[target_variable].unique()
 
-    x = [
-        dataset.loc[dataset[target_variable] == unique, input_variable]
-        for unique in y_unique
-    ]
+    x = [dataset.loc[dataset[target_variable] == unique, input_variable] for unique in y_unique]
 
     if show_shapes:
-        print(
-            "--------------------------------Skewness and Kurtosis-------------------------"
-        )
+        print("--------------------------------Skewness and Kurtosis-------------------------")
 
         for xi, yi in zip(x, y_unique):
-            print(
-                f"Skweness and kurtosis for {target_variable}:{yi}. Skweness={xi.skew():.3f}, Kurtosis={xi.kurtosis():.3f}"
-            )
+            print(f"Skweness and kurtosis for {target_variable}:{yi}. Skweness={xi.skew():.3f}, Kurtosis={xi.kurtosis():.3f}")
 
-        print(
-            "------------------------------------------------------------------------------\n"
-        )
+        print("------------------------------------------------------------------------------\n")
 
     kruskal = stats.kruskal(*x)
-    print(
-        "------------------------------------------------------------------------------"
-    )
+    print("------------------------------------------------------------------------------")
     print(f"statistic={kruskal[0]:.3f}, p_value={kruskal[1]:.3f}\n")
     if kruskal[1] < 0.05:
-        print(
-            f"Since {kruskal[1]:.3f} < 0.05 you can reject the null hypothesis, \nso we have that medians_1 != medians_2 != ...."
-        )
+        print(f"Since {kruskal[1]:.3f} < 0.05 you can reject the null hypothesis, \nso we have that medians_1 != medians_2 != ....")
     else:
-        print(
-            f"Since {kruskal[1]:.3f} > 0.05 you cannot reject the null hypothesis \nso we have that medians_1 = medians_2 = ...."
-        )
-    print(
-        "------------------------------------------------------------------------------\n"
-    )
+        print(f"Since {kruskal[1]:.3f} > 0.05 you cannot reject the null hypothesis \nso we have that medians_1 = medians_2 = ....")
+    print("------------------------------------------------------------------------------\n")
 
     if plot_boxplot:
         fig = px.box(
@@ -386,7 +350,35 @@ def kruskal_test(
             width=1500,
             height=500,
         )
-        fig.show()
+        fig.show(renderer=plotly_renderer)
+
+
+def _cramerv_relationship_strength(degrees_of_freedom: int, cramerv: float):
+    """
+    returns the strength of the relationship of two categorical variables
+    source: https://www.statology.org/interpret-cramers-v/
+
+    Arguments:
+    ----------
+    degrees_of_freedom:  degrees of freedom obtained from a contingency
+                         table as:
+                            min(number of rows - 1, number of columns - 1)
+    cramerv:             Cramer's V coefficient
+    """
+    values = {
+        "1": [0.10, 0.50],
+        "2": [0.07, 0.35],
+        "3": [0.06, 0.29],
+        "4": [0.05, 0.25],
+        "5": [0.04, 0.22],
+    }
+
+    if np.round(cramerv, 2) <= values[str(degrees_of_freedom)][0]:
+        return "small"
+    elif np.round(cramerv, 2) >= values[str(degrees_of_freedom)][-1]:
+        return "high"
+    else:
+        return "medium"
 
 
 # Creamers V Correlation
@@ -397,18 +389,22 @@ def cramersv(
     show_crosstab: bool = False,
     plot_histogram: bool = False,
     histnorm: str = "percent",
+    plotly_renderer: str = "notebook",
 ):
     """
-    This function computes cramer's V correlation coefficient which is a measure of association between two nominal variables.
+    This function computes Cramer's V correlation coefficient which is a measure of association between two nominal variables.
 
     H0: there is not a relationship between the variables.
     H1: there is a relationship between the variables..
 
+    If p_value < 0.5 you can reject the null hypothesis
+
     Arguments:
+    ----------
         dataset: pandas dataframe or dict with the format {'col1':np.array, 'col2':np.array}
         target_variable: string
             Name of the target variable
-        input_varaible: string
+        input_variable: string
             Name of the input variable
         show_crosstab: bool:
             if True prints the crosstab used to compute Cramer's V
@@ -416,10 +412,12 @@ def cramersv(
             If True plot the histogram of input_variable
         histnorm: string (default='percentage')
             It can be either 'percent' or 'count'. If 'percent'
-            show the percengate of each category, if 'count' show
+            show the percentage of each category, if 'count' show
             the frequency of each category.
+        plotly_renderer: renderer to use when plotting plotly figures. Options:
+            - notebook: render plotly figures in a jupyter notebook
+            - colab: render plotly figures in a google colab notebook
 
-    If p_value < 0.5 you can reject the null hypothesis
     """
 
     if type(dataset) == dict:
@@ -432,11 +430,7 @@ def cramersv(
 
     if show_crosstab:
         print("----------------------- Contingency Table -------------------------")
-        display(
-            pd.crosstab(
-                dataset[input_feature], dataset[target_feature], margins=True
-            ).style.background_gradient(cmap="Blues")
-        )
+        display(pd.crosstab(dataset[input_feature], dataset[target_feature], margins=True).style.background_gradient(cmap="Blues"))
         print("------------------------------------------------------------------\n")
 
     dimension = obs.to_numpy().sum()
@@ -447,25 +441,15 @@ def cramersv(
     n_cols = dataset[input_feature].nunique()
     degrees_of_freedom = min(n_rows - 1, n_cols - 1)
 
-    strength = cramerv_relationship_strength(
-        5 if degrees_of_freedom > 4 else degrees_of_freedom, cramer
-    )
+    strength = _cramerv_relationship_strength(5 if degrees_of_freedom > 4 else degrees_of_freedom, cramer)
 
-    print(
-        "---------------------------------------------- Cramer's V --------------------------------------------"
-    )
+    print("---------------------------------------------- Cramer's V --------------------------------------------")
     print(f"CramersV: {cramer:.3f}, chi2:{chi2:.3f}, p_value:{p:.5f}\n")
     if p < 0.05:
-        print(
-            f"Since {p:.5f} < 0.05 you can reject the null hypothesis, \nThere is a {strength} relationship between the variables."
-        )
+        print(f"Since {p:.5f} < 0.05 you can reject the null hypothesis, \nThere is a {strength} relationship between the variables.")
     else:
-        print(
-            f"Since {p:.5f} > 0.05 you cannot reject the null hypothesis, \nso there is not a relationship between the variables."
-        )
-    print(
-        "------------------------------------------------------------------------------------------------------\n"
-    )
+        print(f"Since {p:.5f} > 0.05 you cannot reject the null hypothesis, \nso there is not a relationship between the variables.")
+    print("------------------------------------------------------------------------------------------------------\n")
 
     if plot_histogram:
         fig = px.histogram(
@@ -477,7 +461,7 @@ def cramersv(
             width=1500,
             height=500,
         )
-        fig.show()
+        fig.show(renderer=plotly_renderer)
 
 
 def breusch_pagan_test(dataset, target_variable: str, input_variable: str):
@@ -506,21 +490,13 @@ def breusch_pagan_test(dataset, target_variable: str, input_variable: str):
     # perform Bresuch-Pagan test
     statistic, p_value, _, _ = sms.het_breuschpagan(fit_lr.resid, fit_lr.model.exog)
 
-    print(
-        "------------------------------------ Breusch-Pagan test ----------------------------------"
-    )
+    print("------------------------------------ Breusch-Pagan test ----------------------------------")
     print(f"statistic={statistic:.3f}, p_value={p_value:.3f}\n")
     if p_value < 0.05:
-        print(
-            f"Since {p_value:.3f} < 0.05 you can reject the null hypothesis, so homoscedasticity is not present"
-        )
+        print(f"Since {p_value:.3f} < 0.05 you can reject the null hypothesis, so homoscedasticity is not present")
     else:
-        print(
-            f"Since {p_value:.3f} > 0.05 you cannot reject the null hypothesis, so homoscedasticity is present"
-        )
-    print(
-        "-------------------------------------------------------------------------------------------\n"
-    )
+        print(f"Since {p_value:.3f} > 0.05 you cannot reject the null hypothesis, so homoscedasticity is present")
+    print("-------------------------------------------------------------------------------------------\n")
 
 
 def correlation_coef(
@@ -532,6 +508,7 @@ def correlation_coef(
     breusch_pagan: bool = False,
     scatter_plot: bool = False,
     apply_log_transform: bool = False,
+    plotly_renderer: str = "notebook",
 ):
     """
     This function computes the correlation between two numerical variables.
@@ -560,6 +537,9 @@ def correlation_coef(
             If True a scatter plot is display
         apply_log_transform: bool
             If Ture apply a logarithm transformation to input and target variables
+        plotly_renderer: renderer to use when plotting plotly figures. Options:
+            - notebook: render plotly figures in a jupyter notebook
+            - colab: render plotly figures in a google colab notebook
     """
 
     assert kind in [
@@ -599,9 +579,7 @@ def correlation_coef(
             nan_policy="omit",
         )
 
-    print(
-        f"------------------------------------ {kind} correlation ---------------------------------"
-    )
+    print(f"------------------------------------ {kind} correlation ---------------------------------")
     print(f"statistic={corr:.3f}, p_value={p_value:.3f}\n")
     if p_value < 0.05:
         print(
@@ -611,9 +589,7 @@ def correlation_coef(
         print(
             f"Since {p_value:.3f} > 0.05 you cannot reject the null hypothesis, so the variables {target_variable} \nand {input_variable} are not correlated"  # noqa: E501
         )
-    print(
-        "-------------------------------------------------------------------------------------------\n"
-    )
+    print("-------------------------------------------------------------------------------------------\n")
 
     if scatter_plot:
         fig = px.scatter(
@@ -627,12 +603,10 @@ def correlation_coef(
             height=600,
         )
         fig.update_traces(marker_line_width=1, marker_line_color="white", opacity=0.8)
-        fig.show()
+        fig.show(renderer=plotly_renderer)
 
 
-def contingency_table(
-    dataset, target_variable: str, input_variable: str, table_size: int = 30
-) -> None:
+def contingency_table(dataset, target_variable: str, input_variable: str, table_size: int = 30) -> None:
     """
     This function computes the contingency table of the given varaibles
 
@@ -652,11 +626,7 @@ def contingency_table(
     obs = pd.crosstab(dataset[input_variable], dataset[target_variable], margins=True)
 
     print("----------------------- Contingency Table -------------------------")
-    display(
-        obs.style.background_gradient(cmap="Blues").set_table_attributes(
-            f'style="font-size: {table_size}px"'
-        )
-    )
+    display(obs.style.background_gradient(cmap="Blues").set_table_attributes(f'style="font-size: {table_size}px"'))
     print("------------------------------------------------------------------\n")
 
 

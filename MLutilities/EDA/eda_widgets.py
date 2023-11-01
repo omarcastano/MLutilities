@@ -5,17 +5,10 @@ import ipywidgets as widgets
 from functools import partial
 from IPython.display import display
 from typing import Union, Dict
-from MLutilities.EDA import (
-    kolmogorov_test,
-    shapiro_test,
-    correlation_coef,
-    kruskal_test,
-    cramersv,
-    kde_plot,
-)
+from MLutilities.EDA import kolmogorov_test, shapiro_test, correlation_coef, kruskal_test, cramersv, kde_plot, biserial_correlation
 
 
-def kolmogorov_test_widget(dataset: pd.DataFrame):
+def kolmogorov_test_widget(dataset: pd.DataFrame, plotly_renderer: str = "notebook"):
     """
     This function computes Kolmogorov test to check if the variable
     is normaly distributed
@@ -26,7 +19,11 @@ def kolmogorov_test_widget(dataset: pd.DataFrame):
     if p_value < 0.05 you can reject the null hypohesis
 
     Arguments:
+    ---------
         dataset: pandas dataframe or dict with de format {'col1':np.array, 'col2':np.array}
+        plotly_renderer: renderer to use when plotting plotly figures. Options:
+            - notebook: render plotly figures in a jupyter notebook
+            - colab: render plotly figures in a google colab notebook
     """
 
     num_vars = dataset.select_dtypes([np.number]).columns
@@ -61,7 +58,7 @@ def kolmogorov_test_widget(dataset: pd.DataFrame):
     )
 
     w = widgets.interactive_output(
-        partial(kolmogorov_test, dataset=dataset, plot_histogram=True),
+        partial(kolmogorov_test, dataset=dataset, plot_histogram=True, plotly_renderer=plotly_renderer),
         {
             "variable": variable,
             "transformation": transformation,
@@ -183,15 +180,19 @@ def correlation_coef_widget(dataset: pd.DataFrame):
     display(widgets.HBox([variable1, variable2, kind, apply_log]), w)
 
 
-def countplot_widget(dataset: pd.DataFrame):
+def countplot_widget(dataset: pd.DataFrame, plotly_renderer: str = "notebook"):
     """
     Show the counts of observations in each categorical bin using bars. A count plot can be
     thought of as a histogram across a categorical, instead of quantitative variable.
-    This function will infer data types, so it is highly recomended to set categorical variables
+    This function will infer data types, so it is highly recommended to set categorical variables
     as string or pd.Categorical
+
     Arguments:
     ---------
         dataset: pandas dataframe or dict with de format {'col1':np.array, 'col2':np.array}
+        plotly_renderer: renderer to use when plotting plotly figures. Options:
+            - notebook: render plotly figures in a jupyter notebook
+            - colab: render plotly figures in a google colab notebook
     """
 
     cat_vars = dataset.select_dtypes([object, "category"]).columns.tolist()
@@ -210,11 +211,17 @@ def countplot_widget(dataset: pd.DataFrame):
     )
 
     def hist(dataset, **kwargs):
-        fig = px.histogram(data_frame=dataset, barmode="group", **kwargs)
+        fig = px.histogram(data_frame=dataset, barmode="group", histnorm="percent", **kwargs)
         fig.update_layout(width=1500, height=500)
-        fig.show()
+        fig.show(renderer=plotly_renderer)
 
-    w = widgets.interactive_output(partial(hist, dataset=dataset), {"x": variable, "color": color})
+    w = widgets.interactive_output(
+        partial(
+            hist,
+            dataset=dataset,
+        ),
+        {"x": variable, "color": color},
+    )
     display(widgets.HBox([variable, color]), w)
 
 
@@ -316,7 +323,7 @@ def barplot_widget(dataset: pd.DataFrame):
     display(widgets.HBox([cat_variable, num_variable, func]), w)
 
 
-def cramerv_widget(dataset: pd.DataFrame):
+def cramerv_widget(dataset: pd.DataFrame, plotly_renderer: str = "notebook"):
     """
     This function computes cramer's V correlation coefficient which is a measure of association between two nominal variables.
 
@@ -324,8 +331,11 @@ def cramerv_widget(dataset: pd.DataFrame):
     H1: there is a relationship between the variables..
 
     Arguments:
+    ----------
         dataset: pandas dataframe or dict with the format {'col1':np.array, 'col2':np.array}
-
+        plotly_renderer: renderer to use when plotting plotly figures. Options:
+            - notebook: render plotly figures in a jupyter notebook
+            - colab: render plotly figures in a google colab notebook
     """
 
     cat_vars = dataset.select_dtypes([object, "category"]).columns.tolist()
@@ -344,7 +354,7 @@ def cramerv_widget(dataset: pd.DataFrame):
     )
 
     w = widgets.interactive_output(
-        partial(cramersv, dataset=dataset, show_crosstab=True, plot_histogram=True),
+        partial(cramersv, dataset=dataset, show_crosstab=False, plot_histogram=True, plotly_renderer=plotly_renderer),
         {
             "input_feature": variable1,
             "target_feature": variable2,
@@ -400,3 +410,35 @@ def kde_widget(dataset: Union[pd.DataFrame, Dict[str, np.ndarray]]):
         },
     )
     display(widgets.HBox([variable, color, transformation, plot_boxplot]), w)
+
+
+def biserial_correlation_widget(dataset: pd.DataFrame, plotly_renderer: str = "notebook"):
+    num_vars = dataset.select_dtypes([np.number]).columns.tolist()
+    cat_vars = dataset.select_dtypes([object, "category"]).columns.tolist()
+
+    variable1 = widgets.Dropdown(
+        options=num_vars,
+        description="Variable 1:",
+        layout=widgets.Layout(width="20%", height="30px"),
+        style={"description_width": "initial"},
+    )
+    variable2 = widgets.Dropdown(
+        options=cat_vars,
+        description="Variable 2:",
+        layout=widgets.Layout(width="20%", height="30px"),
+        style={"description_width": "initial"},
+    )
+
+    transformation = widgets.Dropdown(
+        options=["None", "yeo_johnson", "log"],
+        description="Transformation:",
+        layout=widgets.Layout(width="20%", height="30px"),
+        style={"description_width": "initial"},
+    )
+
+    w = widgets.interactive_output(
+        partial(biserial_correlation, dataset=dataset, plotly_renderer=plotly_renderer),
+        {"categorical_variable": variable2, "numerical_variable": variable1, "transformation": transformation},
+    )
+
+    display(widgets.HBox([variable1, variable2, transformation]), w)
