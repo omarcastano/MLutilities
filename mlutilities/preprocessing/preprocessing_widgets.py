@@ -3,7 +3,7 @@ import numpy as np
 from IPython.display import display
 from ipywidgets import widgets
 from functools import partial
-from MLutilities.preprocessing.utils import scaler
+from mlutilities.preprocessing.utils import scaler
 
 
 def scaler_widget(dataset: pd.DataFrame):

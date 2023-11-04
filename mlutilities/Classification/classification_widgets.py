@@ -3,13 +3,13 @@ import ipywidgets as widgets
 import numpy.typing as npt
 from functools import partial
 from IPython.display import display
-from MLutilities.utils import (
+from mlutilities.utils import (
     plot_log_reg,
     roc_curve_viz,
     plot_iris_decision_tree,
     plot_kernel_pca,
 )
-from MLutilities.Classification import metrics
+from mlutilities.Classification import metrics
 import logging
 
 
@@ -20,6 +20,7 @@ logging.warning(
     ----------------------------------------------------------------------------
     """
 )
+
 
 def logistic_regression_widget():
     """

@@ -1,7 +1,7 @@
 import ipywidgets as widgets
 from functools import partial
 from IPython.display import display
-from MLutilities.classification.plots import plot_1d_binary_classification
+from mlutilities.classification.plots import plot_1d_binary_classification
 
 
 def binary_1d_widget():

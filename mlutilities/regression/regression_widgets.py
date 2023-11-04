@@ -3,10 +3,10 @@ import ipywidgets as widgets
 from functools import partial
 from . import PolynomialRegression
 from IPython.display import display
-from MLutilities.utils import plot_polyreg
+from mlutilities.utils import plot_polyreg
 from sklearn.model_selection import train_test_split
-from MLutilities.regression.plots import compare_learning_curves
-from MLutilities.regression.utils import generate_nonlinear_data
+from mlutilities.regression.plots import compare_learning_curves
+from mlutilities.regression.utils import generate_nonlinear_data
 from sklearn.linear_model import LinearRegression, Ridge, Lasso, ElasticNet
 
 
@@ -168,12 +168,8 @@ def polynomial_regression_widget():
         X, y = generate_nonlinear_data(N=N)
 
         # train test split
-        X_train, X_test, y_train, y_test = train_test_split(
-            X, y, test_size=0.2, random_state=42
-        )
-        model = PolynomialRegression(
-            degree=degree, estimator=estimators[estimator_name]
-        )
+        X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+        model = PolynomialRegression(degree=degree, estimator=estimators[estimator_name])
         model.fit(X_train, y_train)
         model.plot_fitted_model(X_train, y_train, X_test, y_test)
 

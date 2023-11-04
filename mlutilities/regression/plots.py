@@ -4,8 +4,8 @@ from sklearn.pipeline import make_pipeline
 from sklearn.model_selection import learning_curve
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import PolynomialFeatures
-from MLutilities.regression.models import PolynomialRegression
-from MLutilities.regression.utils import generate_nonlinear_data
+from mlutilities.regression.models import PolynomialRegression
+from mlutilities.regression.utils import generate_nonlinear_data
 from sklearn.linear_model import LinearRegression, Ridge, Lasso, ElasticNet
 
 
@@ -21,9 +21,7 @@ def plot_poly_reg(degree: int, N: int = 50) -> None:
         Number of instances of the generated non-linear data
     """
     X, y = generate_nonlinear_data(N)
-    X_train, X_test, y_train, y_test = train_test_split(
-        X, y, test_size=0.2, random_state=42
-    )
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
     model = PolynomialRegression(degree=degree)
     model.fit(X_train, y_train)
     model.plot_fitted_model(X_train, y_train, X_test, y_test)
@@ -147,9 +145,8 @@ def compare_learning_curves(
     )
     fig.show()
 
-def plot_regularized_poly_reg(
-    estimator: str = "Linear", degree: int = 2, N: int = 50, alpha: int = 1, l1_ratio: float = 0.5
-) -> None:
+
+def plot_regularized_poly_reg(estimator: str = "Linear", degree: int = 2, N: int = 50, alpha: int = 1, l1_ratio: float = 0.5) -> None:
     """
     Perform regularized polynomial regression using the specified estimator and plot the fitted model.
 
@@ -182,9 +179,7 @@ def plot_regularized_poly_reg(
     X, y = generate_nonlinear_data(N=N)
 
     # train test split
-    X_train, X_test, y_train, y_test = train_test_split(
-        X, y, test_size=0.2, random_state=42
-    )
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
     model = PolynomialRegression(degree=degree, estimator=estimators[estimator])
     model.fit(X_train, y_train)
     model.plot_fitted_model(X_train, y_train, X_test, y_test)

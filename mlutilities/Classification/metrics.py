@@ -7,13 +7,12 @@ from sklearn.metrics import (
     average_precision_score,
     confusion_matrix,
 )
-from MLutilities.utils import highlight_quadrants, get_metrics_data
+from mlutilities.utils import highlight_quadrants, get_metrics_data
 
 sns.set()
 
 
 def threshold_example(threshold: float = 0.5):
-
     """
     Illustrates how model metrics such as accuracy
     depends on threshold probability
@@ -26,9 +25,7 @@ def threshold_example(threshold: float = 0.5):
 
     # Defines labels
     y_pred = np.random.random(size=50)
-    y_true = (
-        y_pred + np.random.uniform(low=-0.3, high=0.3, size=len(y_pred)) > 0.5
-    ) * 1
+    y_true = (y_pred + np.random.uniform(low=-0.3, high=0.3, size=len(y_pred)) > 0.5) * 1
     constant = [1] * len(y_pred)
 
     # Plot labels
@@ -54,7 +51,6 @@ def threshold_example(threshold: float = 0.5):
 
 
 def per_class_accuracy(y_true: npt.ArrayLike, y_pred: npt.ArrayLike):
-
     """
     Computes per class accuracy
 
@@ -68,7 +64,6 @@ def per_class_accuracy(y_true: npt.ArrayLike, y_pred: npt.ArrayLike):
     acc_by_class = []
 
     for y in np.unique(y_true):
-
         tn, fp, fn, tp = confusion_matrix((y_true == y) * 1, (y_pred == y) * 1).ravel()
         acc_by_class.append(metrics_data["accuracy"]["function"](tn, fp, fn, tp))
 
@@ -83,7 +78,6 @@ def threshold_metric_evaluation(
     threshold: float = 0.5,
     label: str = None,
 ):
-
     """
     Plot the value of a given metric for several probability threshold. This function
     only work for a binary classification problem
@@ -104,7 +98,6 @@ def threshold_metric_evaluation(
     thresholds = []
     metrics_data = get_metrics_data()
     for t in np.arange(0.01, 0.99, 0.01):
-
         y_pred = (y_score[:, 1] >= t).astype(int)
         tn, fp, fn, tp = confusion_matrix(y_true, y_pred).ravel()
         metrics.append(metrics_data[metric]["function"](tn, fp, fn, tp))
@@ -154,10 +147,7 @@ def threshold_metric_evaluation(
     highlight_quadrants(metric, ax=ax[1])
 
 
-def precision_recall_tradeoff(
-    y_true: npt.ArrayLike, y_score: npt.ArrayLike, threshold: float = 0.5
-):
-
+def precision_recall_tradeoff(y_true: npt.ArrayLike, y_score: npt.ArrayLike, threshold: float = 0.5):
     """
     This function allow you to evaluate the precision-recall tradeoff
 
@@ -231,10 +221,7 @@ def precision_recall_tradeoff(
     ax[1].set_ylabel("True Label", fontsize=20)
 
 
-def precision_recall_curve(
-    y_true: npt.ArrayLike, y_score: npt.ArrayLike, threshold: float = 0.5
-):
-
+def precision_recall_curve(y_true: npt.ArrayLike, y_score: npt.ArrayLike, threshold: float = 0.5):
     """
     Plots Preciison recall curve and PR AUC
 
@@ -286,9 +273,7 @@ def precision_recall_curve(
         f"{_precision}\n {_recall}\n {_f1_score}",
         fontsize=20,
     )
-    ax[0].set_title(
-        f"PR AUC:{average_precision_score(y_true, y_score[:,1]).round(3)}", fontsize=25
-    )
+    ax[0].set_title(f"PR AUC:{average_precision_score(y_true, y_score[:,1]).round(3)}", fontsize=25)
     ax[0].set_ylim(0, 1.1)
     ax[0].legend(fontsize=18)
 
@@ -317,7 +302,6 @@ def precision_recall_curve(
 
 
 def ROC_curve(y_true: npt.ArrayLike, y_score: npt.ArrayLike, threshold: float = 0.5):
-
     """
     Compute ROC curve and AUC
 
@@ -354,9 +338,7 @@ def ROC_curve(y_true: npt.ArrayLike, y_score: npt.ArrayLike, threshold: float = 
 
     ax[0].set_ylabel("TPR", fontsize=20)
     ax[0].set_xlabel("FPR", fontsize=20)
-    ax[0].plot(
-        FPR[idx].round(3), TPR[idx].round(3), "rD", markersize=10, label="Threshold"
-    )
+    ax[0].plot(FPR[idx].round(3), TPR[idx].round(3), "rD", markersize=10, label="Threshold")
     fig.suptitle(
         f"TPR:{TPR[idx].round(3)}\n FPR:{FPR[idx].round(3)}",
         fontsize=20,
@@ -372,9 +354,7 @@ def ROC_curve(y_true: npt.ArrayLike, y_score: npt.ArrayLike, threshold: float = 
     conf_mt_str[1, 0] = "FN = " + str(conf_mt[1, 0])
     conf_mt_str[0, 1] = "FP = " + str(conf_mt[0, 1])
 
-    ax[0].set_title(
-        f"ROC AUC:{roc_auc_score(y_true, y_score[:,1]).round(3)}", fontsize=25
-    )
+    ax[0].set_title(f"ROC AUC:{roc_auc_score(y_true, y_score[:,1]).round(3)}", fontsize=25)
     ax[0].legend(fontsize=15)
 
     sns.heatmap(

@@ -1,9 +1,8 @@
 import ipywidgets as widgets
-from MLutilities.stats.distributions import example_histogram
+from mlutilities.stats.distributions import example_histogram
 
 
 def widget_example_histogram_matplotlib():
-
     """
     Interactively plots the boxplot and the histogram for a normally distributed variable
     and a skewed distributed variabl.
@@ -37,7 +36,5 @@ def widget_example_histogram_matplotlib():
         style={"description_width": "initial"},
     )
 
-    w = widgets.interactive_output(
-        example_histogram, {"mean": mean, "std": std, "alpha": alpha}
-    )
+    w = widgets.interactive_output(example_histogram, {"mean": mean, "std": std, "alpha": alpha})
     display(widgets.HBox([mean, std, alpha]), w)
