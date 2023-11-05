@@ -2,8 +2,8 @@ name: Publish to PyPI
 
 on:
   push:
-    branches:
-      - main
+    tags:
+      - v*
 
 jobs:
   build:
@@ -14,4 +14,3 @@ jobs:
         uses: JRubics/poetry-publish@v1.17
         with:
           pypi_token: ${{ secrets.PYPI_API_TOKEN }}
-        if: contains(github.event.head_commit.message, 'release', 'i')
