@@ -7,7 +7,7 @@ on:
     paths:
       - "**"
     commit_message:
-      contains: release
+      contains: 'release'
 
 jobs:
   build:
