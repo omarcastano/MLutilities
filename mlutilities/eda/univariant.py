@@ -6,6 +6,7 @@ import numpy as np
 import pandas as pd
 import plotly.express as px
 from scipy import stats
+from typing import Union, Optional, Dict
 
 
 def kolmogorov_test(
@@ -156,3 +157,59 @@ def shapiro_test(
         fig.update_traces(marker_line_width=1, marker_line_color="white", opacity=0.8)
         fig.update_layout(xaxis_title=variable, width=1500, height=500)
         fig.show(renderer=plotly_renderer)
+
+
+def kde_plot(
+    dataset: Union[pd.DataFrame, Dict[str, np.ndarray]],
+    variable: str,
+    transformation: Optional[str] = None,
+    color: Optional[str] = None,
+    plot_boxplot: bool = False,
+):
+    """
+    Generate a kernel density estimate (KDE) plot for a given variable in the dataset. Optionally applies a
+    transformation to the variable before generating the plot.
+    Parameters:
+    -----------
+        dataset: (pd.DataFrame or dict with format {'col1': np.array, 'col2': np.array}): The input dataset to use
+            for generating the KDE plot.
+        variable: (str): The name of the variable to use in the KDE plot.
+        transformation: (str, optional): The kind of transformation to apply to the input variable. Default is None.
+            Valid options are:
+                - "yeo_johnson": apply Yeo-Johnson transformation to the input variable.
+                - "log": apply logarithmic transformation to the input variable.
+        color: (str, optional): The name of the column in the dataset to use for assigning colors to the marks in
+            the plot. Default is None.
+        plot_boxplot: (bool, optional): Whether to add a boxplot in the margin of the KDE plot. Default is False.
+    """
+
+    if type(dataset) == dict:
+        dataset = pd.DataFrame(dataset)
+    dataset = dataset.dropna(subset=[variable]).copy()
+
+    if transformation == "yeo_johnson":
+        x = stats.yeojohnson(dataset[variable].to_numpy())[0]
+    elif transformation == "log":
+        x = np.log1p(dataset[variable].to_numpy())
+    else:
+        x = dataset[variable].to_numpy()
+    x_scale = (x - x.mean()) / x.std()
+
+    if plot_boxplot:
+        mosaic = """
+    aaaaa
+    AAAAA
+    AAAAA
+    AAAAA
+    AAAAA
+    """
+        fig, ax = plt.subplot_mosaic(mosaic, figsize=(20, 10), sharex=True)
+        sns.kdeplot(x=x, hue=dataset[color] if color else None, ax=ax["A"])
+        sns.boxplot(x=x, y=dataset[color] if color else None, ax=ax["a"])
+        ax["A"].set_ylabel("Density", size=15)
+        ax["A"].set_xlabel(variable, size=15)
+    else:
+        fig, ax = plt.subplots(figsize=(20, 10))
+        sns.kdeplot(x=x, hue=dataset[color] if color else None, ax=ax)
+        ax.set_ylabel("Density", size=15)
+        ax.set_xlabel(variable, size=15)
