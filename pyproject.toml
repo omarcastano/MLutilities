@@ -4,7 +4,7 @@ version = "0.0.5"
 description = "Library to teach Machine Learning"
 authors = ["omarcastano <omar.castano@udea.edu.co>", "deoache <daniel.ocampoh@udea.edu.co>"]
 packages = [
-    {include = "MLutilities"}
+    {include = "mlutilities"}
 ]
 readme = "README.md" 
 

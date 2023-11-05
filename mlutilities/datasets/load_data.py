@@ -107,7 +107,7 @@ def load_dataset(data_set: str, load_as: str = "dict", n=-1):
     if load_as not in ["dict", "list", "numpy1D", "numpy2D", "dataframe"]:
         raise Exception("load_as mus be on of the possible options: 'dict', 'list, 'numpy1D', 'numpy2D' o 'dataframe'")
 
-    path_to_data = pkg_resources.resource_filename(__name__, f"{data_set}.pkl")
+    path_to_data = pkg_resources.resource_filename(__name__, f"data/{data_set}.pkl")
 
     with open(path_to_data, "rb") as f:
         data = pickle.load(f)
