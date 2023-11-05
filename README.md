@@ -32,3 +32,4 @@ df = data["data"]
 kolmogorov_test(dataset=df, variable="bill_depth_mm", plot_histogram=True)
 ```
 
+You can fine more example on the [notebooks](./notebooks/) folder.
