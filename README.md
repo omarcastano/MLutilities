@@ -10,6 +10,7 @@ pip install mlutilities-udea
 # Basi Usage
 Using the mlutilities library for Exploratory Data Analysis (EDA)
 
+### Univariant Analysis
 In this example, we demonstrate how to use the mlutilities library to load a dataset, perform the Kolmogorov-Smirnov goodness-of-fit test, and visualize the data.
 
 ```python
@@ -32,4 +33,4 @@ df = data["data"]
 kolmogorov_test(dataset=df, variable="bill_depth_mm", plot_histogram=True)
 ```
 
-You can fine more example on the [notebooks](./notebooks/) folder.
+You can find more example on the [notebooks](./notebooks/) folder.
