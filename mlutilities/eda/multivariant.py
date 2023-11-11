@@ -47,7 +47,7 @@ def cramersv(
     plot_histogram: bool = False,
     histnorm: str = "percent",
     return_test: bool = True,
-    print_test: bool = False,
+    print_test: bool = True,
     plotly_renderer: str = "notebook",
 ):
     """

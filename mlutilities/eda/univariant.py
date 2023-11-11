@@ -16,8 +16,9 @@ def kolmogorov_test(
     plot_histogram: bool = False,
     bins: int = 30,
     color: str = None,
-    plotly_renderer: str = "notebook",
+    print_test: bool = True,
     return_test: bool = False,
+    plotly_renderer: str = "notebook",
 ):
     """
     This function computes Kolmogorov test to check if the variable
@@ -66,19 +67,28 @@ def kolmogorov_test(
     x_scale = (x - x.mean()) / x.std()
 
     ktest = stats.kstest(x_scale, "norm")
-    print(f"------------------------- Kolmogorov test fot the variable {variable} --------------------")
-    print(f"statistic={ktest[0]:.3f}, p_value={ktest[1]:.3f}\n")
-    if ktest[1] < 0.05:
-        print(
-            f"Since {ktest[1]:.3f} < 0.05 you can reject the null hypothesis, so the variable {variable} \ndo not follow a normal distribution"  # noqa: E501
-        )
-        conclusion = "Not normal distribution"
+
+    if print_test:
+        print(f"------------------------- Kolmogorov test fot the variable {variable} --------------------")
+        print(f"statistic={ktest[0]:.3f}, p_value={ktest[1]:.3f}\n")
+        if ktest[1] < 0.05:
+            print(
+                f"Since {ktest[1]:.3f} < 0.05 you can reject the null hypothesis, so the variable {variable} \ndo not follow a normal distribution"  # noqa: E501
+            )
+            conclusion = "Not normal distribution"
+        else:
+            print(
+                f"Since {ktest[1]:.3f} > 0.05 you cannot reject the null hypothesis, so the variable {variable} \nfollows a normal distribution"
+            )
+            conclusion = "Normal distribution"
+        print("-------------------------------------------------------------------------------------------\n")
+
     else:
-        print(
-            f"Since {ktest[1]:.3f} > 0.05 you cannot reject the null hypothesis, so the variable {variable} \nfollows a normal distribution"
-        )
-        conclusion = "Normal distribution"
-    print("-------------------------------------------------------------------------------------------\n")
+        if ktest[1] < 0.05:
+            conclusion = "Not normal distribution"
+        else:
+            conclusion = "Normal distribution"
+
     if plot_histogram:
         fig = px.histogram(dataset, x=x, nbins=bins, marginal="box", color=color, barmode="overlay")
         fig.update_traces(marker_line_width=1, marker_line_color="white", opacity=0.8)
