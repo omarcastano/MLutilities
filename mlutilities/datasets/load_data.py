@@ -1,7 +1,7 @@
 import pickle
 import pkg_resources
 
-DATASETS = ["penguins", "diamonds", "diamonds_noisy", "adults", "cars", "cars_noisy", "imdb"]
+DATASETS = ["penguins", "diamonds", "diamonds_noisy", "adults", "cars", "cars_noisy", "imdb", "nyc_taxis"]
 
 
 def data_format(data: pickle, load_as: str, n: int):
