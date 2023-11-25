@@ -6,12 +6,15 @@ from functools import partial
 from mlutilities.preprocessing.utils import scaler
 
 
-def scaler_widget(dataset: pd.DataFrame):
+def scaler_widget(dataset: pd.DataFrame, plotly_renderer: str = "notebook"):
     """
     Helper function to visualize the efect of scaling and normalization over continuos variables
 
     Arguments:
         dataset: pandas dataframe or dict with the format {'col1':np.array, 'col2':np.array}
+        plotly_renderer: renderer to use when plotting plotly figures. Options:
+            - notebook: render plotly figures in a jupyter notebook
+            - colab: render plotly figures in a google colab notebook
     """
 
     num_vars = dataset.select_dtypes([np.number]).columns
@@ -33,7 +36,7 @@ def scaler_widget(dataset: pd.DataFrame):
     )
 
     w = widgets.interactive_output(
-        partial(scaler, dataset),
+        partial(scaler, dataset, plotly_renderer=plotly_renderer),
         {"kind": kind, "variables": num_variable},
     )
 

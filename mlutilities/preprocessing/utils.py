@@ -8,7 +8,9 @@ from plotly.subplots import make_subplots
 from sklearn.preprocessing import StandardScaler, MinMaxScaler
 
 
-def get_kde(data):
+def get_kde(
+    data,
+):
     """
     Perform kernel density estimation (KDE) on a given dataset.
 
@@ -22,10 +24,10 @@ def get_kde(data):
 
     Returns:
     --------
-    x : ndarray
-        One-dimensional array of x-axis values for the KDE curve.
-    y : ndarray
-        One-dimensional array of y-axis values representing the estimated density values.
+        x : ndarray
+            One-dimensional array of x-axis values for the KDE curve.
+        y : ndarray
+            One-dimensional array of y-axis values representing the estimated density values.
 
     Example:
     --------
@@ -46,15 +48,18 @@ def get_kde(data):
     return x, y
 
 
-def scaler(dataset: pd.DataFrame = None, variables: List[str] = None, kind: str = "standard_scaler"):
+def scaler(dataset: pd.DataFrame = None, variables: List[str] = None, kind: str = "standard_scaler", plotly_renderer="notebook"):
     """
     Helper function to visualize the effect of scaling and normalization over continuous variables
 
     Arguments:
     ----------
-    dataset:   pandas dataframe or dict with the format {'col1':np.array, 'col2':np.array}
-    variables: list with the name of the features to scale
-    kind:      name of the transformation to perform. Options ["standard_scaler", "minmax_scaler"]
+        dataset:   pandas dataframe or dict with the format {'col1':np.array, 'col2':np.array}
+        variables: list with the name of the features to scale
+        kind:      name of the transformation to perform. Options ["standard_scaler", "minmax_scaler"]
+        plotly_renderer: renderer to use when plotting plotly figures. Options:
+            - notebook: render plotly figures in a jupyter notebook
+            - colab: render plotly figures in a google colab notebook
     """
     # drop nan values
     dataset = dataset.dropna()
@@ -83,4 +88,4 @@ def scaler(dataset: pd.DataFrame = None, variables: List[str] = None, kind: str 
         # legend=dict(orientation="h", y=-0.25),
     )
 
-    fig.show()
+    fig.show(renderer=plotly_renderer)
