@@ -8,7 +8,7 @@ from typing import Union, Dict
 from mlutilities.eda.multivariant import correlation_coef, cramersv, biserial_correlation, kruskal_test
 
 
-def correlation_coef_widget(dataset: pd.DataFrame, plotly_renderer: str = "notebook"):
+def correlation_coef_widget(dataset: pd.DataFrame):
     """
     This function computes the correlation between two numerical variables.
 
@@ -48,7 +48,7 @@ def correlation_coef_widget(dataset: pd.DataFrame, plotly_renderer: str = "noteb
     )
 
     w = widgets.interactive_output(
-        partial(correlation_coef, dataset=dataset, scatter_plot=True, return_test=False, plotly_renderer=plotly_renderer),
+        partial(correlation_coef, dataset=dataset, scatter_plot=True, return_test=False),
         {
             "input_variable": variable1,
             "target_variable": variable2,
