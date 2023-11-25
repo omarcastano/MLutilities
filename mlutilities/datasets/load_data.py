@@ -1,7 +1,7 @@
 import pickle
 import pkg_resources
 
-DATASETS = ["penguins", "diamonds", "adults", "cars", "cars_nulls", "imdb"]
+DATASETS = ["penguins", "diamonds", "diamonds_noisy", "adults", "cars", "cars_noisy", "imdb"]
 
 
 def data_format(data: pickle, load_as: str, n: int):
@@ -51,7 +51,6 @@ def data_format(data: pickle, load_as: str, n: int):
         }
 
     elif load_as == "numpy1D":
-
         sample.dropna(inplace=True)
         ds = {}
         for col in sample.columns:
