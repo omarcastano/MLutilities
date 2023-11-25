@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "MLutilities_udea"
-version = "0.0.6"
+version = "0.0.7"
 description = "Library to teach Machine Learning"
 authors = ["omarcastano <omar.castano@udea.edu.co>", "deoache <daniel.ocampoh@udea.edu.co>"]
 packages = [
