@@ -90,6 +90,8 @@ class LinearModelImputer(OneToOneFeatureMixin, BaseEstimator, TransformerMixin):
             The modified impute_feature column with missing values replaced by predictions.
 
         """
+        self.columns = X.columns.to_list()
+
         X_copy = X.copy().select_dtypes(include=np.number)
 
         # get instances with impute_feature missing values
@@ -102,7 +104,7 @@ class LinearModelImputer(OneToOneFeatureMixin, BaseEstimator, TransformerMixin):
         target_predict = self.linear_model.predict(feature_test)
         X_copy.loc[nan_instances, self.impute_feature] = target_predict
 
-        return X_copy.loc[:, [self.impute_feature]]
+        return X_copy.loc[:, self.columns]
 
 
 class GroupImputer(OneToOneFeatureMixin, BaseEstimator, TransformerMixin):

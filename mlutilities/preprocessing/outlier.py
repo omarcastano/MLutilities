@@ -4,8 +4,7 @@ from sklearn.base import BaseEstimator, TransformerMixin, OneToOneFeatureMixin
 import numpy as np
 
 
-# replace outliers with upper fence from IQR or with NAN
-class IQR(OneToOneFeatureMixin, BaseEstimator, TransformerMixin):
+class IQR(BaseEstimator, TransformerMixin, OneToOneFeatureMixin):
     """
     An Interquartile Range (IQR) Transformer.
 
@@ -52,14 +51,14 @@ class IQR(OneToOneFeatureMixin, BaseEstimator, TransformerMixin):
         self.threshold = threshold
         self.replacement = replacement
 
-    def fit(self, X: pd.DataFrame, y: Optional[pd.Series] = None):
+    def fit(self, X, y: Optional[pd.Series] = None):
         """
         Calculate the IQR and thresholds for the input data.
 
         Parameters:
         -----------
-            X : pandas DataFrame
-                The input DataFrame containing the training data.
+            X : pandas DataFrame or numpy array
+                The input data.
             y : pandas Series, optional
                 The target variable (ignored).
         Returns:
@@ -67,6 +66,10 @@ class IQR(OneToOneFeatureMixin, BaseEstimator, TransformerMixin):
         IQR
             The IQR transformer.
         """
+
+        # Convert NumPy array to DataFrame if input is NumPy array
+        if not isinstance(X, pd.DataFrame):
+            X = pd.DataFrame(X)
 
         input_features = X.columns
         self.iqr = X[input_features].quantile([0.25, 0.75]).apply(lambda x: x[0.75] - x[0.25], axis=0)
@@ -88,25 +91,31 @@ class IQR(OneToOneFeatureMixin, BaseEstimator, TransformerMixin):
 
         return self
 
-    def transform(self, X: pd.DataFrame, y: Optional[pd.Series] = None):
+    def transform(self, X, y: Optional[pd.Series] = None):
         """
         Replace outliers in the input data with the defined upper and lower thresholds.
 
         Parameters:
         -----------
-            X : pandas DataFrame
-                The input DataFrame containing the training data.
+            X : pandas DataFrame or numpy array
+                The input data.
             y : pandas Series, optional
                 The target variable (ignored).
         Returns:
         --------
             pandas DataFrame
                 The input DataFrame with outliers replaced by the defined thresholds.
-
         """
 
+        # Convert NumPy array to DataFrame if input is NumPy array
+        if not isinstance(X, pd.DataFrame):
+            X = pd.DataFrame(X)
+
         if self.replacement == "fences":
-            X = X.where(X < self.upper_threshold, self.upper_fence, axis=1).where(X > self.lower_threshold, self.lower_fence, axis=1)
+            for feature in self.upper_fence.index:
+                X.loc[X[feature] > self.upper_fence[feature], feature] = self.upper_fence[feature]
+                X.loc[X[feature] < self.lower_fence[feature], feature] = self.lower_fence[feature]
+
         elif self.replacement == "nan":
             upper_rpl = pd.Series([np.nan] * len(self.upper_fence), self.upper_fence.index)
             lower_rpl = pd.Series([np.nan] * len(self.lower_fence), self.lower_fence.index)
