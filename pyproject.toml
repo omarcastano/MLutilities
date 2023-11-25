@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "MLutilities_udea"
-version = "0.0.7"
+version = "0.0.8"
 description = "Library to teach Machine Learning"
 authors = ["omarcastano <omar.castano@udea.edu.co>", "deoache <daniel.ocampoh@udea.edu.co>"]
 packages = [
@@ -29,4 +29,3 @@ pandas = "<2.0.0"
 [build-system]
 requires = ["poetry-core>=1.0.0"]
 build-backend = "poetry.core.masonry.api"
-
