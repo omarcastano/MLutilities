@@ -11,15 +11,6 @@ from sklearn.linear_model import LinearRegression, Ridge, Lasso, ElasticNet
 
 
 def regularization_widget():
-    logging.warning(
-        """
-        ------------------------------------------------------------------------------------
-        This function (MLutilities.Regression.regression_widgets.regularization_widget) is deprecated. 
-        Please use MLutilities.regression.regression_widget.polynomial_regression_widget  instead.          
-        ------------------------------------------------------------------------------------
-        """
-    )
-
     """
     this function helps to visualize the effect of regularization in a regression model
     """
@@ -102,7 +93,7 @@ def regularization_widget():
     )
 
 
-def polynomial_regression_widget():
+def polynomial_regression_widget(plotly_renderer="notebook"):
     """
     Interactive polynomial regression
     """
@@ -171,7 +162,7 @@ def polynomial_regression_widget():
         X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
         model = PolynomialRegression(degree=degree, estimator=estimators[estimator_name])
         model.fit(X_train, y_train)
-        model.plot_fitted_model(X_train, y_train, X_test, y_test)
+        model.plot_fitted_model(X_train, y_train, X_test, y_test, plotly_renderer=plotly_renderer)
 
     w = widgets.interactive_output(
         poly_reg,

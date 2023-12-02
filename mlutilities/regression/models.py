@@ -5,6 +5,7 @@ from plotly import graph_objects as go
 import numpy as np
 from plotly.subplots import make_subplots
 
+
 class PolynomialRegression:
     """
     Fits a polynomial regression model.
@@ -72,7 +73,7 @@ class PolynomialRegression:
     def get_intercept(self):
         return self.model.named_steps["linear"].intercept_
 
-    def plot_fitted_model(self, X_train, y_train, X_test=None, y_test=None):
+    def plot_fitted_model(self, X_train, y_train, X_test=None, y_test=None, plotly_renderer="notebook"):
         """
         Plot the fitted model.
 
@@ -86,6 +87,8 @@ class PolynomialRegression:
                 Testing data.
             y_test: array-like, optional
                 Testing labels.
+            plotly_renderer: str, optional
+                Plotly renderer to use. Defaults to 'notebook'.
         """
         mae_test = np.mean(np.abs((self.predict(X_test) - y_test)))
         r2_test = self.score(X_test, y_test)
@@ -100,16 +103,14 @@ class PolynomialRegression:
             )
         )
         if X_test is not None and y_test is not None:
-            fig.add_scatter(
-                x=X_test.ravel(), y=y_test, mode="markers", name=f"Test data: <br>MAE: {mae_test:.3f} <br>R^2: {r2_test:.3f}"
-            )
+            fig.add_scatter(x=X_test.ravel(), y=y_test, mode="markers", name=f"Test data: <br>MAE: {mae_test:.3f} <br>R^2: {r2_test:.3f}")
 
         x_dummy = np.linspace(X_train.min(), X_train.max(), 100)
         fig.add_trace(go.Scatter(x=x_dummy, y=self.predict(x_dummy.reshape(-1, 1)).ravel(), mode="lines", name="Fitted model"))
 
         # Second plot (Weights of the fitted curve)
         weights = self.get_coef()
-        x_weights = np.arange(len(weights))
+        x_weights = [f"W{i}" for i in np.arange(1, len(weights) + 1)]
 
         fig.add_trace(go.Scatter(x=x_weights, y=weights, mode="lines+markers", name="Weights", line=dict(dash="dash")), row=1, col=2)
 
@@ -124,4 +125,4 @@ class PolynomialRegression:
             height=600,
         )
 
-        fig.show()
+        fig.show(renderer=plotly_renderer)
