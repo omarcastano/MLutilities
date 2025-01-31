@@ -1,5 +1,6 @@
 import pickle
 import pkg_resources
+import pandas as pd
 
 DATASETS = ["penguins", "diamonds", "diamonds_noisy", "adults", "cars", "cars_noisy", "imdb", "nyc_taxis"]
 
@@ -108,7 +109,6 @@ def load_dataset(data_set: str, load_as: str = "dict", n=-1):
 
     path_to_data = pkg_resources.resource_filename(__name__, f"data/{data_set}.pkl")
 
-    with open(path_to_data, "rb") as f:
-        data = pickle.load(f)
+    data = pd.read_pickle(path_to_data)
 
     return data_format(data, load_as, n)
